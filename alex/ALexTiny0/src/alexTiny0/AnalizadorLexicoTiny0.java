@@ -19,7 +19,7 @@ public class AnalizadorLexicoTiny0 {
     private static enum Estado {
         INICIO, REC_EOF, REC_COM0, REC_COM1, REC_MULT, REC_DIV, REC_MENORQUE, REC_MAYORQUE, REC_MENORIGUAL, REC_MAYORIGUAL,
         REC_IGUAL, REC_IGUALCOMPARACION, REC_PAP, REC_PCIERR, REC_PUNTOCOMA, REC_LLAVEAP, REC_LLAVECIERR, REC_ARROBA,
-        REC_ID, REC_AMPERSAN0, REC_AMPERSAN1, REC_MAS, REC_MENOS, REC_0, REC_ENT, REC_IDEC, REC_DEC, REC_0DEC, REC_DEC0, REC_IEXP,
+        REC_ID, REC_AMPERSAN0, REC_AMPERSAN1, REC_MAS, REC_MENOS, REC_0, REC_ENT, REC_IDEC, REC_DEC, REC_0DEC, REC_IEXP,
         REC_EXP, REC_EXP0, REC_EXPSIGN, REC_NOIGUAL0, REC_NOIGUAL1
     }
 
@@ -145,8 +145,7 @@ public class AnalizadorLexicoTiny0 {
                 case REC_EOF:
                     return unidadEof();
                 case REC_IDEC:
-                    if (hayDigitoPos()) transita(Estado.REC_DEC);
-                    else if (hayCero()) transita(Estado.REC_DEC0);
+                    if (hayDigito()) transita(Estado.REC_DEC);
                     else error();
                     break;
                 case REC_DEC:
@@ -159,11 +158,6 @@ public class AnalizadorLexicoTiny0 {
                     if (hayCero()) transita(Estado.REC_0DEC);
                     if (hayDigitoPos()) transita(Estado.REC_DEC);
                     else error();
-                    break;
-                case REC_DEC0:
-                    if (hayCero()) transita(Estado.REC_0DEC);
-                    else if (hayE()) transita(Estado.REC_IEXP);
-                    else return unidadReal();
                     break;
                 case REC_IEXP:
                     if (hayCero()) transita(Estado.REC_EXP0);
