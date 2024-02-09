@@ -13,7 +13,7 @@ public enum ClaseLexica {
     IDEN,
 	ENT,
 	NUM_REAL,
-	IGUAL("=="),
+	IGUAL("="),
     MAS("+"),
 	MENOS("-"),
 	POR("*"),
