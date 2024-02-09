@@ -355,7 +355,7 @@ public class AnalizadorLexicoTiny0 {
     }
 
     private UnidadLexica unidadReal() {
-        return new UnidadLexicaMultivaluada(filaInicio, columnaInicio, ClaseLexica.REAL, lex.toString());
+        return new UnidadLexicaMultivaluada(filaInicio, columnaInicio, ClaseLexica.NUM_REAL, lex.toString());
     }
 
     private UnidadLexica unidadMas() {

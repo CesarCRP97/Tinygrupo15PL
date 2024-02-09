@@ -11,7 +11,7 @@ import alexTiny0.UnidadLexica;
 public class DomJudge {
 	private static void imprime(UnidadLexica unidad) {
 		switch(unidad.clase()) {
-		   case IDEN: case ENT: case REAL: System.out.println(unidad.lexema()); break;
+		   case IDEN: case ENT: case NUM_REAL: System.out.println(unidad.lexema()); break;
                    default: System.out.println(unidad.clase().getImage());
 		}
 	}	

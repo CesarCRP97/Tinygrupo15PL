@@ -11,7 +11,7 @@ public enum ClaseLexica {
 	FALSE("false"),
     IDEN,
 	ENT,
-	REAL,
+	NUM_REAL,
 	IGUAL("=="),
     MAS("+"),
 	MENOS("-"),
