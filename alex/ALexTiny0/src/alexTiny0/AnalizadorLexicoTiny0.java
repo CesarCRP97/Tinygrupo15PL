@@ -47,7 +47,7 @@ public class AnalizadorLexicoTiny0 {
         while (true) {
             switch (estado) {
                 case INICIO:
-                    if (hayLetra()) transita(Estado.REC_ID);
+                    if (hayBarraBaja() || hayLetra()) transita(Estado.REC_ID);
                     else if (hayDigitoPos()) transita(Estado.REC_ENT);
                     else if (hayCero()) transita(Estado.REC_0);
                     else if (haySuma()) transita(Estado.REC_MAS);
@@ -65,7 +65,6 @@ public class AnalizadorLexicoTiny0 {
                     else if (hayMayorQue()) transita(Estado.REC_MAYORQUE);
                     else if (hayArroba()) transita(Estado.REC_ARROBA);
                     else if (hayAmpersand()) transita(Estado.REC_AMPERSAN0);
-                    else if (hayLetra() || hayBarraBaja()) transita(Estado.REC_ID);
                     else if (hayAlmohadilla()) transitaIgnorando(Estado.REC_COM0);
                     else if (haySep()) transitaIgnorando(Estado.INICIO);
                     else if (hayEOF()) transita(Estado.REC_EOF);
@@ -103,9 +102,11 @@ public class AnalizadorLexicoTiny0 {
                 case REC_MAYORQUE:
                     if (hayIgual()) transita(Estado.REC_MAYORIGUAL);
                     else return unidadMayorQue();
+                    break;
                 case REC_MENORQUE:
                     if (hayIgual()) transita(Estado.REC_MENORIGUAL);
                     else return unidadMenorQue();
+                    break;
                 case REC_MAYORIGUAL:
                     return unidadMayorIgual();
                 case REC_MENORIGUAL:
@@ -113,6 +114,7 @@ public class AnalizadorLexicoTiny0 {
                 case REC_IGUAL:
                     if (hayIgual()) transita(Estado.REC_IGUALCOMPARACION);
                     else return unidadIgual();
+                    break;
                 case REC_IGUALCOMPARACION:
                     return unidadIgualComparacion();
                 case REC_NOIGUAL0:
@@ -173,12 +175,10 @@ public class AnalizadorLexicoTiny0 {
                     break;
                 case REC_EXP0:
                     return unidadReal();
-
                 case REC_EXP:
                     if (hayDigito()) transita(Estado.REC_EXP);
                     else return unidadReal();
                     break;
-
                 case REC_EXPSIGN:
                     if (hayCero()) transita(Estado.REC_EXP0);
                     else if (hayDigitoPos()) transita(Estado.REC_EXP);
@@ -221,7 +221,7 @@ public class AnalizadorLexicoTiny0 {
     }
 
     private boolean hayBarraBaja() {
-        return sigCar >= '_';
+        return sigCar == '_';
     }
 
     private boolean hayLetra() {
@@ -326,28 +326,18 @@ public class AnalizadorLexicoTiny0 {
     }
 
     private UnidadLexica unidadId() {
-        switch (lex.toString().toLowerCase()) {
-            case "int":
-                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.INT);
-            case "real":
-                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.REAL);
-            case "bool":
-                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.BOOL);
-            case "and":
-                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.AND);
-            case "or":
-                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.OR);
-            case "not":
-                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.NOT);
-            case "null":
-                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.NULL);
-            case "true":
-                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.TRUE);
-            case "false":
-                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.FALSE);
-            default:
-                return new UnidadLexicaMultivaluada(filaInicio, columnaInicio, ClaseLexica.IDEN, lex.toString());
-        }
+        return switch (lex.toString().toLowerCase()) {
+            case "int" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.INT);
+            case "real" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.REAL);
+            case "bool" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.BOOL);
+            case "and" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.AND);
+            case "or" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.OR);
+            case "not" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.NOT);
+            case "null" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.NULL);
+            case "true" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.TRUE);
+            case "false" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.FALSE);
+            default -> new UnidadLexicaMultivaluada(filaInicio, columnaInicio, ClaseLexica.IDEN, lex.toString());
+        };
     }
 
     private UnidadLexica unidadEnt() {
@@ -432,11 +422,11 @@ public class AnalizadorLexicoTiny0 {
         int curCar = sigCar;
         try {
             sigCar();
-        } catch (IOException e) {}
+        } catch (IOException ignored) {}
         throw new ECaracterInesperado("(" + filaActual + ',' + columnaActual + "):Caracter inexperado"+(char)curCar);
     }
 
-    public static void main(String arg[]) throws IOException {
+    public static void main(String[] arg) throws IOException {
         Reader input = new InputStreamReader(new FileInputStream(arg[0]));
         AnalizadorLexicoTiny0 al = new AnalizadorLexicoTiny0(input);
         UnidadLexica unidad;

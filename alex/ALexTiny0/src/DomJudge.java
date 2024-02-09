@@ -21,9 +21,9 @@ public class DomJudge {
      AnalizadorLexicoTiny0 al = new AnalizadorLexicoTiny0(input);
      UnidadLexica unidad = null;
      do {
-       try {  
-         unidad = al.sigToken();
-	 imprime(unidad);
+       try {
+           unidad = al.sigToken();
+           imprime(unidad);
        }
        catch(ECaracterInesperado e) {
               System.out.println("ERROR");
