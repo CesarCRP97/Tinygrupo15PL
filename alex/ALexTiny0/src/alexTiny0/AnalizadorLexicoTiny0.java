@@ -326,18 +326,28 @@ public class AnalizadorLexicoTiny0 {
     }
 
     private UnidadLexica unidadId() {
-        return switch (lex.toString().toLowerCase()) {
-            case "int" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.INT);
-            case "real" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.REAL);
-            case "bool" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.BOOL);
-            case "and" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.AND);
-            case "or" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.OR);
-            case "not" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.NOT);
-            case "null" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.NULL);
-            case "true" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.TRUE);
-            case "false" -> new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.FALSE);
-            default -> new UnidadLexicaMultivaluada(filaInicio, columnaInicio, ClaseLexica.IDEN, lex.toString());
-        };
+        switch (lex.toString().toLowerCase()) {
+            case "int":
+                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.INT);
+            case "real":
+                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.REAL);
+            case "bool":
+                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.BOOL);
+            case "and":
+                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.AND);
+            case "or":
+                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.OR);
+            case "not":
+                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.NOT);
+            case "null":
+                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.NULL);
+            case "true":
+                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.TRUE);
+            case "false":
+                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.FALSE);
+            default:
+                return new UnidadLexicaMultivaluada(filaInicio, columnaInicio, ClaseLexica.IDEN, lex.toString());
+        }
     }
 
     private UnidadLexica unidadEnt() {
