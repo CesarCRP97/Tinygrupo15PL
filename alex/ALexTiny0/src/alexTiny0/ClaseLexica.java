@@ -1,10 +1,44 @@
 package alexTiny0;
 
 public enum ClaseLexica {
-    INT, BOOL, AND, OR, NOT, NULL, TRUE, FALSE,
-    IDEN, ENT, REAL, IGUAL,
-    MAS, MENOS, POR, DIV, EVALUA, DONDE, EOF,
-    MENORQUE, MAYORQUE, MENORIGUAL, MAYORIGUAL,
-    IGUAL_COMP, NOIGUAL_COMP, PAR_APERTURA, PAR_CIERRE, PUNTOYCOMA,
-    LLAVE_APERTURA, LLAVE_CIERRE, DOBLEAMPERSAND, ARROBA
+    INT("int"),
+	BOOL("bool"),
+	AND("and"),
+	OR("or"),
+	NOT("not"),
+	NULL("null"),
+	TRUE("true"),
+	FALSE("false"),
+    IDEN,
+	ENT,
+	REAL,
+	IGUAL("=="),
+    MAS("+"),
+	MENOS("-"),
+	POR("*"),
+	DIV("/"),
+	EOF,
+    MENORQUE("<"),
+	MAYORQUE(">"),
+	MENORIGUAL("<="),
+	MAYORIGUAL(">="),
+    IGUAL_COMP("=="),
+	NOIGUAL_COMP("!="),
+	PAR_APERTURA("("),
+	PAR_CIERRE(")"),
+	PUNTOYCOMA(";"),
+    LLAVE_APERTURA("{"),
+	LLAVE_CIERRE("}"),
+	DOBLEAMPERSAND("&&"),
+	ARROBA("@");
+    private String image;
+    public String getImage() {
+        return image;
+    }
+    private ClaseLexica() {
+        image = toString();
+    }
+    private ClaseLexica(String image) {
+        this.image = image;
+    }
 }
