@@ -29,6 +29,6 @@ public class DomJudge {
               System.out.println("ERROR");
        }
      }
-     while (unidad.clase() != ClaseLexica.EOF);
+     while (unidad == null || unidad.clase() != ClaseLexica.EOF);
     }        
 } 
