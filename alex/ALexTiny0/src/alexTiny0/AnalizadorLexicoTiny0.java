@@ -433,7 +433,7 @@ public class AnalizadorLexicoTiny0 {
         try {
             sigCar();
         } catch (IOException ignored) {}
-        throw new ECaracterInesperado("(" + filaActual + ',' + columnaActual + "):Caracter inexperado"+(char)curCar);
+        throw new ECaracterInesperado("(" + filaActual + ',' + columnaActual + "):Caracter inesperado"+(char)curCar);
     }
 
     public static void main(String[] arg) throws IOException {
