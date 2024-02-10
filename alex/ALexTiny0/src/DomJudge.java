@@ -1,6 +1,4 @@
 import alexTiny0.AnalizadorLexicoTiny0.ECaracterInesperado;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -16,7 +14,7 @@ public class DomJudge {
 		}
 	}	
 
-   public static void main(String[] args) throws FileNotFoundException, IOException {
+   public static void main(String[] args) throws IOException {
      Reader input  = new InputStreamReader(System.in);
      AnalizadorLexicoTiny0 al = new AnalizadorLexicoTiny0(input);
      UnidadLexica unidad = null;
