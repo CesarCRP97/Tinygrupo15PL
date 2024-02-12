@@ -73,6 +73,7 @@
                             @ fin = true
                         }
                     }; ## fin del while
+                    # Comentario incorrecto
                     if act == null { ## se ha alcanzado un punto de inserción
                         ## hay que insertar un nuevo nodo
                         if padre^.nombre < nombres.nombres[i] { ## insertar como hijo izquierdo
@@ -95,7 +96,7 @@
         @ i=0;
         while i < nombres.cont {
             call inserta_nombre(arbol);
-            @ i = i + 1
+            @ i = i + 1e
         }
     }; ## del procedimiento construye_arbol
 
