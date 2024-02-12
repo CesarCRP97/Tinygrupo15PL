@@ -1,6 +1,11 @@
 package alex;
 
 public class ALexOperations {
+    public static class ECaracterInesperado extends RuntimeException {
+      public ECaracterInesperado(String msg) {
+          super(msg);
+      }
+    }
    private AnalizadorLexicoTiny alex;
 
    public ALexOperations(AnalizadorLexicoTiny alex) {
@@ -216,6 +221,6 @@ public class ALexOperations {
    }
 
    public void error() {
-      System.err.println("***" + alex.fila() + " Caracter inexperado: " + alex.lexema());
+      throw new ECaracterInesperado("***"+alex.fila()+","+alex.columna()+": Caracter inexperado: "+alex.lexema());
    }
 }

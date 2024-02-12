@@ -6,6 +6,7 @@ package alex;
 %class AnalizadorLexicoTiny
 %type  UnidadLexica
 %unicode
+%public
 
 %{
   private ALexOperations ops;
