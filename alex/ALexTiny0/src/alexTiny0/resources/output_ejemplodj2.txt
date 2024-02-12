@@ -1,0 +1,7 @@
+ERROR
+comentario
+mal
+iniciado
+ERROR
+ERROR
+EOF
