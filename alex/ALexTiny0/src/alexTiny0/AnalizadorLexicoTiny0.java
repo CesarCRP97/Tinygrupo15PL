@@ -226,7 +226,7 @@ public class AnalizadorLexicoTiny0 {
 
     private boolean hayLetra() {
         return sigCar >= 'a' && sigCar <= 'z' ||
-                sigCar >= 'A' && sigCar <= 'z';
+                sigCar >= 'A' && sigCar <= 'Z';
     }
 
     private boolean hayDigitoPos() {
@@ -339,8 +339,6 @@ public class AnalizadorLexicoTiny0 {
                 return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.OR);
             case "not":
                 return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.NOT);
-            case "null":
-                return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.NULL);
             case "true":
                 return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.TRUE);
             case "false":

@@ -7,7 +7,6 @@ public enum ClaseLexica {
 	AND("<and>"),
 	OR("<or>"),
 	NOT("<not>"),
-	NULL("<null>"),
 	TRUE("<true>"),
 	FALSE("<false>"),
     IDEN,
