@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with JFLAP 7.1.--><structure>
+	<type>fa</type>
+	<automaton>
+		<!--The list of states.-->
+		<state id="0" name="Inicio">
+			<x>463.0</x>
+			<y>215.0</y>
+			<label>Inicio</label>
+			<initial/>
+		</state>
+		<state id="1" name="RecEof">
+			<x>30.0</x>
+			<y>210.0</y>
+			<final/>
+		</state>
+		<state id="2" name="RecCom">
+			<x>47.0</x>
+			<y>99.0</y>
+			<final/>
+		</state>
+		<state id="3" name="RecMult">
+			<x>45.0</x>
+			<y>291.0</y>
+			<final/>
+		</state>
+		<state id="4" name="RecDiv">
+			<x>65.0</x>
+			<y>381.0</y>
+			<final/>
+		</state>
+		<state id="5" name="RecMenor">
+			<x>208.0</x>
+			<y>385.0</y>
+			<final/>
+		</state>
+		<state id="6" name="RecPyC">
+			<x>623.0</x>
+			<y>42.0</y>
+			<final/>
+		</state>
+		<state id="7" name="RecLLA">
+			<x>446.0</x>
+			<y>21.0</y>
+			<final/>
+		</state>
+		<state id="8" name="RecLLC">
+			<x>559.0</x>
+			<y>23.0</y>
+			<final/>
+		</state>
+		<state id="9" name="RecPap">
+			<x>297.0</x>
+			<y>38.0</y>
+			<final/>
+		</state>
+		<state id="10" name="RecMayor">
+			<x>290.0</x>
+			<y>390.0</y>
+			<final/>
+		</state>
+		<state id="11" name="RecIgual">
+			<x>371.0</x>
+			<y>378.0</y>
+			<final/>
+		</state>
+		<state id="12" name="RecIgualComp">
+			<x>320.0</x>
+			<y>469.0</y>
+			<final/>
+		</state>
+		<state id="13" name="RecMenorIgual">
+			<x>101.0</x>
+			<y>463.0</y>
+			<final/>
+		</state>
+		<state id="14" name="Rec0">
+			<x>752.0</x>
+			<y>241.0</y>
+			<final/>
+		</state>
+		<state id="15" name="RecMas">
+			<x>511.0</x>
+			<y>304.0</y>
+			<final/>
+		</state>
+		<state id="16" name="RecArroba">
+			<x>919.0</x>
+			<y>170.0</y>
+			<final/>
+		</state>
+		<state id="17" name="RecId">
+			<x>729.0</x>
+			<y>76.0</y>
+			<final/>
+		</state>
+		<state id="18" name="RecMayorIgual">
+			<x>217.0</x>
+			<y>462.0</y>
+			<final/>
+		</state>
+		<state id="19" name="RecExpSigno">
+			<x>891.0</x>
+			<y>533.0</y>
+		</state>
+		<state id="20" name="RecIDec">
+			<x>680.0</x>
+			<y>353.0</y>
+		</state>
+		<state id="21" name="RecEnt">
+			<x>571.0</x>
+			<y>441.0</y>
+			<final/>
+		</state>
+		<state id="22" name="RecPCier">
+			<x>368.0</x>
+			<y>22.0</y>
+			<final/>
+		</state>
+		<state id="23" name="RecAt1">
+			<x>882.0</x>
+			<y>70.0</y>
+			<final/>
+		</state>
+		<state id="24" name="RecMenos">
+			<x>594.0</x>
+			<y>235.0</y>
+			<final/>
+		</state>
+		<state id="25" name="RecAt0">
+			<x>746.0</x>
+			<y>127.0</y>
+		</state>
+		<state id="26" name="RecCom1">
+			<x>177.0</x>
+			<y>36.0</y>
+		</state>
+		<state id="27" name="RecNoIgual0">
+			<x>461.0</x>
+			<y>374.0</y>
+		</state>
+		<state id="28" name="RecNoIgual1">
+			<x>460.0</x>
+			<y>478.0</y>
+			<final/>
+		</state>
+		<state id="40" name="RecExp">
+			<x>1054.0</x>
+			<y>374.0</y>
+			<final/>
+		</state>
+		<state id="41" name="RecExp0">
+			<x>913.0</x>
+			<y>461.0</y>
+			<final/>
+		</state>
+		<state id="43" name="Rec0Dec">
+			<x>962.0</x>
+			<y>253.0</y>
+		</state>
+		<state id="44" name="RecIDec">
+			<x>866.0</x>
+			<y>254.0</y>
+			<final/>
+		</state>
+		<state id="45" name="RecIExp">
+			<x>785.0</x>
+			<y>465.0</y>
+		</state>
+		<!--The list of transitions.-->
+		<transition>
+			<from>24</from>
+			<to>21</to>
+			<read>[1-9]</read>
+		</transition>
+		<transition>
+			<from>20</from>
+			<to>44</to>
+			<read>[0-9]</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>3</to>
+			<read>*</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>5</to>
+			<read>&lt;</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>27</to>
+			<read>!</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>11</to>
+			<read>=</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>24</to>
+			<read>-</read>
+		</transition>
+		<transition>
+			<from>45</from>
+			<to>19</to>
+			<read>[+,/]</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>26</to>
+			<read>#</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>17</to>
+			<read>[a-z,A-Z,0-9,_]</read>
+		</transition>
+		<transition>
+			<from>10</from>
+			<to>18</to>
+			<read>=</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>4</to>
+			<read>/</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>[ ,/n,/t,/r,/b]</read>
+		</transition>
+		<transition>
+			<from>25</from>
+			<to>23</to>
+			<read>&amp;</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>13</to>
+			<read>=</read>
+		</transition>
+		<transition>
+			<from>26</from>
+			<to>2</to>
+			<read>#</read>
+		</transition>
+		<transition>
+			<from>44</from>
+			<to>44</to>
+			<read>[1-9]</read>
+		</transition>
+		<transition>
+			<from>45</from>
+			<to>40</to>
+			<read>[1-9]</read>
+		</transition>
+		<transition>
+			<from>45</from>
+			<to>41</to>
+			<read>0</read>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>12</to>
+			<read>=</read>
+		</transition>
+		<transition>
+			<from>43</from>
+			<to>43</to>
+			<read>0</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>0</to>
+			<read>/n</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>8</to>
+			<read>}</read>
+		</transition>
+		<transition>
+			<from>19</from>
+			<to>40</to>
+			<read>[1-9]</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>9</to>
+			<read>(</read>
+		</transition>
+		<transition>
+			<from>19</from>
+			<to>41</to>
+			<read>0</read>
+		</transition>
+		<transition>
+			<from>27</from>
+			<to>28</to>
+			<read>=</read>
+		</transition>
+		<transition>
+			<from>24</from>
+			<to>14</to>
+			<read>0</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>2</to>
+			<read>[^/n EOF]</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>7</to>
+			<read>{</read>
+		</transition>
+		<transition>
+			<from>21</from>
+			<to>20</to>
+			<read>.</read>
+		</transition>
+		<transition>
+			<from>21</from>
+			<to>21</to>
+			<read>[0-9]</read>
+		</transition>
+		<transition>
+			<from>40</from>
+			<to>40</to>
+			<read>[0-9]</read>
+		</transition>
+		<transition>
+			<from>43</from>
+			<to>44</to>
+			<read>[1-9]</read>
+		</transition>
+		<transition>
+			<from>44</from>
+			<to>45</to>
+			<read>[e,E]</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>1</to>
+			<read>Eof</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>25</to>
+			<read>&amp;</read>
+		</transition>
+		<transition>
+			<from>15</from>
+			<to>14</to>
+			<read>0</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>10</to>
+			<read>&gt;</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>22</to>
+			<read>)</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>6</to>
+			<read>;</read>
+		</transition>
+		<transition>
+			<from>44</from>
+			<to>43</to>
+			<read>0</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>16</to>
+			<read>@</read>
+		</transition>
+		<transition>
+			<from>21</from>
+			<to>45</to>
+			<read>[e,E]</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>15</to>
+			<read>+</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>1</to>
+			<read>EOF</read>
+		</transition>
+		<transition>
+			<from>14</from>
+			<to>20</to>
+			<read>.</read>
+		</transition>
+		<transition>
+			<from>15</from>
+			<to>21</to>
+			<read>[1-9]</read>
+		</transition>
+		<transition>
+			<from>17</from>
+			<to>17</to>
+			<read>[a-z,A-Z,_0-9]</read>
+		</transition>
+	</automaton>
+</structure>
