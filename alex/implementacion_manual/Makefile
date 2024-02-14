@@ -7,5 +7,4 @@ zip:
 clean: 
 	rm -f *.class *~ PLG15Tiny0.zip
 	rm -f alexTiny0/*.class alexTiny0/*~
-	rm -f alexTiny0/resources/*~
 
