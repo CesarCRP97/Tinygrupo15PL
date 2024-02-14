@@ -1,7 +1,7 @@
-build:
+build: clean
 	javac DomJudge.java
 
-zip:
+zip: clean
 	zip -r PLG15Tiny0.zip DomJudge.java alexTiny0
 
 clean: 
