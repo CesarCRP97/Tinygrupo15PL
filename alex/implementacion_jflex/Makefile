@@ -1,8 +1,8 @@
 
-build: analizador
+build: clean analizador
 	javac DomJudge.java
 
-zip:
+zip: clean
 	zip -r PLG15Tiny.zip DomJudge.java alex ruta_jflex
 
 analizador:
