@@ -1,15 +1,16 @@
-build: clean alex
+build: clean cleanalex alex
 	javac asint/Main.java
 
-zip: clean
+zip: clean cleanalex alex
 	zip -r PLG15Tiny0.zip alex asint errors
 
 alex: cleanalex
 	cp -r ../../alex/implementacion_manual/alex .
 
-clean: cleanalex
+clean:
 	rm -f *.class *~ PLG15Tiny0.zip
 	rm -f asint/*.class asint/*~ errors/*.class errors/*~
+	rm -f alex/*.class alex/*~
 
 cleanalex:
 	rm -rf alex
