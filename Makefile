@@ -7,7 +7,7 @@ memoriapdf:
 clean: clean_manual clean_jflex
 	rm -f PLg15fase1.zip PLg15fase2.zip *~ memoria.pdf
 
-clean_manual:
+clean_alex_manual:
 	make -C alex/implementacion_manual/ clean
 
 clean_jflex:
