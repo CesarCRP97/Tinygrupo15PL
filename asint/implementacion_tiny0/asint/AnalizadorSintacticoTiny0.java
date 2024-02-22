@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AnalizadorSintacticoTiny0 {
     private UnidadLexica anticipo;       // token adelantado
