@@ -1,4 +1,4 @@
-build: alex
+build: clean alex
 	javac asint/Main.java
 
 zip: clean
