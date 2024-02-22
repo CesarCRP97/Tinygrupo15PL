@@ -11,6 +11,7 @@ public class Main {
      Reader input = new InputStreamReader(new FileInputStream(args[0]));
      AnalizadorSintacticoTiny0 asint = new AnalizadorSintacticoTiny0(input);
      asint.analiza();
+     System.out.println("OK");
  }
 }   
    

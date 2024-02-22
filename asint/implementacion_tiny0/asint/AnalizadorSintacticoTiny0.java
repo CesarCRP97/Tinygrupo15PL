@@ -273,8 +273,33 @@ public class AnalizadorSintacticoTiny0 {
 			case FALSE:
 			case IDEN:
                 expresion_basica();
+                break;
             default:
                 esperados(ClaseLexica.PAR_APERTURA, ClaseLexica.ENT, ClaseLexica.NUM_REAL, ClaseLexica.TRUE, ClaseLexica.FALSE, ClaseLexica.IDEN);
+                error();
+                break;
+        }
+    }
+
+    private void expresion_basica() {
+        switch(anticipo.clase()) {
+            case ENT:
+                empareja(ClaseLexica.ENT);
+                break;
+            case NUM_REAL:
+                empareja(ClaseLexica.NUM_REAL);
+                break;
+            case TRUE:
+                empareja(ClaseLexica.TRUE);
+                break;
+            case FALSE:
+                empareja(ClaseLexica.FALSE);
+                break;
+            case IDEN:
+                empareja(ClaseLexica.IDEN);
+                break;
+            default:
+                esperados(ClaseLexica.ENT, ClaseLexica.NUM_REAL, ClaseLexica.TRUE, ClaseLexica.FALSE, ClaseLexica.IDEN);
                 error();
                 break;
         }
@@ -352,30 +377,6 @@ public class AnalizadorSintacticoTiny0 {
                 break;
             default:
                 esperados(ClaseLexica.MENOS, ClaseLexica.NOT);
-                error();
-                break;
-        }
-    }
-
-    private void expresion_basica() {
-        switch(anticipo.clase()) {
-            case ENT:
-                empareja(ClaseLexica.ENT);
-                break;
-            case NUM_REAL:
-                empareja(ClaseLexica.NUM_REAL);
-                break;
-            case TRUE:
-                empareja(ClaseLexica.TRUE);
-                break;
-            case FALSE:
-                empareja(ClaseLexica.FALSE);
-                break;
-            case IDEN:
-                empareja(ClaseLexica.IDEN);
-                break;
-            default:
-                esperados(ClaseLexica.ENT, ClaseLexica.NUM_REAL, ClaseLexica.TRUE, ClaseLexica.FALSE, ClaseLexica.IDEN);
                 error();
                 break;
         }
