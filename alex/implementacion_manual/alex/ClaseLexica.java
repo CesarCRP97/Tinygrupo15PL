@@ -1,4 +1,4 @@
-package alexTiny0;
+package alex;
 
 public enum ClaseLexica {
     INT("<int>"),

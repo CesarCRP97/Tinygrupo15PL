@@ -1,10 +1,10 @@
-import alexTiny0.AnalizadorLexicoTiny0.ECaracterInesperado;
+import alex.AnalizadorLexicoTiny0.ECaracterInesperado;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import alexTiny0.AnalizadorLexicoTiny0;
-import alexTiny0.ClaseLexica;
-import alexTiny0.UnidadLexica;
+import alex.AnalizadorLexicoTiny0;
+import alex.ClaseLexica;
+import alex.UnidadLexica;
 
 public class DomJudge {
 	private static void imprime(UnidadLexica unidad) {
