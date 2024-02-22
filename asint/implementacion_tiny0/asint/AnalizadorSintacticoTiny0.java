@@ -105,7 +105,6 @@ public class AnalizadorSintacticoTiny0 {
     private void instrucciones() {
         switch(anticipo.clase()) {
             case ARROBA:
-                empareja(ClaseLexica.ARROBA);
                 instruccion();
                 rinstrucciones();
                 break;
