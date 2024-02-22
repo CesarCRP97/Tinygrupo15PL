@@ -23,7 +23,7 @@ public class AnalizadorLexicoTiny0 {
     private int columnaActual;
     private static String NL = System.getProperty("line.separator");
     private GestionErroresTiny0 errores;
-    private void fijaGestionErrores(GestionErroresTiny0 errores) {
+    public void fijaGestionErrores(GestionErroresTiny0 errores) {
         this.errores = errores;
     }
 
