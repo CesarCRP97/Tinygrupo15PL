@@ -3,7 +3,7 @@ package errors;
 import alex.ClaseLexica;
 import java.util.Set;
 
-public class GestionErroresEval {
+public class GestionErroresTiny0 {
    public void errorLexico(int fila, int col, String lexema) {
      System.out.println("ERROR fila "+fila+","+col+": Caracter inexperado: "+lexema); 
      System.exit(1);
