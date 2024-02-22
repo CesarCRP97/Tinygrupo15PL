@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.Reader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import errors.GestionErroresTiny0;
 
 public class AnalizadorLexicoTiny0 {
 
@@ -21,6 +22,11 @@ public class AnalizadorLexicoTiny0 {
     private int filaActual;
     private int columnaActual;
     private static String NL = System.getProperty("line.separator");
+    private GestionErroresTiny0 errores;
+    private void fijaGestionErrores(GestionErroresTiny0 errores) {
+        this.errores = errores;
+    }
+
 
     private static enum Estado {
         INICIO, REC_EOF, REC_COM0, REC_COM1, REC_MULT, REC_DIV, REC_MENORQUE, REC_MAYORQUE, REC_MENORIGUAL, REC_MAYORIGUAL,
@@ -426,12 +432,20 @@ public class AnalizadorLexicoTiny0 {
         return new UnidadLexicaUnivaluada(filaInicio, columnaInicio, ClaseLexica.EOF);
     }
 
-    private void error() {
+    /*private void error() {
         int curCar = sigCar;
         try {
             sigCar();
         } catch (IOException ignored) {}
         throw new ECaracterInesperado("(" + filaActual + ',' + columnaActual + "):Caracter inesperado"+(char)curCar);
+    }*/
+
+    private void error() {
+        int curCar = sigCar;
+        try {
+            sigCar();
+        } catch (IOException ignored) {}
+        errores.errorLexico(filaActual, columnaActual, lex.toString());
     }
 
     public static void main(String[] arg) throws IOException {
