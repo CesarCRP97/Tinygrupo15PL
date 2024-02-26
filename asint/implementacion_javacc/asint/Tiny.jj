@@ -7,39 +7,39 @@ package asint;
 public class AnalizadorSintacticoTiny {}
 PARSER_END(AnalizadorSintacticoTiny)
   TOKEN:{<#letra:["a"-"z","A"-"Z"]>}
-  TOKEN:{<#caracter:[_|<letra>|<digito>]>}
+  TOKEN:{<#caracter:"_" | <letra> | <digito>>}
   TOKEN:{<#digitoPositivo:["1"-"9"]>}
-  TOKEN:{<#digito:[<digitoPositivo>|"0"]>} 
-  TOKEN:{<#parteEntera:[<digitoPositivo> (<digito>)* |"0"]>} 
-  TOKEN:{<#parteDecimal: \.(<digito>)* [<digitoPositivo> | "0"]>}
-  TOKEN:{<#segParteReal: [<parteDecimal>|<parteExponencial>|<parteDecimal><parteExponencial>]>}
-  TOKEN:{<#parteExponencial: (e|E) (<litEntero>)>}
+  TOKEN:{<#digito:<digitoPositivo>|"0">} 
+  TOKEN:{<#parteEntera:<digitoPositivo> (<digito>)* | "0" >} 
+  TOKEN:{<#parteDecimal: "." (<digito>)* <digitoPositivo> | "0">}
+  TOKEN:{<#segParteReal: <parteDecimal>|<parteExponencial>|<parteDecimal><parteExponencial>>}
+  TOKEN:{<#parteExponencial: ["e","E"] <litEntero>>}
   SKIP:{<["\t"," ","\r","\b","\n"]>}  
-  SKIP:{<"#"(~["\n"])*>}  
-  TOKEN: [IGNORE_CASE] {<int:"int">}
-  TOKEN: [IGNORE_CASE] {<real:"real">}
-  TOKEN: [IGNORE_CASE] {<bool:"bool">}
-  TOKEN: [IGNORE_CASE] {<string:"string">
-  TOKEN: [IGNORE_CASE] {<and:"and">}
-  TOKEN: [IGNORE_CASE] {<or:"or">}
-  TOKEN: [IGNORE_CASE] {<not:"not">
-  TOKEN: [IGNORE_CASE] {<null:"null">}
-  TOKEN: [IGNORE_CASE] {<true:"true">}
-  TOKEN: [IGNORE_CASE] {<false:"false">}
-  TOKEN: [IGNORE_CASE] {<if:"if">}
-  TOKEN: [IGNORE_CASE] {<else:"else">}
-  TOKEN: [IGNORE_CASE] {<while:"while">}
-  TOKEN: [IGNORE_CASE] {<struct:"struct">}
-  TOKEN: [IGNORE_CASE] {<new:"new">}
-  TOKEN: [IGNORE_CASE] {<delete:"delete">}
-  TOKEN: [IGNORE_CASE] {<read:"read">}
-  TOKEN: [IGNORE_CASE] {<write:"write">}
-  TOKEN: [IGNORE_CASE] {<nl:"nl">}
-  TOKEN: [IGNORE_CASE] {<type:"type">}
-  TOKEN: [IGNORE_CASE] {<call:"call">}
-  TOKEN:{<suma:"\+">}
+  SKIP:{<"##"(~["\n"])*>}  
+  TOKEN[IGNORE_CASE]: {<bool:"bool">}
+  TOKEN[IGNORE_CASE]: {<real:"real">}
+  TOKEN[IGNORE_CASE]: {<INT:"int">}
+  TOKEN[IGNORE_CASE]: {<string:"string">}
+  TOKEN[IGNORE_CASE]: {<and:"and">}
+  TOKEN[IGNORE_CASE]: {<or:"or">}
+  TOKEN[IGNORE_CASE]: {<not:"not">}
+  TOKEN[IGNORE_CASE]: {<NULL:"null">}
+  TOKEN[IGNORE_CASE]: {<TRUE:"true">}
+  TOKEN[IGNORE_CASE]: {<FALSE:"false">}
+  TOKEN[IGNORE_CASE]: {<IF:"if">}
+  TOKEN[IGNORE_CASE]: {<ELSE:"else">}
+  TOKEN[IGNORE_CASE]: {<WHILE:"while">}
+  TOKEN[IGNORE_CASE]: {<struct:"struct">}
+  TOKEN[IGNORE_CASE]: {<NEW:"new">}
+  TOKEN[IGNORE_CASE]: {<delete:"delete">}
+  TOKEN[IGNORE_CASE]: {<read:"read">}
+  TOKEN[IGNORE_CASE]: {<write:"write">}
+  TOKEN[IGNORE_CASE]: {<nl:"nl">}
+  TOKEN[IGNORE_CASE]: {<type:"type">}
+  TOKEN[IGNORE_CASE]: {<call:"call">}
+  TOKEN:{<suma:"+">}
   TOKEN:{<resta:"-">}
-  TOKEN:{<mult:"\*">}
+  TOKEN:{<mult:"*">}
   TOKEN:{<div:"/">}
   TOKEN:{<porcentaje:"%">}
   TOKEN:{<menorque:"<">}
@@ -48,24 +48,24 @@ PARSER_END(AnalizadorSintacticoTiny)
   TOKEN:{<mayorigual:">=">}
   TOKEN:{<igual_comp:"==">}
   TOKEN:{<noigual_comp:"!=">}
-  TOKEN:{<par_a:"\(">}
-  TOKEN:{<par_c:"\)">}
+  TOKEN:{<par_a:"(">}
+  TOKEN:{<par_c:")">}
   TOKEN:{<puntoycoma:";">}
   TOKEN:{<igual_op:"=">}
-  TOKEN:{<corch_a:"\{">}
-  TOKEN:{<corch_c:"\}">}
-  TOKEN:{<punto:"\.">}
-  TOKEN:{<capirote:"\^">}
+  TOKEN:{<corch_a:"[">}
+  TOKEN:{<corch_c:"]">}
+  TOKEN:{<punto:".">}
+  TOKEN:{<capirote:"^">}
   TOKEN:{<coma:",">}
-  TOKEN:{<llave_a:"\{">}
-  TOKEN:{<llave_c:"\}">}
+  TOKEN:{<llave_a:"{">}
+  TOKEN:{<llave_c:"}">}
   TOKEN:{<ampersand:"&">}
   TOKEN:{<dobleampersand:"&&">}
   TOKEN:{<arroba:"@">}
-  TOKEN:{<litEntero:([\+,\-])?<parteEntera>>}
+  TOKEN:{<litEntero:(["+","-"])?<parteEntera>>}
   TOKEN:{<litReal:<litEntero><segParteReal>>}
-  TOKEN:{<litCadena:\"(~[<EOF>])*\">}
-  TOKEN:{<iden>:[<letra>|_](<caracter>)*}
+  TOKEN:{<litCadena:"""(~[<EOF>])*""">}
+  TOKEN:{<iden:(<letra>|"_")(<caracter>)*>}
 
   void analiza()   : {} {programa() <EOF> }
   void programa()  : {} { bloque() }
@@ -85,10 +85,10 @@ PARSER_END(AnalizadorSintacticoTiny)
   void ampersand_opt() : {} {<ampersand> | {}}
   
   void tipo(): {} { tipo0() }
-  void tipo0() : {} { tipo0() RTipo0() | tipo1()}
-  void RTipo0() : {} { <corch_a> <litEntero> <corch_c> | {}}
+  void tipo0() : {} { tipo1() RTipo0() }
+  void RTipo0() : {} { <corch_a> <litEntero> <corch_c> RTipo0() | {}}
   void tipo1() : {} { tipo2() | <capirote> tipo1()}
-  void tipo2() : {} { <int> | <real> | <bool> | <string> | <iden> | <struct> campos() | <iden> }
+  void tipo2() : {} { <INT> | <real> | <bool> | <string> | <struct> campos() | <iden> }
 
   void campos() : {} { <llave_a> campos_list() <llave_c>}
   void campos_list() : {} { campo() rcampos_list()}
@@ -98,15 +98,15 @@ PARSER_END(AnalizadorSintacticoTiny)
   void instrucciones_opt() : {} {instrucciones() | {}}
   void instrucciones() : {} {instruccion() rinstrucciones()}
   void rinstrucciones() : {} {<puntoycoma> instruccion() rinstrucciones() | {}}
-  void instruccion() : {} { instr_eval() | instr_ifelse() | instr_while() | instr_read() | instr_write() | instr_nl() | instr_reserva() | instr_liberacion() | instr_invocacion | instr_compuesta() }
+  void instruccion() : {} { instr_eval() | instr_ifelse() | instr_while() | instr_read() | instr_write() | instr_nl() | instr_reserva() | instr_liberacion() | instr_invocacion() | instr_compuesta() }
   void instr_eval() : {} {<arroba> expresion()}
-  void instr_ifelse() : {} { <if> expresion() bloque() else_opt() }
-  void else_opt() : {} { <else> bloque() | {}}
-  void instr_while() : {} { <while> expresion() bloque() }
+  void instr_ifelse() : {} { <IF> expresion() bloque() else_opt() }
+  void else_opt() : {} { <ELSE> bloque() | {}}
+  void instr_while() : {} { <WHILE> expresion() bloque() }
   void instr_read() : {} { <read> expresion() }
   void instr_write() : {} { <write> expresion() }
   void instr_nl() : {} { <nl> }
-  void instr_reserva() : {} { <new> expresion() }
+  void instr_reserva() : {} { <NEW> expresion() }
   void instr_liberacion() : {} { <delete> expresion() }
   void instr_compuesta() : {} { bloque() }
   void instr_invocacion() : {} { <call> <iden> parametros_reales() }
@@ -130,7 +130,7 @@ PARSER_END(AnalizadorSintacticoTiny)
   void e5() : {} { e6() | op5() e5() }
   void e6() : {} { e7() re6() }
   void re6() : {} { op6() re6() | {}}
-  void e7() : {} { <par_a> e0() <par_c> | <iden> | <litEntero> | <litReal> | <litCadena> | <null> | <bool> }
+  void e7() : {} { <par_a> e0() <par_c> | <iden> | <litEntero> | <litReal> | <litCadena> | <NULL> | <TRUE> | <FALSE> }
 
   void op0() : {} { <igual_op> }
   void op1() : {} { <igual_comp> | <noigual_comp> | <menorque> | <mayorque> | <menorigual> | <mayorigual> }
