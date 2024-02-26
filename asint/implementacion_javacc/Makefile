@@ -1,11 +1,17 @@
 build: clean cleanjavacc javacc
 	javac asint/Main.java
 
+debug: clean cleanjavacc javacc-debug
+	javac asint/Main.java
+
 zip: clean cleanjavacc
 	zip -r PLG15Tiny0.zip asint
 
 javacc:
-	cd asint; javacc Tiny.jj
+	javacc -output_directory=asint/ asint/Tiny.jj
+
+javacc-debug:
+	javacc -debug_parser -output_directory=asint/ asint/Tiny.jj
 
 clean:
 	rm -f *.class *~ PLG15Tiny0.zip
@@ -13,3 +19,5 @@ clean:
 
 cleanjavacc:
 	rm -f asint/Token.java asint/AnalizadorSintacticoTinyTokenManager.java asint/AnalizadorSintacticoTinyConstants.java asint/ParseException.java asint/TokenMgrError.java asint/AnalizadorSintacticoTiny.java asint/SimpleCharStream.java
+
+cleanall: clean cleanjavacc
