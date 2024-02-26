@@ -60,8 +60,8 @@ PARSER_END(AnalizadorSintacticoTiny)
   TOKEN:{<coma:",">}
   TOKEN:{<llave_a:"{">}
   TOKEN:{<llave_c:"}">}
-  TOKEN:{<ampersand:"&">}
   TOKEN:{<dobleampersand:"&&">}
+  TOKEN:{<ampersand:"&">}
   TOKEN:{<arroba:"@">}
   TOKEN:{<litEntero:(["+","-"])?<parteEntera>>}
   TOKEN:{<litReal:<litEntero><segParteReal>>}
@@ -72,12 +72,13 @@ PARSER_END(AnalizadorSintacticoTiny)
   void programa()  : {} { bloque() }
   void bloque()    : {} { <llave_a> declaraciones_opt() instrucciones_opt() <llave_c> }
   void declaraciones_opt() : {} {declaraciones() | {}}
-  void declaraciones() : {} {declaracion() rlista_decs()}
+  void declaraciones() : {} {lista_declaraciones() <dobleampersand>}
+  void lista_declaraciones() : {} {declaracion() rlista_decs()}
   void rlista_decs() : {} {<puntoycoma> declaracion() rlista_decs() | {}}
   void declaracion() : {} {dec_variable() | dec_tipo() | dec_procedimiento() }
   void dec_variable() : {} {tipo() <iden>}
   void dec_tipo() : {} {<type> tipo() <iden>}
-  void dec_procedimiento() : {} {<call> <iden> parametros_form() bloque()}
+  void dec_procedimiento() : {} {<proc> <iden> parametros_form() bloque()}
   void parametros_form() : {} {<par_a> parametros_form_list_opt() <par_c>}
   void parametros_form_list_opt() : {} {parametros_form_list() | {}}
   void parametros_form_list() : {} {parametro_form() rparametros_form_list()}
