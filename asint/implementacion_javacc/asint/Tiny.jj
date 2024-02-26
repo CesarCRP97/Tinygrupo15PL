@@ -37,6 +37,7 @@ PARSER_END(AnalizadorSintacticoTiny)
   TOKEN[IGNORE_CASE]: {<nl:"nl">}
   TOKEN[IGNORE_CASE]: {<type:"type">}
   TOKEN[IGNORE_CASE]: {<call:"call">}
+  TOKEN[IGNORE_CASE]: {<proc:"proc">}
   TOKEN:{<suma:"+">}
   TOKEN:{<resta:"-">}
   TOKEN:{<mult:"*">}
