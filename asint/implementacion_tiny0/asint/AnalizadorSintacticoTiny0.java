@@ -33,7 +33,27 @@ public class AnalizadorSintacticoTiny0 {
         esperados = EnumSet.noneOf(ClaseLexica.class);
         // Se lee el primer token adelantado
         sigToken();                      
+    }    
+    public AnalizadorSintacticoTiny0(Reader input, GestionErroresTiny0 errores) {
+        // se crea el gestor de errores
+        this.errores = errores;
+        // se crea el analizador léxico
+        try {
+            alex = new AnalizadorLexicoTiny0(input);
+        } catch (IOException ex) {
+            System.out.println("Error al leer el input con el Analizador lexico");
+        }
+        // se fija el gestor de errores en el analizador léxico
+        // (debe añadirse el método 'fijaGestionErrores' a
+        //  dicho analizador)
+        alex.fijaGestionErrores(errores);
+        // se crea el conjunto de clases léxicas esperadas
+        // (estará incializado a vacío)
+        esperados = EnumSet.noneOf(ClaseLexica.class);
+        // Se lee el primer token adelantado
+        sigToken();                      
     }
+ 
     public void analiza() {
         programa();
         empareja(ClaseLexica.EOF);
@@ -167,6 +187,7 @@ public class AnalizadorSintacticoTiny0 {
 			case NOIGUAL_COMP: 
                 OP1();
                 E2();
+                RE1();
                 break;
             default: 
                 esperados(ClaseLexica.IGUAL_COMP, ClaseLexica.MAYORQUE, ClaseLexica.MENORQUE, ClaseLexica.MAYORIGUAL, ClaseLexica.MENORIGUAL, ClaseLexica.NOIGUAL_COMP);
@@ -397,13 +418,16 @@ public class AnalizadorSintacticoTiny0 {
 
 
     private void empareja(ClaseLexica claseEsperada) {
-        if (anticipo.clase() == claseEsperada)
+        if (anticipo.clase() == claseEsperada) {
+            traza_emparejamiento(anticipo);
             sigToken();
-        else {
+        } else {
             esperados(claseEsperada);
             error();
         }
     }
+
+    protected void traza_emparejamiento(UnidadLexica anticipo) {}
 
     private void sigToken() {
         try {

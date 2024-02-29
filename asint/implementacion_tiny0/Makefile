@@ -1,6 +1,9 @@
 build: clean cleanalex alex
 	javac asint/Main.java
 
+domjudge: clean cleanalex alex
+	javac asint/* DomJudge.java
+
 zip: clean cleanalex alex
 	zip -r PLG15Tiny0.zip alex asint errors
 
@@ -14,3 +17,5 @@ clean:
 
 cleanalex:
 	rm -rf alex
+
+cleanall: clean cleanalex

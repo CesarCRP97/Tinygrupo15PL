@@ -65,7 +65,7 @@ PARSER_END(AnalizadorSintacticoTiny)
   TOKEN:{<arroba:"@">}
   TOKEN:{<litEntero:(["+","-"])?<parteEntera>>}
   TOKEN:{<litReal:<litEntero><segParteReal>>}
-  TOKEN:{<litCadena:"""(~[<EOF>])*""">}
+  TOKEN:{<litCadena: "\"" ( ~["\""] )* "\"">}
   TOKEN:{<iden:(<letra>|"_")(<caracter>)*>}
 
   void analiza()   : {} {programa() <EOF> }
