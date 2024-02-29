@@ -177,6 +177,7 @@ public class AnalizadorSintacticoTiny0 {
     private void E2() {
         E3();
         RE2();
+        RE21();
     }
 
     private void RE2() {
@@ -185,13 +186,20 @@ public class AnalizadorSintacticoTiny0 {
                 OP2_NOASOC();
                 E3();
                 break;
+            default:
+                esperados(ClaseLexica.MENOS);
+                break;
+        }
+    }
+    private void RE21(){
+        switch (anticipo.clase()) {
             case MAS:
                 OP2_IZQ();
                 E3();
-                RE2();
+                RE21();
                 break;
             default:
-                esperados(ClaseLexica.MENOS, ClaseLexica.MAS);
+                esperados(ClaseLexica.MAS);
                 break;
         }
     }
