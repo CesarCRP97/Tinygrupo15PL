@@ -187,6 +187,7 @@ public class AnalizadorSintacticoTiny0 {
 			case NOIGUAL_COMP: 
                 OP1();
                 E2();
+                RE1();
                 break;
             default: 
                 esperados(ClaseLexica.IGUAL_COMP, ClaseLexica.MAYORQUE, ClaseLexica.MENORQUE, ClaseLexica.MAYORIGUAL, ClaseLexica.MENORIGUAL, ClaseLexica.NOIGUAL_COMP);
