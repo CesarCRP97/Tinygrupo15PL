@@ -123,8 +123,9 @@ PARSER_END(AnalizadorSintacticoTiny)
   void re0() : {} { op0() e0() | {}}
   void e1() : {} { e2() re1() }
   void re1() : {} { op1() e2() | {}}
-  void e2() : {} { e3() re2() }
-  void re2() : {} { op2_noasoc() e3() | op2_izq() e3() re2() | {}}
+  void e2() : {} { e3() re2() re21() }
+  void re2() : {} { op2_noasoc() e3() | {}}
+  void re21() : {} { op2_izq() e3() re21() | {}}
   void e3() : {} { e4() re3() }
   void re3() : {} { op3_der() e3() | op3_noasoc() e4() | {}}
   void e4() : {} { e5() re4() }
