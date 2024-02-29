@@ -17,3 +17,5 @@ clean:
 
 cleanalex:
 	rm -rf alex
+
+cleanall: clean cleanalex
