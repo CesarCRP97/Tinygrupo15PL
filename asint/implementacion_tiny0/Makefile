@@ -5,7 +5,7 @@ domjudge: clean cleanalex alex
 	javac asint/* DomJudge.java
 
 zip: clean cleanalex alex
-	zip -r PLG15Tiny0.zip alex asint errors
+	zip -r PLG15Tiny0.zip alex asint errors DomJudge.java
 
 alex: cleanalex
 	cp -r ../../alex/implementacion_manual/alex .
