@@ -17,7 +17,7 @@ public enum ClaseLexica {
 	MENOS("-"),
 	POR("*"),
 	DIV("/"),
-	EOF("EOF"),
+	EOF("<EOF>"),
     MENORQUE("<"),
 	MAYORQUE(">"),
 	MENORIGUAL("<="),
