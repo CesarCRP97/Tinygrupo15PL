@@ -1,6 +1,5 @@
 package errors;
 
-import alex.UnidadLexica;
 import alex.ClaseLexica;
 import java.util.Set;
 
@@ -22,8 +21,4 @@ public class GestionErroresTiny0 {
      e.printStackTrace();
      System.exit(1);
    }
-
-   public void errorSintactico(UnidadLexica unidadLexica) {
-    throw new ErrorSintactico("ERROR fila "+unidadLexica.fila()+", columna "+unidadLexica.columna()+" : Elemento inexperado "+unidadLexica.lexema());
-  }
 }
