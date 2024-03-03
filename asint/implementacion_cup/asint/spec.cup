@@ -1,22 +1,21 @@
 package asint;
 
 import java_cup.runtime.*;
-import alex.AnalizadorLexicoEval;
 import alex.UnidadLexica;
-import errors.GestionErroresEval;
-
+import errors.GestionErroresTiny;
+import alex.AnalizadorLexicoTiny;
 scan with {: 
   return getScanner().next_token(); 
 :};
 parser code {: 
-   private GestionErroresEval errores;
+   private GestionErroresTiny errores;
    public void syntax_error(Symbol unidadLexica) {
      errores.errorSintactico((UnidadLexica)unidadLexica);
    }
 :};
 init with {: 
-   errores = new GestionErroresEval();
-   AnalizadorLexicoEval alex = (AnalizadorLexicoEval)getScanner();
+   errores = new GestionErroresTiny();
+   AnalizadorLexicoTiny alex = (AnalizadorLexicoTiny)getScanner();
    alex.fijaGestionErrores(errores);
 :};
 
@@ -29,13 +28,13 @@ terminal	BOOL, REAL, INT, STRING, AND, OR, NOT, NULL,
 			NOIGUAL_COMP, PAR_A, PAR_C, PUNTYCOMA, IGUAL_OP,
 			CORCH_A, CORCH_C, PUNTO, CAPIROTE, COMA, LLAVE_A,
 			LLAVE_C, DOBLEAMPERSAND, AMPERSAND, ARROBA, LIT_REAL,
-			LIT_CADENA, IDEN;
+			LIT_CADENA, LIT_ENTERO,IDEN;
 
-non terminal	programa, bloque, declaraciones_opt,
+non terminal	analiza,programa, bloque, declaraciones_opt,
 				declaraciones, lista_declaraciones, rlista_decs,
-				declaracion, dec_variable, dect_tipo, dec_procedimiento
-				parametros_form_list_op, parametros_form_list, rparametros_form_list,
-				parametro_form, ampersand_op, tipo, tipo0, RTipo0,
+				declaracion, dec_variable, dec_tipo, dec_procedimiento,
+				parametros_form_list_opt, parametros_form_list, rparametros_form_list,
+				parametros_form, ampersand_opt, tipo, tipo0, RTipo0,
 				tipo1, tipo2, campos, campos_list, rcampos_list,
 				campo, instrucciones_opt, instrucciones, rinstrucciones,
 				instruccion, instr_eval, instr_ifelse, else_opt, instr_while,
@@ -43,9 +42,9 @@ non terminal	programa, bloque, declaraciones_opt,
 				instr_compuesta, instr_invocacion, parametros_reales, parametros_reales_list_opt,
 				parametros_reales_list, rparametros_reales_list, expresion, e0,
 				re0, e1, re1, e2, re2, re21, e3, re3, e4, re4, e5, e6, re6, e7, op0,
-				op1, op2_izq, op2_noasoc, op4, op5, op6, op_indexacion, op_acceso_registro,
+				op1, op2_izq, op2_noasoc,op3_der,op3_noasoc,op4, op5, op6, op_indexacion, op_acceso_registro,
 				op_indireccion;
-	analiza ::= programa EOF;
+analiza ::= programa ;
 
 programa ::= bloque;
 
@@ -65,17 +64,19 @@ dec_variable ::= tipo IDEN;
 
 dec_tipo ::= TYPE tipo IDEN;
 
-dec_procedimiento ::= PROC IDEN parametros_form bloque;
-
-parametros_form ::= PAR_A parametros_form_list_opt PAR_C;
 
 parametros_form_list_opt ::= parametros_form_list | ;
+parametros_form_list ::= parametros_form rparametros_form_list;
+parametros_form ::= PAR_A parametros_form_list_opt PAR_C;
 
-parametros_form_list ::= parametro_form rparametros_form_list;
 
-rparametros_form_list ::= COMA parametro_form rparametros_form_list | ;
+dec_procedimiento ::= PROC IDEN parametros_form bloque;
 
-parametro_form ::= tipo ampersand_opt IDEN;
+
+
+rparametros_form_list ::= COMA parametros_form rparametros_form_list | ;
+
+parametros_form ::= tipo ampersand_opt IDEN;
 
 ampersand_opt ::= AMPERSAND | ;
 
@@ -190,3 +191,4 @@ op_indexacion ::= CORCH_A e0 CORCH_C;
 op_acceso_registro ::= PUNTO IDEN;
 
 op_indireccion ::= CAPIROTE;
+
