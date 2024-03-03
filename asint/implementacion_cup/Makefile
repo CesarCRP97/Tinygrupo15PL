@@ -7,7 +7,7 @@ zip: clean cleanjflex cleancup
 jflex:
 	jflex alex/spec.jflex
 
-CUPFLAGS = -parser AnalizadorSintacticoEval -symbols ClaseLexica
+CUPFLAGS = -parser asint/AnalizadorSintacticoTiny -symbols alex/ClaseLexica
 
 cup:
 	cup ${CUPFLAGS} asint/spec.cup
@@ -22,6 +22,6 @@ cleanjflex:
 	rm -f alex/AnalizadorLexicoTiny.java
 
 cleancup:
-	rm -f asint/sintactico.java asint/sintacticoSym.java asint/sintactico.java~
+	rm -f asint/AnalizadorSintacticoTiny.java alex/ClaseLexica.java
 
 cleanall: clean cleanjflex cleancup
