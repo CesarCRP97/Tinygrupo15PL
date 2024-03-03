@@ -1,6 +1,6 @@
 package alex;
 
-import alex.ClaseLexica;
+import asint.ClaseLexica;
 
 public class ALexOperations {
     public static class ECaracterInesperado extends RuntimeException {

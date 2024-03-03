@@ -1,5 +1,5 @@
 package alex;
-import alex.ClaseLexica;
+import asint.ClaseLexica;
 import java_cup.runtime.Symbol;
 
 public class UnidadLexica extends Symbol {
