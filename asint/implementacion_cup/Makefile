@@ -2,7 +2,7 @@ build: clean cleanjflex jflex cleancup cup
 	javac -cp java-cup-11b-20160615-3.jar alex/*.java asint/*.java errors/*.java
 
 zip: clean cleanjflex cleancup
-	zip -r PLG15Tiny0.zip asint/ alex/ errors/ Main.java
+	zip -r PLG15TinyCUP.zip asint/ alex/ errors/ ruta_cup ruta_jflex cup_options java-cup-11b-20160615-3.jar
 
 jflex:
 	jflex alex/spec.jflex
