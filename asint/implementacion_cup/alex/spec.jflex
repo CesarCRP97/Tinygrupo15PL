@@ -91,7 +91,7 @@ caracter = {letra}|{digito}|_
 iden = ({letra}|_){caracter}*
 litCadena = \".*\"
 espacio = [ \b\r\t\n]
-comentario = ##([^\n])*
+comentario = ##([^\n]*)?\n
 
 %%
 {espacio} {}
