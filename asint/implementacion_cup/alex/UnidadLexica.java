@@ -68,7 +68,7 @@ public class UnidadLexica extends Symbol {
        case ClaseLexica.IDEN: return lexema;
        case ClaseLexica.LIT_CADENA: return lexema;
        case ClaseLexica.LIT_REAL: return lexema ;
-       case ClaseLexica.EOF: return "EOF";
+       case ClaseLexica.EOF: return "<EOF>";
        
          default: return "?";               
        }
