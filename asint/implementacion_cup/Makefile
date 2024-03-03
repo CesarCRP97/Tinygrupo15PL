@@ -1,5 +1,5 @@
 build: clean cleanjflex jflex cleancup cup
-	javac Main.java
+	javac asint/Main.java
 
 zip: clean cleanjflex cleancup
 	zip -r PLG15Tiny0.zip asint/ alex/ errors/ Main.java
