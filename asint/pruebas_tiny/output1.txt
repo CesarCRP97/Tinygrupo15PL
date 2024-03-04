@@ -252,8 +252,7 @@ x
 }
 ;
 @
-"una
-cadena!!!"
+"una cadena!!!"
 +
 <null>
 ;
