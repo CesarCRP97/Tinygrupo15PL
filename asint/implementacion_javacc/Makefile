@@ -11,13 +11,13 @@ zip: clean cleanjavacc
 	zip -r PLG15TinyJavacc.zip asint ruta_javacc DomJudge.java
 
 javacc:
-	java -cp javacc.jar javacc -output_directory=asint/ asint/Tiny.jj
+	java -cp javacc.jar javacc -output_directory=asint/ asint/spec.jj
 
 javacc-debug:
-	java -cp javacc.jar javacc -debug_parser -output_directory=asint/ asint/Tiny.jj
+	java -cp javacc.jar javacc -debug_parser -output_directory=asint/ asint/spec.jj
 
 clean:
-	rm -f *.class *~ PLG15Tiny0.zip
+	rm -f *.class *~ PLG15TinyJavacc.zip
 	rm -f asint/*.class asint/*~
 
 cleanjavacc:
