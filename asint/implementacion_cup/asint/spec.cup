@@ -38,7 +38,7 @@ non terminal programa, bloque, declaraciones_opt, instrucciones_opt,
              tipo2, campos, campos_lista, campo, instrucciones, instruccion, instr_eval, instr_if,
              instr_if_else, instr_while, instr_read, instr_write,
              instr_nl, instr_reserva, instr_liberacion, instr_invocacion,
-             instr_compuesta, expresion, expresion_basica, expresion_compuesta,
+             instr_compuesta, expresion, expresion_basica, 
              E0, E1, E2, E3, E4, E5, E6, E7, op0, op1, op2_izq,
              op2_noasoc, op3_der, op3_noasoc, op4, op5, op6,
              op_indexacion, op_acceso_registro, op_indireccion, parametros_reales, parametros_reales_lista_opt, parametros_reales_lista;
@@ -119,11 +119,9 @@ parametros_reales_lista ::= expresion | parametros_reales_lista COMA expresion;
 
 instr_compuesta ::= bloque;
 
-expresion ::= expresion_basica | expresion_compuesta;
-
 expresion_basica ::= LIT_ENTERO | LIT_REAL | LIT_CADENA | IDEN | NULL | TRUE | FALSE;
 
-expresion_compuesta ::= E0;
+expresion ::= E0;
 
 E0 ::= E1 | E1 op0 E0;
 
@@ -131,7 +129,7 @@ E1 ::= E2 | E1 op1 E2;
 
 E2 ::= E3 | E2 op2_izq E3 | E2 op2_noasoc E3;
 
-E3 ::= E4 | E3 op3_der E3 | E3 op3_noasoc E4;
+E3 ::= E4 | E4 op3_der E3 | E4 op3_noasoc E4;
 
 E4 ::= E5 | E4 op4 E5;
 
