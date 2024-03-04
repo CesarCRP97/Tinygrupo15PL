@@ -8,7 +8,7 @@ public class AnalizadorSintacticoTinyDJ extends AnalizadorSintacticoTiny {
     }
 
     @Override
-    private void trace_token(Token t, String where) {
+    protected void trace_token(Token t, String where) {
         if((t.kind > 11 && t.kind < 33) || t.kind == 0) {
             System.out.println("<" + t.image + ">");
         }
