@@ -11,10 +11,10 @@ zip: clean cleanjavacc
 	zip -r PLG15Tiny0.zip asint
 
 javacc:
-	javacc -output_directory=asint/ asint/Tiny.jj
+	java -cp javacc.jar javacc -output_directory=asint/ asint/Tiny.jj
 
 javacc-debug:
-	javacc -debug_parser -output_directory=asint/ asint/Tiny.jj
+	java -cp javacc.jar javacc -debug_parser -output_directory=asint/ asint/Tiny.jj
 
 clean:
 	rm -f *.class *~ PLG15Tiny0.zip
