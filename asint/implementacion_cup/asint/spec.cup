@@ -39,9 +39,9 @@ non terminal programa, bloque, declaraciones_opt, instrucciones_opt,
              instr_if_else, instr_while, instr_read, instr_write,
              instr_nl, instr_reserva, instr_liberacion, instr_invocacion,
              instr_compuesta, expresion, expresion_basica, expresion_compuesta,
-             e0, e1, e2, e3, e4, e5, e6, e7, op0, op1, op2_izq,
+             E0, E1, E2, E3, E4, E5, E6, E7, op0, op1, op2_izq,
              op2_noasoc, op3_der, op3_noasoc, op4, op5, op6,
-             op_indexacion, op_acceso_registro, op_indireccion;
+             op_indexacion, op_acceso_registro, op_indireccion, parametros_reales, parametros_reales_lista_opt, parametros_reales_lista;
 
 programa ::= bloque;
 
