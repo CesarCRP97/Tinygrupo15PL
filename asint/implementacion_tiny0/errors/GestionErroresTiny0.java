@@ -5,6 +5,18 @@ import alex.ClaseLexica;
 import java.util.Set;
 
 public class GestionErroresTiny0 {
+
+    public static class ErrorLexico extends RuntimeException {
+        public ErrorLexico(String msg) {
+            super(msg);
+        }
+    }
+
+    public static class ErrorSintactico extends RuntimeException {
+        public ErrorSintactico(String msg) {
+            super(msg);
+        }
+    }
    public void errorLexico(int fila, int col, String lexema) {
      System.out.println("ERROR fila "+fila+","+col+": Caracter inexperado: "+lexema); 
      System.exit(1);
