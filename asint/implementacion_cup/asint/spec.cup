@@ -35,8 +35,7 @@ non terminal programa, bloque, declaraciones_opt, instrucciones_opt,
              dec_variable, dec_tipo, dec_procedimiento,
              parametros_form, parametros_form_lista_opt, parametros_form_lista,
              parametro_form, ampersand_opt, tipo, tipo0, tipo1,
-             tipo2, campos, campos_lista, campo, tipo_puntero,
-             instrucciones, instruccion, instr_eval, instr_if,
+             tipo2, campos, campos_lista, campo, instrucciones, instruccion, instr_eval, instr_if,
              instr_if_else, instr_while, instr_read, instr_write,
              instr_nl, instr_reserva, instr_liberacion, instr_invocacion,
              instr_compuesta, expresion, expresion_basica, expresion_compuesta,
@@ -87,8 +86,6 @@ campos ::= LLAVE_A campos_lista LLAVE_C;
 campos_lista ::= campo | campos_lista COMA campo;
 
 campo ::= tipo IDEN;
-
-tipo_puntero ::= CAPIROTE tipo_basico;
 
 instrucciones ::= instruccion | instrucciones PUNTYCOMA instruccion;
 
