@@ -8,7 +8,7 @@ debug: clean cleanjavacc javacc-debug
 	javac asint/Main.java
 
 zip: clean cleanjavacc
-	zip -r PLG15Tiny0.zip asint
+	zip -r PLG15TinyJavacc.zip asint ruta_javacc DomJudge.java
 
 javacc:
 	java -cp javacc.jar javacc -output_directory=asint/ asint/Tiny.jj
