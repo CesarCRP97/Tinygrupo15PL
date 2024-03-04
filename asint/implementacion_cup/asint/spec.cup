@@ -30,21 +30,19 @@ terminal	BOOL, REAL, INT, STRING, AND, OR, NOT, NULL,
 			LLAVE_C, DOBLEAMPERSAND, AMPERSAND, ARROBA, LIT_REAL,
 			LIT_CADENA, LIT_ENTERO,IDEN;
 
-non terminal	analiza,programa, bloque, declaraciones_opt,
-				declaraciones, lista_declaraciones, rlista_decs,
-				declaracion, dec_variable, dec_tipo, dec_procedimiento,
-				parametros_form_list_opt, parametros_form_list, rparametros_form_list,
-				parametros_form, ampersand_opt, tipo, tipo0, RTipo0,
-				tipo1, tipo2, campos, campos_list, rcampos_list,
-				campo, instrucciones_opt, instrucciones, rinstrucciones,
-				instruccion, instr_eval, instr_ifelse, else_opt, instr_while,
-				instr_read, instr_write, instr_nl, instr_reserva, instr_liberacion,
-				instr_compuesta, instr_invocacion, parametros_reales, parametros_reales_list_opt,
-				parametros_reales_list, rparametros_reales_list, expresion, e0,
-				re0, e1, re1, e2, re2, re21, e3, re3, e4, re4, e5, e6, re6, e7, op0,
-				op1, op2_izq, op2_noasoc,op3_der,op3_noasoc,op4, op5, op6, op_indexacion, op_acceso_registro,
-				op_indireccion;
-analiza ::= programa ;
+non terminal programa, bloque, declaraciones_opt, instrucciones_opt,
+             declaraciones, lista_declaraciones, declaracion,
+             dec_variable, dec_tipo, dec_procedimiento,
+             parametros_form, parametros_form_lista_opt, parametros_form_lista,
+             parametro_form, ampersand_opt, tipo, tipo0, tipo1,
+             tipo2, campos, campos_lista, campo, tipo_puntero,
+             instrucciones, instruccion, instr_eval, instr_if,
+             instr_if_else, instr_while, instr_read, instr_write,
+             instr_nl, instr_reserva, instr_liberacion, instr_invocacion,
+             instr_compuesta, expresion, expresion_basica, expresion_compuesta,
+             e0, e1, e2, e3, e4, e5, e6, e7, op0, op1, op2_izq,
+             op2_noasoc, op3_der, op3_noasoc, op4, op5, op6,
+             op_indexacion, op_acceso_registro, op_indireccion;
 
 programa ::= bloque;
 
@@ -52,11 +50,11 @@ bloque ::= LLAVE_A declaraciones_opt instrucciones_opt LLAVE_C;
 
 declaraciones_opt ::= declaraciones | ;
 
+instrucciones_opt ::= instrucciones | ;
+
 declaraciones ::= lista_declaraciones DOBLEAMPERSAND;
 
-lista_declaraciones ::= declaracion rlista_decs;
-
-rlista_decs ::= PUNTYCOMA declaracion rlista_decs | ;
+lista_declaraciones ::= declaracion | lista_declaraciones PUNTYCOMA declaracion;
 
 declaracion ::= dec_variable | dec_tipo | dec_procedimiento;
 
@@ -64,53 +62,43 @@ dec_variable ::= tipo IDEN;
 
 dec_tipo ::= TYPE tipo IDEN;
 
-
-parametros_form_list_opt ::= parametros_form_list | ;
-parametros_form_list ::= parametros_form rparametros_form_list;
-parametros_form ::= PAR_A parametros_form_list_opt PAR_C;
-
-
 dec_procedimiento ::= PROC IDEN parametros_form bloque;
 
+parametros_form ::= PAR_A parametros_form_lista_opt PAR_C;
 
+parametros_form_lista_opt ::= parametros_form_lista | ;
 
-rparametros_form_list ::= COMA parametros_form rparametros_form_list | ;
+parametros_form_lista ::= parametro_form | parametros_form_lista COMA parametro_form;
 
-parametros_form ::= tipo ampersand_opt IDEN;
+parametro_form ::= tipo ampersand_opt IDEN;
 
 ampersand_opt ::= AMPERSAND | ;
 
 tipo ::= tipo0;
 
-tipo0 ::= tipo1 RTipo0;
-
-RTipo0 ::= CORCH_A LIT_ENTERO CORCH_C RTipo0 | ;
+tipo0 ::= tipo0 CORCH_A LIT_ENTERO CORCH_C | tipo1;
 
 tipo1 ::= tipo2 | CAPIROTE tipo1;
 
 tipo2 ::= INT | REAL | BOOL | STRING | STRUCT campos | IDEN;
 
-campos ::= LLAVE_A campos_list LLAVE_C;
+campos ::= LLAVE_A campos_lista LLAVE_C;
 
-campos_list ::= campo rcampos_list;
-
-rcampos_list ::= COMA campo rcampos_list | ;
+campos_lista ::= campo | campos_lista COMA campo;
 
 campo ::= tipo IDEN;
 
-instrucciones_opt ::= instrucciones | ;
+tipo_puntero ::= CAPIROTE tipo_basico;
 
-instrucciones ::= instruccion rinstrucciones;
+instrucciones ::= instruccion | instrucciones PUNTYCOMA instruccion;
 
-rinstrucciones ::= PUNTYCOMA instruccion rinstrucciones | ;
-
-instruccion ::= instr_eval | instr_ifelse | instr_while | instr_read | instr_write | instr_nl | instr_reserva | instr_liberacion | instr_invocacion | instr_compuesta;
+instruccion ::= instr_eval | instr_if | instr_if_else | instr_while | instr_read | instr_write | instr_nl | instr_reserva | instr_liberacion | instr_invocacion | instr_compuesta;
 
 instr_eval ::= ARROBA expresion;
 
-instr_ifelse ::= IF expresion bloque else_opt;
+instr_if ::= IF expresion bloque;
 
-else_opt ::= ELSE bloque | ;
+instr_if_else ::= IF expresion bloque ELSE bloque;
 
 instr_while ::= WHILE expresion bloque;
 
@@ -124,49 +112,37 @@ instr_reserva ::= NEW expresion;
 
 instr_liberacion ::= DELETE expresion;
 
-instr_compuesta ::= bloque;
-
 instr_invocacion ::= CALL IDEN parametros_reales;
 
-parametros_reales ::= PAR_A parametros_reales_list_opt PAR_C;
+parametros_reales ::= PAR_A parametros_reales_lista_opt PAR_C;
 
-parametros_reales_list_opt ::= parametros_reales_list | ;
+parametros_reales_lista_opt ::= parametros_reales_lista | ;
 
-parametros_reales_list ::= expresion rparametros_reales_list;
+parametros_reales_lista ::= expresion | parametros_reales_lista COMA expresion;
 
-rparametros_reales_list ::= COMA expresion rparametros_reales_list | ;
+instr_compuesta ::= bloque;
 
-expresion ::= e0;
+expresion ::= expresion_basica | expresion_compuesta;
 
-e0 ::= e1 re0;
+expresion_basica ::= LIT_ENTERO | LIT_REAL | LIT_CADENA | IDEN | NULL | TRUE | FALSE;
 
-re0 ::= op0 e0 | ;
+expresion_compuesta ::= E0;
 
-e1 ::= e2 re1;
+E0 ::= E1 | E1 op0 E0;
 
-re1 ::= op1 e2 re1 | ;
+E1 ::= E2 | E1 op1 E2;
 
-e2 ::= e3 re2 re21;
+E2 ::= E3 | E2 op2_izq E3 | E2 op2_noasoc E3;
 
-re2 ::= op2_noasoc e3 | ;
+E3 ::= E4 | E3 op3_der E3 | E3 op3_noasoc E4;
 
-re21 ::= op2_izq e3 re21 | ;
+E4 ::= E5 | E4 op4 E5;
 
-e3 ::= e4 re3;
+E5 ::= E6 | op5 E5;
 
-re3 ::= op3_der e3 | op3_noasoc e4 | ;
+E6 ::= E7 | E6 op6;
 
-e4 ::= e5 re4;
-
-re4 ::= op4 e5 re4 | ;
-
-e5 ::= e6 | op5 e5;
-
-e6 ::= e7 re6;
-
-re6 ::= op6 re6 | ;
-
-e7 ::= PAR_A e0 PAR_C | IDEN | LIT_ENTERO | LIT_REAL | LIT_CADENA | NULL | TRUE | FALSE;
+E7 ::= PAR_A E0 PAR_C | expresion_basica;
 
 op0 ::= IGUAL_OP;
 
@@ -186,9 +162,8 @@ op5 ::= RESTA | NOT;
 
 op6 ::= op_indexacion | op_acceso_registro | op_indireccion;
 
-op_indexacion ::= CORCH_A e0 CORCH_C;
+op_indexacion ::= CORCH_A expresion CORCH_C;
 
 op_acceso_registro ::= PUNTO IDEN;
 
 op_indireccion ::= CAPIROTE;
-
