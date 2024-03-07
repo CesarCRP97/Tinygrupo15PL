@@ -3,7 +3,7 @@ options  {
   DEBUG_PARSER=true;
 }  
 PARSER_BEGIN(AnalizadorSintacticoTiny)
-package asint;
+package implementacion_javacc.asint;
 
 public class AnalizadorSintacticoTiny {}
 PARSER_END(AnalizadorSintacticoTiny)

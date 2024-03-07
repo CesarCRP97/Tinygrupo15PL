@@ -1,4 +1,4 @@
-package asint;
+package implementacion_javacc.asint;
 import java.io.FileReader;
 public class Main{
    public static void main(String[] args) throws Exception {

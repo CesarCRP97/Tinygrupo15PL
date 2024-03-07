@@ -1,10 +1,12 @@
+package implementacion_javacc;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import asint.AnalizadorSintacticoTinyDJ;
-import asint.AnalizadorSintacticoTiny;
-import asint.TokenMgrError;
-import asint.ParseException;
+import implementacion_javacc.asint.AnalizadorSintacticoTinyDJ;
+import implementacion_javacc.asint.AnalizadorSintacticoTiny;
+import implementacion_javacc.asint.TokenMgrError;
+import implementacion_javacc.asint.ParseException;
 
 
 public class DomJudge {

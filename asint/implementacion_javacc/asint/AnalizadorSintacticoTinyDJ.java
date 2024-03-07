@@ -1,4 +1,4 @@
-package asint;
+package implementacion_javacc.asint;
 
 public class AnalizadorSintacticoTinyDJ extends AnalizadorSintacticoTiny {
 
