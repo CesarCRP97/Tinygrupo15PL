@@ -2,6 +2,8 @@ package alex;
 
 import asint.ClaseLexica;
 
+import errors.GestionErroresTiny.ErrorLexico;
+
 public class ALexOperations {
     public static class ECaracterInesperado extends RuntimeException {
       public ECaracterInesperado(String msg) {
@@ -223,6 +225,6 @@ public class ALexOperations {
    }
 
    public void error() {
-      throw new ECaracterInesperado("***"+alex.fila()+","+alex.columna()+": Caracter inexperado: "+alex.lexema());
+      throw new ErrorLexico("***"+alex.fila()+","+alex.columna()+": Caracter inexperado: "+alex.lexema());
    }
 }
