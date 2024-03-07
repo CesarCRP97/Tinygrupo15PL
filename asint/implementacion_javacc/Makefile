@@ -1,5 +1,5 @@
 build: clean cleanjavacc javacc
-	javac asint/Main.java
+	javac asint/*.java
 
 domjudge: clean cleanjavacc javacc 
 	javac asint/*.java DomJudge.java
