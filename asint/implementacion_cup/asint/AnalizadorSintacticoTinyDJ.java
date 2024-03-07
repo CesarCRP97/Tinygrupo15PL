@@ -1,4 +1,4 @@
-package asint;
+package implementacion_cup.asint;
 
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;

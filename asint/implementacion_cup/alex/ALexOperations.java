@@ -1,8 +1,8 @@
-package alex;
+package implementacion_cup.alex;
 
-import asint.ClaseLexica;
+import implementacion_cup.asint.ClaseLexica;
 
-import errors.GestionErroresTiny.ErrorLexico;
+import implementacion_cup.errors.GestionErroresTiny.ErrorLexico;
 
 public class ALexOperations {
     public static class ECaracterInesperado extends RuntimeException {

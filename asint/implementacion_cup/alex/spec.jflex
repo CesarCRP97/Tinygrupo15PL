@@ -1,5 +1,5 @@
-package alex;
-import errors.GestionErroresTiny;
+package implementacion_cup.alex;
+import implementacion_cup.errors.GestionErroresTiny;
 %%
 %cup
 %line

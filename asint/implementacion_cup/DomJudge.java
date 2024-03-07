@@ -1,9 +1,10 @@
+package implementacion_cup;
 
-import alex.AnalizadorLexicoTiny;
-import asint.AnalizadorSintacticoTiny;
-import asint.AnalizadorSintacticoTinyDJ;
-import errors.GestionErroresTiny.ErrorLexico;
-import errors.GestionErroresTiny.ErrorSintactico;
+import implementacion_cup.alex.AnalizadorLexicoTiny;
+import implementacion_cup.asint.AnalizadorSintacticoTiny;
+import implementacion_cup.asint.AnalizadorSintacticoTinyDJ;
+import implementacion_cup.errors.GestionErroresTiny.ErrorLexico;
+import implementacion_cup.errors.GestionErroresTiny.ErrorSintactico;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
