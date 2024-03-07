@@ -15,211 +15,211 @@ public class ALexOperations {
    }
 
    public UnidadLexica unidadInt() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.INT,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.INT,"int");
    }
 
    public UnidadLexica unidadReal() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.REAL,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.REAL,"real");
    }
 
    public UnidadLexica unidadBool() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.BOOL,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.BOOL,"bool");
    }
 
    public UnidadLexica unidadString() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.STRING,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.STRING,"string");
    }
 
    public UnidadLexica unidadAnd() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.AND,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.AND,"and");
    }
 
    public UnidadLexica unidadOr() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.OR,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.OR,"or");
    }
 
    public UnidadLexica unidadNot() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.NOT,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.NOT,"not");
    }
 
    public UnidadLexica unidadNull() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.NULL,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.NULL,"null");
    }
 
    public UnidadLexica unidadTrue() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.TRUE,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.TRUE,"true");
    }
 
    public UnidadLexica unidadFalse() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.FALSE,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.FALSE,"false");
    }
 
    public UnidadLexica unidadProc() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.PROC,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.PROC,"proc");
    }
 
    public UnidadLexica unidadIf() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.IF,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.IF,"if");
    }
 
    public UnidadLexica unidadElse() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.ELSE,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.ELSE,"else");
    }
 
    public UnidadLexica unidadWhile() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.WHILE,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.WHILE,"while");
    }
 
    public UnidadLexica unidadStruct() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.STRUCT,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.STRUCT,"struct");
    }
 
    public UnidadLexica unidadNew() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.NEW,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.NEW,"new");
    }
 
    public UnidadLexica unidadDelete() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.DELETE,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.DELETE,"delete");
    }
 
    public UnidadLexica unidadRead() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.READ,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.READ,"read");
    }
 
    public UnidadLexica unidadWrite() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.WRITE,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.WRITE,"write");
    }
 
    public UnidadLexica unidadType() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.TYPE,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.TYPE,"type");
    }
 
    public UnidadLexica unidadCall() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.CALL,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.CALL,"call");
    }
 
    public UnidadLexica unidadSuma() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.SUMA,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.SUMA,"+");
    }
 
    public UnidadLexica unidadResta() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.RESTA,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.RESTA,"-");
    }
 
    public UnidadLexica unidadMult() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.MULT,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.MULT,"*");
    }
 
    public UnidadLexica unidadDiv() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.DIV,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.DIV,"/");
    }
 
    public UnidadLexica unidadPorcentaje() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.PORCENTAJE,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.PORCENTAJE,"%");
    }
 
    public UnidadLexica unidadMenorQue() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.MENORQUE,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.MENORQUE,"<");
    }
 
    public UnidadLexica unidadMayorQue() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.MAYORQUE,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.MAYORQUE,">");
    }
 
    public UnidadLexica unidadMenorIgual() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.MENORIGUAL,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.MENORIGUAL,"<=");
    }
 
    public UnidadLexica unidadMayorIgual() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.MAYORIGUAL,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.MAYORIGUAL,">=");
    }
 
    public UnidadLexica unidadIgualComp() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.IGUAL_COMP,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.IGUAL_COMP,"==");
    }
 
    public UnidadLexica unidadNoIgualComp() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.NOIGUAL_COMP,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.NOIGUAL_COMP,"!=");
    }
 
    public UnidadLexica unidadParA() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.PAR_A,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.PAR_A,"(");
    }
 
    public UnidadLexica unidadParC() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.PAR_C,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.PAR_C,")");
    }
 
    public UnidadLexica unidadPuntoYComa() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.PUNTYCOMA,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.PUNTYCOMA,";");
    }
 
    public UnidadLexica unidadIgualOp() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.IGUAL_OP,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.IGUAL_OP,"=");
    }
 
    public UnidadLexica unidadCorchA() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.CORCH_A,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.CORCH_A,"[");
    }
 
    public UnidadLexica unidadCorchC() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.CORCH_C,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.CORCH_C,"]");
    }
 
    public UnidadLexica unidadPunto() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.PUNTO,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.PUNTO,".");
    }
 
    public UnidadLexica unidadCapirote() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.CAPIROTE,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.CAPIROTE,"^");
    }
 
    public UnidadLexica unidadComa() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.COMA,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.COMA,",");
    }
 
    public UnidadLexica unidadLlaveA() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.LLAVE_A,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.LLAVE_A,"{");
    }
 
    public UnidadLexica unidadLlaveC() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.LLAVE_C,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.LLAVE_C,"}");
    }
 
    public UnidadLexica unidadAmpersand() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.AMPERSAND,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.AMPERSAND,"&");
    }
 
    public UnidadLexica unidadDobleAmpersand() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.DOBLEAMPERSAND,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.DOBLEAMPERSAND,"&&");
    }
 
    public UnidadLexica unidadArroba() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.ARROBA,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.ARROBA,"@");
    }
 
    public UnidadLexica unidadLitEntero() {
-      return new UnidadLexicaMultivaluada(alex.fila(), alex.columna(), ClaseLexica.LIT_ENTERO,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.LIT_ENTERO,alex.lexema());
    }
 
    public UnidadLexica unidadLitReal() {
-      return new UnidadLexicaMultivaluada(alex.fila(), alex.columna(), ClaseLexica.LIT_REAL,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.LIT_REAL,alex.lexema());
    }
 
    public UnidadLexica unidadIden() {
-      return new UnidadLexicaMultivaluada(alex.fila(), alex.columna(), ClaseLexica.IDEN,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.IDEN,alex.lexema());
    }
 
    public UnidadLexica unidadLitCadena() {
-      return new UnidadLexicaMultivaluada(alex.fila(), alex.columna(), ClaseLexica.LIT_CADENA,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.LIT_CADENA,alex.lexema());
    }
 
    public UnidadLexica unidadNl() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.NL,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.NL,"nl");
    }
 
    public UnidadLexica unidadEof() {
-      return new UnidadLexicaUnivaluada(alex.fila(), alex.columna(), ClaseLexica.EOF,alex.lexema());
+      return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.EOF,"EOF");
    }
 
    public void error() {
