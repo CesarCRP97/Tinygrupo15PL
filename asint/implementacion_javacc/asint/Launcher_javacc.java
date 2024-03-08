@@ -9,7 +9,6 @@ public class Launcher_javacc{
         System.out.println(e.getMessage());
         System.exit(1);
       }
-	  asint.analiza();
       System.out.println("OK");
    }
 
