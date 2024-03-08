@@ -11,7 +11,20 @@ public class Launcher_cup {
 		Reader input = new InputStreamReader(new FileInputStream(file));
 		AnalizadorLexicoTiny al=new AnalizadorLexicoTiny(input);
 		AnalizadorSintacticoTiny aS=new AnalizadorSintacticoTiny(al);
-		aS.parse();
+        try {
+            aS.parse();
+        } catch (Exception e) {
+            System.out.println("Error de sintaxis: " + e.getMessage());
+        }
+        System.out.println("OK");
+
 	}
 
+    public static void main(String[] args) throws Exception {
+        if (args.length == 0) {
+            System.out.println("Uso: java implementacion_cup.asint.Launcher_cup <fichero>");
+            return;
+        }
+        launch(args[0]);
+    }
 }  

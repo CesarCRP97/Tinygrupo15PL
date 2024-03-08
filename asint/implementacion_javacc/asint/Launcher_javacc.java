@@ -6,4 +6,12 @@ public class Launcher_javacc{
 	  asint.analiza();
       System.out.println("OK");
    }
+
+   public static void main(String[] args) throws Exception {
+      if (args.length != 1) {
+         System.err.println("Uso: java Launcher_javacc <fichero>");
+         System.exit(1);
+      }
+      launch(args[0]);
+   }
 }
