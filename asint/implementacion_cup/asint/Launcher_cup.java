@@ -14,7 +14,7 @@ public class Launcher_cup {
         try {
             aS.parse();
         } catch (Exception e) {
-            System.out.println("Error de sintaxis: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
         System.out.println("OK");
 
