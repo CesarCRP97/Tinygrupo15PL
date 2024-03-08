@@ -15,6 +15,7 @@ public class Launcher_cup {
             aS.parse();
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            System.exit(1);
         }
         System.out.println("OK");
 
