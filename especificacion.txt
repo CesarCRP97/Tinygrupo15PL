@@ -1,0 +1,424 @@
+imprime(prog(Decs, Instrs)):
+    print "{"
+    nl
+    imprime(Decs)
+    imprime(Instrs)
+    print "}"
+    nl
+
+imprime(si_decs(LDecs)):
+    imprime(LDecs)
+    print "&&"
+    nl
+
+imprime(no_decs()):
+    pass
+
+imprime(muchas_decs(LDecs, Dec)):
+    imprime(LDecs)
+    print ","
+    nl
+    imprime(Dec)
+
+imprime(una_dec(Dec)):
+    imprime(Dec)
+
+imprime(dec_variable(Tipo0, Ident)):
+    imprime(Tipo0)
+    print Ident
+    nl
+    print ";"
+    nl
+
+imprime(dec_tipo(Tipo0, Ident)):
+    print "<type>"
+    nl
+    imprime(Tipo0)
+    print Ident
+    nl
+    print ";"
+    nl
+
+imprime(dec_proc(Ident, Params_form, Prog)):
+    print "<proc>"
+    nl
+    print Ident
+    nl
+    imprime(Params_form)
+    imprime(Prog)
+    print ";"
+    nl
+
+imprime(si_param_form(LParams_form)):
+    print "("
+    nl
+    imprime(LParams_form)
+    print ")"
+    nl
+
+imprime(no_param_form()):
+    print "()"
+    nl
+
+imprime(muchos_param_form(LParams_form, Param_form)):
+    imprime(LParams_form)
+    print ","
+    nl
+    imprime(Param_form)
+
+imprime(un_param_form(Param_form)):
+    imprime(Param_form)
+
+imprime(param_form(Tipo0, Ident)):
+    imprime(Tipo0)
+    print Ident
+    nl
+
+imprime(param_form_ref(Tipo0, Ident)):
+    imprime(Tipo0)
+    print "&"
+    nl
+    print Ident
+    nl
+
+imprime(tipo_array(Tipo0, Lit_ent)):
+    imprime(Tipo0)
+    print "["
+    nl
+    imprime(Lit_ent)
+    print "]"
+    nl
+
+imprime(tipo01(Tipo1)):
+    imprime(Tipo0)
+
+imprime(tipo12(Tipo2)):
+    imprime(Tipo1)
+
+imprime(tipo_puntero(Tipo1)):
+    print "^"
+    nl
+    imprime(Tipo1)
+
+imprime(tipo_int()):
+    print "<int>"
+    nl
+
+imprime(tipo_real()):
+    print "<real>"
+    nl
+
+imprime(tipo_bool()):
+    print "<bool>"
+    nl
+
+imprime(tipo_string()):
+    print "<string>"
+    nl
+
+imprime(tipo_struct(LCampos)):
+    print "<struct>"
+    nl
+    print "{"
+    nl
+    imprime(LCampos)
+    print "}"
+    nl
+
+imprime(un_campo(Campo)):
+    imprime(Campo)
+
+imprime(muchos_campos(LCampos, Campo)):
+    imprime(LCampos)
+    print ","
+    nl
+    imprime(Campo)
+
+imprime(campo(Tipo0, Ident)):
+    imprime(Tipo0)
+    print Ident
+    nl
+
+imprime(si_instrs(LInstrs)):
+    imprime(LInstrs)
+
+imprime(no_instrs()):
+    pass
+
+imprime(muchas_instrs(LInstrs, Instr)):
+    imprime(LInstrs)
+    print ";"
+    nl
+    imprime(Instr)
+
+imprime(una_instr(Instr)):
+    imprime(Instr)
+
+imprime(instr_eval(E0)):
+    print "@"
+    nl
+    imprime(E0)
+
+imprime(instr_if(E0, Prog)):
+    print "<if>"
+    nl
+    imprime(E0)
+    imprime(Prog)
+
+imprime(instr_else(E0, Prog1, Prog2)):
+    print "<if>"
+    nl
+    imprime(E0)
+    imprime(Prog1)
+    print "<else>"
+    nl
+    imprime(Prog2)
+
+imprime(instr_while(E0, Prog)):
+    print "<while>"
+    nl
+    imprime(E0)
+    imprime(Prog)
+
+imprime(instr_read(E0)):
+    print "<read>"
+    nl
+    imprime(E0)
+
+imprime(instr_write(E0)):
+    print "<write>"
+    nl
+    imprime(E0) 
+
+imprime(instr_nl()):
+    print "<nl>"
+    nl
+
+imprime(instr_delete(E0)):
+    print "<delete>"
+    nl
+    imprime(E0)
+
+imprime(instr_new(E0)):
+    print "<new>"
+    nl
+    imprime(E0)
+
+imprime(instr_comp(Prog)):
+    imprime(Prog)
+
+imprime(instr_invoc(Ident, Param_reales)):
+    print "<call>"
+    nl
+    print Ident
+    nl
+    imprime(Param_reales)
+
+imprime(si_param_reales(LParam_reales)):
+    print "("
+    nl
+    imprime(LParam_reales)
+    print ")"  
+    nl
+
+imprime(no_param_reales()):
+    print "()" 
+    nl
+
+imprime(muchos_param_reales(LParam_reales, E0)):
+    imprime(LParam_reales)
+    print ","
+    nl
+    imprime(E0)
+
+imprime(un_param_real(E0)):
+    imprime(E0)
+
+imprimeExpBin(Opnd0, Op, Opnd1, np0, np1):
+    imprimeOpnd(Opnd0, np0)
+    print Op
+    nl
+    imprimeOpnd(Opnd1, np1)
+
+imprimeExpUn(Op, Opnd, np):
+    print Op
+    nl
+    imprimeOpnd(Opnd, np)
+
+imprimeOpnd(Opnd, MinPrior):
+    if prioridad(Opnd) < MinPrior:
+        print "("
+        nl
+        imprime(Opnd)
+        print ")"
+        nl
+    else:
+        imprime(Opnd)
+
+prioridad(expr_asign(_,_))):
+    return 0
+
+prioridad(op1(_,_)):
+    return 1
+
+prioridad(op2_mas(_,_)):
+    return 2
+
+prioridad(op2_menos(_,_)):
+    return 2
+
+prioridad(op3_and(_,_)):
+    return 3
+
+prioridad(op3_or(_,_)):
+    return 3
+
+prioridad(op4(_,_)):
+    return 4
+
+prioridad(op5(_,_)):
+    return 5
+
+prioridad(op6(_,_)): 
+    return 6
+
+imprime(e01(E1)):
+    imprime(E1)
+
+imprime(expr_asig(E1, E0)):
+    imprimeExpBin(E1, E0, "=", 1, 0)
+
+imprime(e12(E2)):
+    imprime(E2)
+
+imprime(op1(E1, E2)):
+    imprimeExpBin(E1, ">", E2, 1, 2)
+
+imprime(e23(E3)):
+    imprime(E3)
+
+imprime(op2_mas(E2, E3)):
+    imprimeExpBin(E2, "+", E3, 2, 3)
+
+imprime(op2_menos(E3, E3)):
+    imprimeExpBin(E3, "-", E3, 3, 3)
+    
+imprime(e34(E4)):
+    imprime(E4)
+
+imprime(op3_and(E4, E3)):
+    imprimeExpBin(E4, "and", E3, 4, 3)
+
+imprime(op3_or(E4, E4)):
+    imprimeExpBin(E4, "or", E4, 4, 4)
+
+imprime(e45(E5)):
+    imprime(E5)
+
+imprime(op4(E4, E5)):
+    imprimeExpBin(E4, "*", E5, 4, 5)
+
+imprime(e56(E6)):
+    imprime(E6)
+
+imprime(op5(Op5, E5)):
+    imprimeExpUn(Op5, E5, 5)
+
+imprime(e67(E7)):
+    imprime(E7)
+
+imprime(op6(E6, Op6)):
+    imprimeExpUn(Op6, E6, 6)
+
+imprime(e70(E7)):
+    imprime(E7)
+
+imprime(lit_ent(LitEnt)):
+    print LitEnt
+    nl
+
+imprime(lit_real(LitReal)):
+    print LitReal
+    nl
+
+imprime(lit_true()):
+    print "<true>"
+    nl
+
+imprime(lit_false()):
+    print "<false>"
+    nl
+
+imprime(lit_cadena(LitCadena)):
+    print LitCadena
+    nl
+
+imprime(expr_iden(Ident)):
+    print Ident
+    nl
+
+imprime(null()):
+    print "<null>"
+    nl
+
+imprime(op1_igual_comp()):
+    print "=="
+    nl
+
+imprime(op1_noigual_comp()):
+    print "!="
+    nl
+
+imprime(op1_menor_comp()):
+    print "<"
+    nl
+
+imprime(op1_mayor_comp()):
+    print ">"
+    nl  
+
+imprime(op1_menor_igual_comp()):
+    print "<="
+    nl
+
+imprime(op1_mayor_igual_comp()):
+    print ">="
+    nl
+
+imprime(op4_mult()):
+    print "*"
+    nl
+
+imprime(op4_div()):
+    print "/"
+    nl
+
+imprime(op4_porc()):
+    print "%"
+    nl
+    
+imprime(op5_menos()):
+    print "-"
+    nl
+
+imprime(op5_not()):
+    print "<not>"
+    nl
+
+imprime(op6_index(E0)):
+    print "["
+    nl
+    imprime(E0)
+    print "]"
+    nl
+
+imprime(op6_access(Iden)):
+    print "."
+    nl
+    print Iden
+    nl
+
+imprime(op6_indir()):
+    print "^"
+    nl
+
