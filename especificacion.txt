@@ -250,16 +250,31 @@ imprimeOpnd(Opnd, MinPrior):
     else:
         imprime(Opnd)
 
-prioridad(expr_asign(_,_))):
+prioridad(asignacion(_,_))):
     return 0
 
-prioridad(op1(_,_)):
+prioridad(igual_comp(_,_))
     return 1
 
-prioridad(mas(_,_)):
+prioridad(dist_comp(_,_)):
+    return 1
+
+prioridad(mayorque(_,_)):
+    return 1
+
+prioridad(menorque(_,_)):
+    return 1
+
+prioridad(mayorigual(_,_)):
+    return 1
+
+prioridad(menorigual(_,_)):
+    return 1
+
+prioridad(suma(_,_)):
     return 2
 
-prioridad(menos(_,_)):
+prioridad(resta(_,_)):
     return 2
 
 prioridad(and(_,_)):
@@ -268,13 +283,28 @@ prioridad(and(_,_)):
 prioridad(or(_,_)):
     return 3
 
-prioridad(op4(_,_)):
+prioridad(mult(_,_)):
     return 4
 
-prioridad(op5(_,_)):
+prioridad(div(_,_)):
+    return 4
+
+prioridad(mod(_,_)):
+    return 4
+
+prioridad(menos_unario(_):
     return 5
 
-prioridad(op6(_,_)): 
+prioridad(not(_)):
+    return 5
+
+prioridad(index(_,_)):
+    return 6
+
+prioridad(acceso(_,_)):
+    return 6
+
+prioridad(indireccion(_)):
     return 6
 
 imprime(asignacion(Exp, Exp)):
@@ -333,7 +363,7 @@ imprime(index(Exp, Exp)):
     print "]"
     nl
 
-imprime(access(Exp, Iden)):
+imprime(acceso(Exp, Iden)):
     imprimeOpnd(Exp, 6)
     print "."
     nl
