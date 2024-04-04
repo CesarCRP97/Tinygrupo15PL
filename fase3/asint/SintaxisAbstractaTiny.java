@@ -991,10 +991,16 @@ public class SintaxisAbstractaTiny {
         } 
     }
 
-    public static class Indexacion extends ExpBin {
+    public static class Indexacion extends Exp {
+        private Exp opnd0;
+        private Exp opnd1;
         public Indexacion(Exp opnd0, Exp opnd1) {
-            super(opnd0,opnd1);
+            super();
+            this.opnd0 = opnd0;
+            this.opnd1 = opnd1;
         }
+        public Exp opnd0() {return opnd0;}
+        public Exp opnd1() {return opnd1;}
         public String toString() {
             return "indexacion("+opnd0+","+opnd1+")";
         } 
