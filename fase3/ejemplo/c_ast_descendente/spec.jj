@@ -1,0 +1,137 @@
+options  {
+  STATIC=false;
+  DEBUG_PARSER=true;
+}  
+PARSER_BEGIN(ConstructorASTsEval)
+package c_ast_descendente;
+import asint.ClaseSemanticaEval;
+import asint.SintaxisAbstractaEval.Exp;
+import asint.SintaxisAbstractaEval.Decs;
+import asint.SintaxisAbstractaEval.LDecs;
+import asint.SintaxisAbstractaEval.Dec;
+import asint.SintaxisAbstractaEval.Prog;
+import c_ast_ascendente.UnidadLexica.StringLocalizado;
+
+public class ConstructorASTsEval {
+   private ClaseSemanticaEval sem = new ClaseSemanticaEval();   
+}
+PARSER_END(ConstructorASTsEval)
+
+  TOKEN:{<#letra:["a"-"z","A"-"Z"]>}
+  TOKEN:{<#digitoPositivo:["1"-"9"]>}
+  TOKEN:{<#digito:<digitoPositivo>|"0">} 
+  TOKEN:{<#parteEntera:<digitoPositivo> (<digito>)* |"0">} 
+  TOKEN:{<#parteDecimal: (<digito>)* <digitoPositivo> | "0">}
+  SKIP:{<["\t"," ","\r","\b","\n"]>}  
+  SKIP:{<"#"(~["\n"])*>}  
+  TOKEN: {<donde:"donde">}
+  TOKEN: {<evalua:"evalua">}
+  TOKEN:{<iden:<letra>(<letra>|<digito>)*>}
+  TOKEN:{<lit_ent:(["+","-"])?<parteEntera>>}
+  TOKEN:{<lit_real:(["+","-"])?<parteEntera>"."<parteDecimal>>  }
+  
+  Prog analiza()   : 
+      {Prog prog;} 
+      {
+         prog = programa() <EOF> 
+            {return prog;} 
+      }
+  Prog programa()  : 
+     {Exp exp; Decs decs;} 
+     {
+         exp = expresion() decs = declaraciones() 
+           {return sem.prog(exp,decs);}
+     }
+  Exp expresion() : 
+      {Exp exp;} 
+      {
+         <evalua> exp =e0() 
+           {return exp;}
+      }
+  Decs declaraciones() : 
+      {LDecs decs;} 
+      {
+        <donde> decs = lista_declaraciones() 
+           {return sem.si_decs(decs);} 
+        | 
+           {return sem.no_decs();}
+      }
+  LDecs lista_declaraciones() : 
+       {LDecs decs; Dec dec;} 
+       {
+          dec = declaracion() decs = rlista_decs(sem.una_dec(dec)) 
+           {return decs;}
+       }
+  LDecs rlista_decs(LDecs decsh) : 
+       {LDecs decs; Dec dec;} 
+       {
+         "," dec = declaracion() decs = rlista_decs(sem.muchas_decs(decsh,dec))  
+           {return decs;}
+         | 
+           {return decsh;}
+       }
+  Dec declaracion() : 
+       {Token id; Exp exp;} 
+       {
+         id = <iden> "=" exp = e0() 
+          {return (Dec)sem.dec(id.image,exp).ponFila(id.beginLine).ponCol(id.beginColumn);}
+       }
+  Exp e0() : 
+        {Exp e1,e2;} 
+        {
+          e1 = e1() e2 = re0(e1) 
+            {return e2;}
+        }
+  Exp re0(Exp eh) : 
+        {String op; Exp e1,e2;} 
+        {
+          op = op0() e1 = e1() e2 = re0(sem.mkop(op,eh,e1))
+             {return e2;} 
+        | 
+             {return eh;}
+        }
+  Exp e1() : 
+        {Exp e1,e2;} 
+        {
+          e1 = e2() e2 = re1(e1) 
+             {return e2;}
+        }
+  Exp re1(Exp eh) : 
+        {String op; Exp e1,e2;} 
+        {
+          op = op1() e1 = e2() e2 = re1(sem.mkop(op,eh,e1))
+              {return e2;} 
+        | 
+              {return eh;}
+        }
+  Exp e2() : 
+       {Token t; Exp e;} 
+       {
+        t = <iden> 
+          {return (Exp)sem.iden(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);} 
+        |
+        t = <lit_ent> 
+          {return (Exp)sem.lit_ent(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);} 
+        |  
+        t = <lit_real> 
+          {return (Exp)sem.lit_real(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);} 
+        | 
+        "(" e =e0() ")" 
+          {return e;}
+       }
+  String op0()  : 
+       {} 
+       {"+" 
+         {return "+";} 
+        |
+        "-" 
+         {return "-";}
+       }
+  String op1()  :       
+       {} 
+       {"*" 
+          {return "*";} 
+        |
+        "/" 
+          {return "/";}
+       }
