@@ -19,6 +19,9 @@ cleanjavacc:
 	rm -f c_ast_descendente/ParseException.java
 	rm -f c_ast_descendente/Token.java
 	rm -f c_ast_descendente/SimpleCharStream.java
+	rm -f c_ast_descendente/ConstructorASTsTiny.java
+	rm -f c_ast_descendente/ConstructorASTsTinyConstants.java
+	rm -f c_ast_descendente/ConstructorASTsTinyTokenManager.java
 
 build: clean jflex cup javacc
 	javac -cp java-cup-11b-20160615-3.jar: asint/*.java c_ast_ascendente/*.java c_ast_descendente/*.java evaluador/*.java
