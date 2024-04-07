@@ -4,7 +4,7 @@ package asint;
 
 public class SintaxisAbstractaTiny {
 
-    public static abstract class Nodo  {
+    public static abstract class Nodo {
        public Nodo() {
 		   fila=col=-1;
        }   
@@ -25,6 +25,7 @@ public class SintaxisAbstractaTiny {
 		  return col; 
 	   }
     }
+
      public static class Prog extends Nodo {
         private Bloque bloque;
 
@@ -118,15 +119,16 @@ public class SintaxisAbstractaTiny {
         } 
     }
 
-    public abstract class Dec extends Nodo {
+    public static abstract class Dec extends Nodo {
         public Dec() {
-            super()
+            super();
         }
         public Tipo tipo() {throw new UnsupportedOperationException();}
         public String iden() {throw new UnsupportedOperationException();}
         public Bloque bloque() {throw new UnsupportedOperationException();}
         public Params_form params_form() {throw new UnsupportedOperationException();}
     }
+
     public static class Dec_variable extends Dec {
         private Tipo tipo;
         private String id;
@@ -182,7 +184,7 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public abstract class Params_form extends Nodo {
+    public static abstract class Params_form extends Nodo {
         public Params_form() {
             super();
         }
@@ -215,7 +217,7 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public abstract class LParams_form extends Nodo {
+    public static abstract class LParams_form extends Nodo {
         public LParams_form() {
             super();
         }
@@ -257,7 +259,7 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public abstract class Param_form extends Nodo {
+    public static abstract class Param_form extends Nodo {
         public Param_form() {
             super();
         }
@@ -302,7 +304,7 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public abstract class Tipo extends Nodo {
+    public static abstract class Tipo extends Nodo {
         public Tipo() {
             super();
         }
@@ -416,7 +418,7 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public abstract class LCampos extends Nodo {
+    public static abstract class LCampos extends Nodo {
         public LCampos() {
             super();
         }
@@ -476,7 +478,7 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public abstract class Instrs extends Nodo {
+    public static abstract class Instrs extends Nodo {
         public Instrs() {
             super();
         }
@@ -509,7 +511,7 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public abstract class LInstrs extends Nodo {
+    public static abstract class LInstrs extends Nodo {
         public LInstrs() {
             super();
         }
@@ -551,7 +553,7 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public abstract class Instr extends Nodo {
+    public static abstract class Instr extends Nodo {
         public Instr() {
             super();
         }
@@ -666,7 +668,7 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public statin class NL extends Instr {
+    public static class NL extends Instr {
         public NL() {
             super();
         }
@@ -742,7 +744,7 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public abstract class Params_reales extends Nodo {
+    public static abstract class Params_reales extends Nodo {
         public Params_reales() {
             super();
         }
@@ -775,7 +777,7 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public abstract class LParams_reales extends Nodo {
+    public static abstract class LParams_reales extends Nodo {
         public LParams_reales() {
             super();
         }
@@ -1115,8 +1117,8 @@ public class SintaxisAbstractaTiny {
     public Prog prog(Bloque bloque) {
         return new Prog(bloque);
     }
-    public Bloque bloque(Exp exp, Decs decs) {
-        return new Bloque(exp,decs);
+    public Bloque bloque(Decs decs, Instrs insts) {
+        return new Bloque(decs,insts);
     }
     public Decs si_decs(LDecs decs) {
         return new Si_decs(decs);
