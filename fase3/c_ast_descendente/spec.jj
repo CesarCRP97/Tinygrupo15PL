@@ -87,43 +87,44 @@ PARSER_END(ConstructorASTsTiny)
         {return prog;}
     }
     Prog programa(): 
-    {Bloque bloque} 
+    {Bloque bloque;} 
     { bloque = bloque() 
         {return sem.prog(bloque);}
     }
     Bloque bloque(): 
     {Decs decs; Instrs insts;} 
-    { <llave_a> decs = declaraciones_opt() insts = instrucciones_opt() <llave_c> 
+    { <llave_a> decs = declaraciones() insts = instrucciones_opt() <llave_c> 
         {return sem.bloque(decs, insts);}
     }
     Decs declaraciones(): 
-    {LDecs decs} 
-    { decs = declaraciones() 
+    {LDecs decs;} 
+    { decs = lista_declaraciones() 
         {return sem.si_decs(decs);} |
         {return sem.no_decs();}
     }
     LDecs lista_declaraciones(): 
-    {LDecs decs; Dec dec} 
+    {LDecs decs; Dec dec;} 
     {dec = declaracion() decs = rlista_decs(sem.una_dec(dec)) <dobleampersand>
         {return decs;}
     }
     LDecs rlista_decs(LDecs decsh):
     {LDecs decs; Dec dec;} 
     { <puntoycoma> dec = declaracion() decs = rlista_decs(sem.muchas_decs(decsh, dec)) 
-        {return decs}
+        {return decs;}
     | 
         {return decsh;}
     } 
     Dec declaracion(): 
     {Dec dec;} 
-    { dec = dec_variable() {return dec}
+    { dec = dec_variable() {return dec;}
         | 
-        dec = dec_tipo() {return dec}
+        dec = dec_tipo() {return dec;}
         | 
-        dec = dec_procedimiento() {return dec}
+        dec = dec_procedimiento() {return dec;}
         }
     Dec dec_variable(): 
-    {Tipo tipo; Token id; } {Tipo = tipo() id = <iden> 
+    {Tipo tipo; Token id;} 
+    {Tipo = tipo() id = <iden> 
         {return (Dec)sem.dec_variable(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
     Dec dec_tipo(): 
@@ -146,25 +147,28 @@ PARSER_END(ConstructorASTsTiny)
     {Param_form param_form; LParams_form lparams_form;} 
     { param_form = parametro_form() lparams_form = rparametros_form_list(sem.un_param_form(param_form))
         {return lparams_form;}
+    }
     LParams_form rparametros_form_list(LParams_form lparams_formh): 
-    {LParams_form lparams_form; Param_form param_form} {<coma> param_form = parametro_form() lparams_form = rparametros_form_list(sem.muchos_params_form(lparams_formh, param_form)) 
-    {return lparams_form} 
-    | 
-    {return lparams_formh;}
+    {LParams_form lparams_form; Param_form param_form;} {<coma> param_form = parametro_form() lparams_form = rparametros_form_list(sem.muchos_params_form(lparams_formh, param_form)) 
+        {return lparams_form;} 
+        | 
+        {return lparams_formh;}
     }
     Param_form parametro_form(): 
     {Tipo tipo; Token id;} 
-    {tipo = tipo() id = <iden>
+    {tipo = tipo() ampersand_opt() id = <iden>
         {return (Param_form)sem.param_form_normal(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
-        |
-        tipo = tipo() <ampersand> id = <iden>
-        {return (Param_form)sem.param_form_ref(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
+
+    void ampersand_opt(): 
+    {} 
+    { <ampersand> }
   
     Tipo tipo(): 
     {Tipo tipo;} 
     { tipo = tipo0() 
         {return tipo;}
+    }
     Tipo tipo0(): 
     {Tipo tipo1, tipo2;} 
     { tipo1 = tipo1() tipo2 = RTipo0(tipo1) 
@@ -182,16 +186,16 @@ PARSER_END(ConstructorASTsTiny)
         {return tipo;}
         | 
         <capirote> tipo = tipo1()
-        {return sem.tipo_puntero(tipo);
+        {return sem.tipo_puntero(tipo);}
     }
     Tipo tipo2(): 
     {Tipo tipo; LCampos lcampos; Token id;} 
-    { <INT> {return tipo_int()}
-    | <real> {return tipo_real()}
-    | <bool> {return tipo_bool()}
-    | <string> {return tipo_string()}
-    | <struct> lcampos = campos() {return tipo_struct(lcampos)}
-    | id = <iden> {return (Tipo)tipo_id(id.image).ponFila(id.beginLine).ponCol(id.beginColumn)}
+    { <INT> {return tipo_int();}
+    | <real> {return tipo_real();}
+    | <bool> {return tipo_bool();}
+    | <string> {return tipo_string();}
+    | <struct> lcampos = campos() {return tipo_struct(lcampos);}
+    | id = <iden> {return (Tipo)tipo_id(id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
 
     LCampos campos(): 
@@ -200,14 +204,14 @@ PARSER_END(ConstructorASTsTiny)
         {return lcampos;}
     }
     LCampos campos_list(): 
-    {LCampos lcampos; Campo campo} 
+    {LCampos lcampos; Campo campo;} 
     { campo = campo() lcampos = rcampos_list(sem.un_campo(campo))
         {return lcampos;}
     }
     LCampos rcampos_list(LCampos lcamposh):
     {LCampos campos; Campo campo;} 
     { <coma> campo = campo() lcampos = rcampos_list(sem.muchas_decs(lcamposh, campo))
-        {return lcampos}
+        {return lcampos;}
         | 
         {return lcamposh;}
     }
@@ -229,34 +233,35 @@ PARSER_END(ConstructorASTsTiny)
     { inst = instruccion() insts = rinstrucciones(sem.una_instr(inst)) 
         {return insts;}
     }
-    LInstrs rinstrucciones(LInstrs instsh):): 
+    LInstrs rinstrucciones(LInstrs instsh):
     {Instr inst; LInstrs insts;} 
     { <puntoycoma> inst = instruccion() insts = rinstrucciones(sem.muchas_instrs(instsh, inst)) 
-        {return insts}
+        {return insts;}
         | 
         {return instsh;}
     }
     Instr instruccion(): 
     {Instr inst;} 
-    { inst = instr_eval() {return inst}
+    { inst = instr_eval() 
+        {return inst;}
         | 
-        inst = instr_ifelse() {return inst}
+        inst = instr_ifelse() {return inst;}
         | 
-        inst = instr_while() {return inst}
+        inst = instr_while() {return inst;}
         | 
-        inst = instr_read() {return inst}
+        inst = instr_read() {return inst;}
         | 
-        inst = instr_write() {return inst}
+        inst = instr_write() {return inst;}
         | 
-        inst = instr_nl() {return inst}
+        inst = instr_nl() {return inst;}
         | 
-        inst = instr_reserva() {return inst}
+        inst = instr_reserva() {return inst;}
         | 
-        inst = instr_liberacion() {return inst}
+        inst = instr_liberacion() {return inst;}
         | 
-        inst = instr_invocacion() {return inst}
+        inst = instr_invocacion() {return inst;}
         | 
-        inst = instr_compuesta() {return inst}
+        inst = instr_compuesta() {return inst;}
     }
     Instr instr_eval(): 
     {Exp exp;} 
@@ -276,12 +281,12 @@ PARSER_END(ConstructorASTsTiny)
         {return sem.if_(exph, bloqueh);}
     }
     Instr instr_while(): 
-    {Exp exp; Bloque bloque} 
+    {Exp exp; Bloque bloque;} 
     { <WHILE> exp = expresion() bloque = bloque() 
         {return sem.while_(exp, bloque);}
     }
     Instr instr_read(): 
-    {Exp exp} 
+    {Exp exp;}
     { <read> exp = expresion() 
         {return sem.read(exp);}
     }
@@ -296,22 +301,22 @@ PARSER_END(ConstructorASTsTiny)
         {return sem.nl();}
     }
     Instr instr_reserva(): 
-    {Token id; Exp exp} 
+    {Token id; Exp exp;}
     { <NEW> exp = expresion() 
         {return (Instr)sem.new_(id.image, exp).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
     Instr instr_liberacion(): 
-    {Exp exp} 
+    {Exp exp;}
     { <delete> exp = expresion() 
         {return sem.delete(exp);}
     }
     Instr instr_compuesta(): 
-    {Bloque bloque} 
+    {Bloque bloque;} 
     { bloque = bloque() 
         {return sem.instr_compuesta(bloque);}
     }
     Instr instr_invocacion(): 
-    {Token id; Params_reales params} 
+    {Token id; Params_reales params;} 
     { <call> id = <iden> params = parametros_reales() 
         {return (Instr)sem.invoc(id.image, params).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
@@ -328,10 +333,10 @@ PARSER_END(ConstructorASTsTiny)
     { exp = expresion() lparams = rparametros_reales_list(sem.un_param_reales(exp)) 
         {return lparams;}
     }
-    LParam_reales rparametros_reales_list(LParam_reales lparamsh):): 
+    LParam_reales rparametros_reales_list(LParam_reales lparamsh):
     {Exp exp; LParam_reales lparams;} 
     { <coma> exp = expresion() lparams = rparametros_reales_list(sem.muchos_params_reales(lparamsh, exp)) 
-        {return lparams}
+        {return lparams;}
         | 
         {return lparamsh;}
     }
@@ -359,7 +364,7 @@ PARSER_END(ConstructorASTsTiny)
         {return exp2;}
     }
     Exp re1(Exp exph): 
-    {String op; Exp exp1, exp2} 
+    {String op; Exp exp1, exp2;}
     { op = op1() exp1 = e2() exp2 = re1(sem.mkop(op, exph, exp1))
         {return exp2;}
         |
@@ -376,6 +381,7 @@ PARSER_END(ConstructorASTsTiny)
         {return sem.mkop(op, exph, exp);}
         |
         {return exph;}
+    }
     Exp re21(Exp exph): 
     {Exp exp1, exp2; String op;} 
     { op = op2_izq() exp1 = e3() exp2 = re21(exph) 
@@ -522,7 +528,7 @@ PARSER_END(ConstructorASTsTiny)
     }
     Exp op6(Exp exph): 
     {Exp exp;} 
-    { exp op_indexacion(exph) 
+    { exp = op_indexacion(exph) 
         {return exp;}
         | 
         exp = op_acceso_registro(exph) 
