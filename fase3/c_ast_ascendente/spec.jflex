@@ -7,6 +7,7 @@ package c_ast_ascendente;
 %type  UnidadLexica
 %unicode
 %public
+%cup
 
 %{
   private ALexOperations ops;
