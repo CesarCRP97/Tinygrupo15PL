@@ -155,14 +155,18 @@ PARSER_END(ConstructorASTsTiny)
         {return lparams_formh;}
     }
     Param_form parametro_form(): 
-    {Tipo tipo; Token id;} 
-    {tipo = tipo() ampersand_opt() id = <iden>
-        {return (Param_form)sem.param_form_normal(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
-    }
+    {Tipo tipo; Token id; Param_form param_form;} 
+    {tipo = tipo() param_form = ampersand_opt(tipo, id) id = <iden>
+        {return param_form;}
+        }
 
-    void ampersand_opt(): 
+    Param_form ampersand_opt(Tipo tipo, Token id): 
     {} 
-    { <ampersand> }
+    { <ampersand>
+        {return (Param_form)sem.param_form_normal(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+        |
+        {return (Param_form)sem.param_form_ref(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+    }
   
     Tipo tipo(): 
     {Tipo tipo;} 
@@ -301,9 +305,9 @@ PARSER_END(ConstructorASTsTiny)
         {return sem.nl();}
     }
     Instr instr_reserva(): 
-    {Token id; Exp exp;}
+    {Exp exp;}
     { <NEW> exp = expresion() 
-        {return (Instr)sem.new_(id.image, exp).ponFila(id.beginLine).ponCol(id.beginColumn);}
+        {return sem.new_(exp);}
     }
     Instr instr_liberacion(): 
     {Exp exp;}
