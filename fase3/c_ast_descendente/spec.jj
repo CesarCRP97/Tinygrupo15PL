@@ -5,11 +5,7 @@ options  {
 PARSER_BEGIN(ConstructorASTsTiny)
     package c_ast_descendente;
     import asint.ClaseSemanticaTiny;
-    import asint.SintaxisAbstractaTiny.Exp;
-    import asint.SintaxisAbstractaTiny.Decs;
-    import asint.SintaxisAbstractaTiny.LDecs;
-    import asint.SintaxisAbstractaTiny.Dec;
-    import asint.SintaxisAbstractaTiny.Prog;
+    import asint.SintaxisAbstractaTiny.*;
     import c_ast_ascendente.UnidadLexica.StringLocalizado;
 
     public class ConstructorASTsTiny {
@@ -124,12 +120,12 @@ PARSER_END(ConstructorASTsTiny)
         }
     Dec dec_variable(): 
     {Tipo tipo; Token id;} 
-    {Tipo = tipo() id = <iden> 
+    {tipo = tipo() id = <iden> 
         {return (Dec)sem.dec_variable(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
     Dec dec_tipo(): 
     {Tipo tipo; Token id;} 
-    { <type> Tipo = tipo() id = <iden>
+    { <type> tipo = tipo() id = <iden>
         {return (Dec)sem.dec_tipo(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
     Dec dec_procedimiento(): 
@@ -155,17 +151,17 @@ PARSER_END(ConstructorASTsTiny)
         {return lparams_formh;}
     }
     Param_form parametro_form(): 
-    {Tipo tipo; Token id; Param_form param_form;} 
-    {tipo = tipo() param_form = ampersand_opt(tipo, id) id = <iden>
+    {Tipo tipo; Param_form param_form;} 
+    {tipo = tipo() param_form = ampersand_opt(tipo)
         {return param_form;}
         }
 
-    Param_form ampersand_opt(Tipo tipo, Token id): 
-    {} 
-    { <ampersand>
-        {return (Param_form)sem.param_form_normal(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
-        |
-        {return (Param_form)sem.param_form_ref(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+    Param_form ampersand_opt(Tipo tipoh): 
+    {Token id;} 
+    { <ampersand> id = <iden>
+        {return (Param_form)sem.param_form_normal(tipoh, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+        | id = <iden>
+        {return (Param_form)sem.param_form_ref(tipoh, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
   
     Tipo tipo(): 
@@ -181,7 +177,7 @@ PARSER_END(ConstructorASTsTiny)
     Tipo RTipo0(Tipo tipoh): 
     {Tipo tipo; Token num;} 
     { <corch_a> num = <litEntero> <corch_c> tipo = RTipo0(tipoh) 
-        {return (Tipo)sem.tipo_array(tipo, num.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+        {return (Tipo)sem.tipo_array(tipo, num.image).ponFila(num.beginLine).ponCol(num.beginColumn);}
         | 
         {return tipoh;}
     }  
@@ -194,12 +190,12 @@ PARSER_END(ConstructorASTsTiny)
     }
     Tipo tipo2(): 
     {Tipo tipo; LCampos lcampos; Token id;} 
-    { <INT> {return tipo_int();}
-    | <real> {return tipo_real();}
-    | <bool> {return tipo_bool();}
-    | <string> {return tipo_string();}
-    | <struct> lcampos = campos() {return tipo_struct(lcampos);}
-    | id = <iden> {return (Tipo)tipo_id(id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+    { <INT> {return sem.tipo_int();}
+    | <real> {return sem.tipo_real();}
+    | <bool> {return sem.tipo_bool();}
+    | <string> {return sem.tipo_string();}
+    | <struct> lcampos = campos() {return sem.tipo_struct(lcampos);}
+    | id = <iden> {return (Tipo)sem.tipo_iden(id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
 
     LCampos campos(): 
@@ -213,8 +209,8 @@ PARSER_END(ConstructorASTsTiny)
         {return lcampos;}
     }
     LCampos rcampos_list(LCampos lcamposh):
-    {LCampos campos; Campo campo;} 
-    { <coma> campo = campo() lcampos = rcampos_list(sem.muchas_decs(lcamposh, campo))
+    {LCampos lcampos; Campo campo;} 
+    { <coma> campo = campo() lcampos = rcampos_list(sem.muchos_campos(lcamposh, campo))
         {return lcampos;}
         | 
         {return lcamposh;}
@@ -222,7 +218,7 @@ PARSER_END(ConstructorASTsTiny)
     Campo campo(): 
     {Tipo tipo; Token id;} 
     { tipo = tipo() id = <iden>
-        {return (Campo)sem.campo(tipo, id.image.ponFila(id.beginLine).ponCol(id.beginColumn));}
+        {return (Campo)sem.campo(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
 
     Instrs instrucciones_opt(): 
@@ -273,13 +269,13 @@ PARSER_END(ConstructorASTsTiny)
         {return sem.eval(exp);}
     }
     Instr instr_ifelse():
-    {Exp exp; Bloque bloque; Inst inst;} 
+    {Exp exp; Bloque bloque; Instr inst;} 
     { <IF> exp = expresion() bloque = bloque() inst = else_opt(exp, bloque)
         {return inst;}
     }
     Instr else_opt(Exp exph, Bloque bloqueh): 
     {Bloque bloque;} 
-    { <ELSE> bloque() 
+    { <ELSE> bloque = bloque() 
         {return sem.if_else(exph, bloqueh, bloque);}
         | 
         {return sem.if_(exph, bloqueh);}
@@ -326,19 +322,19 @@ PARSER_END(ConstructorASTsTiny)
     }
 
     Params_reales parametros_reales(): 
-    {LParam_reales lparams;} 
+    {LParams_reales lparams;} 
     { <par_a> lparams = parametros_reales_list() <par_c>
         {return sem.si_params_reales(lparams);}
         | 
         {return sem.no_params_reales();}
     }
-    LParam_reales parametros_reales_list(): 
-    {Exp exp; LParam_reales lparams;} 
-    { exp = expresion() lparams = rparametros_reales_list(sem.un_param_reales(exp)) 
+    LParams_reales parametros_reales_list(): 
+    {Exp exp; LParams_reales lparams;} 
+    { exp = expresion() lparams = rparametros_reales_list(sem.un_param_real(exp)) 
         {return lparams;}
     }
-    LParam_reales rparametros_reales_list(LParam_reales lparamsh):
-    {Exp exp; LParam_reales lparams;} 
+    LParams_reales rparametros_reales_list(LParams_reales lparamsh):
+    {Exp exp; LParams_reales lparams;} 
     { <coma> exp = expresion() lparams = rparametros_reales_list(sem.muchos_params_reales(lparamsh, exp)) 
         {return lparams;}
         | 
@@ -434,8 +430,8 @@ PARSER_END(ConstructorASTsTiny)
         {return exp2;}
     }
     Exp re6(Exp exph):
-    {String op; Exp exp;} { op = op6() exp = re6(exph) 
-        {return exp;}
+    {Exp exp1, exp2;} { exp1 = op6(exph) exp2 = re6(exp1) 
+        {return exp2;}
         | 
         {return exph;}
     }
@@ -448,22 +444,22 @@ PARSER_END(ConstructorASTsTiny)
         {return (Exp)sem.iden(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
         |
         t = <litEntero>
-        {return sem.lit_ent(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
+        {return (Exp)sem.lit_ent(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
         |
         t = <litReal>
-        {return sem.lit_real(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
+        {return (Exp)sem.lit_real(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
         |
         t = <litCadena>
-        {return sem.lit_cadena(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
+        {return (Exp)sem.lit_cadena(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
         |
         t = <NULL>
-        {return sem.null_().ponFila(t.beginLine).ponCol(t.beginColumn);}
+        {return (Exp)sem.null_().ponFila(t.beginLine).ponCol(t.beginColumn);}
         |
         t = <TRUE>
-        {return sem.true_().ponFila(t.beginLine).ponCol(t.beginColumn);}
+        {return (Exp)sem.true_().ponFila(t.beginLine).ponCol(t.beginColumn);}
         |
         t = <FALSE>
-        {return sem.false_().ponFila(t.beginLine).ponCol(t.beginColumn);}
+        {return (Exp)sem.false_().ponFila(t.beginLine).ponCol(t.beginColumn);}
     }
 
     String op0(): 
@@ -549,7 +545,7 @@ PARSER_END(ConstructorASTsTiny)
     Exp op_acceso_registro(Exp exph): 
     {Token t;} 
     { <punto> t = <iden> 
-        {return (Exp)sem.acceso(exph, t.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+        {return (Exp)sem.acceso(exph, t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
     }
     Exp op_indireccion(Exp exph): 
     {} 
