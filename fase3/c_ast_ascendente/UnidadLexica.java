@@ -1,6 +1,8 @@
-package alex;
+package c_ast_ascendente;
 
-public abstract class UnidadLexica extends Symbol{
+import java_cup.runtime.Symbol;
+
+public class UnidadLexica extends Symbol{
 
     public static class StringLocalizado {
         private int fila; 
@@ -19,6 +21,7 @@ public abstract class UnidadLexica extends Symbol{
        super(clase, new StringLocalizado(lexema, fila, columna));
    }
    public int clase () {return sym;}
-   public int fila() {return ((StringLocalizado)valor).fila();}
-   public int columna() {return ((StringLocalizado)valor).columna();}
+   public int fila() {return ((StringLocalizado)value).fila();}
+   public int columna() {return ((StringLocalizado)value).columna();}
+   public String lexema() {return ((StringLocalizado)value).str();}
 }

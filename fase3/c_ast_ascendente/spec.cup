@@ -52,15 +52,15 @@ non terminal LInstrs lista_instrucciones;
 non terminal Instr instruccion, instr_eval, instr_if, instr_if_else, instr_while, instr_read, instr_write, instr_nl, instr_reserva, instr_liberacion, instr_invocacion, instr_compuesta;
 non terminal Exp expresion, expresion_basica, E0, E1, E2, E3, E4, E5, E6, E7;
 non terminal String op0, op1, op2_izq, op2_noasoc, op3_der, op3_noasoc, op4, op5;
-non terminal Param_reales parametros_reales;
-non terminal LParam_reales parametros_reales_lista;
+non terminal Params_reales parametros_reales;
+non terminal LParams_reales parametros_reales_lista;
 
 programa ::= bloque : blq
     {: RESULT = sem.prog(blq); :};
     
 
 bloque ::= LLAVE_A declaraciones: decs instrucciones:instrs LLAVE_C
-    {: RESULT = sem.bloque(decs, insts) :};
+    {: RESULT = sem.bloque(decs, instrs); :};
 
 declaraciones ::= lista_declaraciones: decs DOBLEAMPERSAND 
     {: RESULT = sem.si_decs(decs); :};
@@ -82,16 +82,16 @@ declaracion ::= dec_procedimiento: dec
     {: RESULT = dec; :};
 
 dec_variable ::= tipo: tipo IDEN: id
-    {: RESULT = (Dec)sem.dec_variable(tipo, id.str()).ponFila(id.fila()).ponCol(id.col()); :};
+    {: RESULT = (Dec)sem.dec_variable(tipo, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
 dec_tipo ::= TYPE tipo: tipo IDEN: id
-    {: RESULT = (Dec)sem.dec_tipo(tipo, id.str()).ponFila(id.fila()).ponCol(id.col()); :};
+    {: RESULT = (Dec)sem.dec_tipo(tipo, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
 dec_procedimiento ::= PROC IDEN: id parametros_form: params bloque: blq
-    {: RESULT = (Dec)sem.dec_proc(id.str(), params, blq).ponFila(id.fila()).ponCol(id.col()); :};
+    {: RESULT = (Dec)sem.dec_proc(id.str(), params, blq).ponFila(id.fila()).ponCol(id.columna()); :};
 
 parametros_form ::= PAR_A parametros_form_lista: params PAR_C
-    {: RESULT = sem.si_params_form(params) :};
+    {: RESULT = sem.si_params_form(params); :};
 
 parametros_form ::= PAR_A PAR_C
     {: RESULT = sem.no_params_form(); :};
@@ -103,16 +103,16 @@ parametros_form_lista ::= parametros_form_lista: lparam COMA parametro_form: par
     {: RESULT = sem.muchos_params_form(lparam, param); :};
 
 parametro_form ::= tipo: tipo AMPERSAND IDEN: id
-    {: RESULT = (Param_form)sem.param_form_normal(tipo, id.str()).ponFila(id.fila()).ponCol(id.col()); :};
+    {: RESULT = (Param_form)sem.param_form_normal(tipo, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
 parametro_form ::= tipo: tipo IDEN: id
-    {: RESULT = (Param_form)sem.param_form_ref(tipo, id.str()).ponFila(id.fila()).ponCol(id.col()); :};
+    {: RESULT = (Param_form)sem.param_form_ref(tipo, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
 tipo ::= tipo0: tipo
     {: RESULT = tipo;  :};
 
 tipo0 ::= tipo0: tipo CORCH_A LIT_ENTERO: num CORCH_C 
-    {: RESULT = (Tipo)sem.tipo_array(tipo, num.str()).ponFila(tipo.fila()).ponCol(tipo.col()); :};
+    {: RESULT = (Tipo)sem.tipo_array(tipo, num.str()).ponFila(num.fila()).ponCol(num.columna()); :};
 
 tipo0 ::= tipo1: tipo
     {: RESULT = tipo; :};
@@ -136,7 +136,7 @@ tipo2 ::= STRING
     {: RESULT = sem.tipo_string(); :};
 
 tipo2 ::= IDEN: id
-    {: RESULT = (Tipo)sem.tipo_iden(id.str()).ponFila(id.fila()).ponCol(id.col()); :};
+    {: RESULT = (Tipo)sem.tipo_iden(id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
 tipo2 ::= STRUCT campos: campos
     {: RESULT = sem.tipo_struct(campos); :};
@@ -151,7 +151,7 @@ campos_lista ::= campos_lista: lcampos COMA campo: campo
     {: RESULT = sem.muchos_campos(lcampos, campo); :};
 
 campo ::= tipo: tipo IDEN: id
-    {: RESULT = (Campo)sem.campo(tipo, id.str()).ponFila(id.fila()).ponCol(id.col()); :};
+    {: RESULT = (Campo)sem.campo(tipo, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
 instrucciones ::= lista_instrucciones: instrs
     {: RESULT = sem.si_instrs(instrs); :};
@@ -160,7 +160,7 @@ instrucciones ::=
     {: RESULT = sem.no_instrs(); :};
 
 lista_instrucciones ::= instruccion: instr
-    {: RESULT = sem.una_instr(instruccion); :};
+    {: RESULT = sem.una_instr(instr); :};
 
 lista_instrucciones ::= lista_instrucciones: linstrs PUNTYCOMA instruccion: instr
     {: RESULT = sem.muchas_instrs(linstrs, instr); :};
@@ -204,8 +204,8 @@ instr_eval ::= ARROBA expresion: exp
 instr_if ::= IF expresion: exp bloque: blq
     {: RESULT = sem.if_(exp, blq); :};
 
-instr_if_else ::= IF expresion: exp bloque: blq ELSE bloque: blq
-    {: RESULT = sem.if_else(exp, blq, blq); :};
+instr_if_else ::= IF expresion: exp bloque: blq1 ELSE bloque: blq2
+    {: RESULT = sem.if_else(exp, blq1, blq2); :};
 
 instr_while ::= WHILE expresion: exp bloque: blq
     {: RESULT = sem.while_(exp, blq); :};
@@ -229,10 +229,10 @@ instr_compuesta ::= bloque: blq
     {: RESULT = sem.instr_compuesta(blq); :};
 
 instr_invocacion ::= CALL IDEN: id parametros_reales: params
-    {: RESULT = (Instr)sem.invoc(id.str(), params).ponFila(id.fila()).ponCol(id.col()); :};
+    {: RESULT = (Instr)sem.invoc(id.str(), params).ponFila(id.fila()).ponCol(id.columna()); :};
 
-parametros_reales ::= PAR_A parametros_reales_lista:params PAR_C
-    {: RESULT = sem.si_params_reales(params); :};
+parametros_reales ::= PAR_A parametros_reales_lista: lparams PAR_C
+    {: RESULT = sem.si_params_reales(lparams); :};
 
 parametros_reales ::= PAR_A PAR_C
     {: RESULT = sem.no_params_reales(); :};
@@ -240,20 +240,20 @@ parametros_reales ::= PAR_A PAR_C
 parametros_reales_lista ::= expresion: exp
     {: RESULT = sem.un_param_real(exp); :};
 
-parametros_reales_lista ::= parametros_reales_lista: params COMA expresion: exp
-    {: RESULT = sem.muchos_params_reales(params, exp); :};
+parametros_reales_lista ::= parametros_reales_lista: lparams COMA expresion: exp
+    {: RESULT = sem.muchos_params_reales(lparams, exp); :};
 
 expresion_basica ::= LIT_ENTERO: num
-    {: RESULT = (Exp)sem.lit_ent(num.str()).ponFila(num.fila()).ponCol(num.col()); :};
+    {: RESULT = (Exp)sem.lit_ent(num.str()).ponFila(num.fila()).ponCol(num.columna()); :};
     
 expresion_basica ::= LIT_REAL: num
-    {: RESULT = (Exp)sem.lit_real(num.str()).ponFila(num.fila()).ponCol(num.col()); :};
+    {: RESULT = (Exp)sem.lit_real(num.str()).ponFila(num.fila()).ponCol(num.columna()); :};
 
 expresion_basica ::= LIT_CADENA: cad
-    {: RESULT = (Exp)sem.lit_cadena(cad.str()).ponFila(cad.fila()).ponCol(cad.col()); :};
+    {: RESULT = (Exp)sem.lit_cadena(cad.str()).ponFila(cad.fila()).ponCol(cad.columna()); :};
 
 expresion_basica ::= IDEN: id
-    {: RESULT = (Exp)sem.iden(id.str()).ponFila(id.fila()).ponCol(id.col()); :};
+    {: RESULT = (Exp)sem.iden(id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
 expresion_basica ::= NULL
     {: RESULT = sem.null_(); :};
@@ -270,31 +270,31 @@ expresion ::= E0 : exp
 E0 ::= E1: exp
     {: RESULT = exp; :};
 E0 ::= E1: exp1 op0: op E0: exp2
-    {: RESULT = sem.mkop(exp1, op, exp2); :};
+    {: RESULT = sem.mkop(op, exp1, exp2); :};
 
 E1 ::= E2: exp
     {: RESULT = exp; :};
 E1 ::= E1: exp1 op1:op E2:exp2
-    {: RESULT = sem.mkop(exp1, op, exp2); :};
+    {: RESULT = sem.mkop(op, exp1, exp2); :};
 
 E2 ::= E3:exp
     {: RESULT = exp; :};
 E2 ::= E2: exp1 op2_izq: op E3: exp2 
-    {: RESULT = sem.mkop(exp1, op, exp2); :};
+    {: RESULT = sem.mkop(op, exp1, exp2); :};
 E2 ::= E2: exp1 op2_noasoc: op E3: exp2
-    {: RESULT = sem.mkop(exp1, op, exp2); :};
+    {: RESULT = sem.mkop(op, exp1, exp2); :};
 
 E3 ::= E4: exp
     {: RESULT = exp; :};
 E3 ::= E4: exp1 op3_der: op E3: exp2 
-    {: RESULT = sem.mkop(exp1, op, exp2); :};
+    {: RESULT = sem.mkop(op, exp1, exp2); :};
 E3 ::= E4: exp1 op3_noasoc: op E4: exp2
-    {: RESULT = sem.mkop(exp1, op, exp2); :};
+    {: RESULT = sem.mkop(op, exp1, exp2); :};
 
 E4 ::= E5: exp
     {: RESULT = exp; :};
 E4 ::= E4: exp1 op4: op E5: exp2
-    {: RESULT = sem.mkop(exp1, op, exp2); :};
+    {: RESULT = sem.mkop(op, exp1, exp2); :};
 
 E5 ::= E6: exp
     {: RESULT = exp; :};
@@ -303,10 +303,10 @@ E5 ::= op5: op E5: exp
 
 E6 ::= E7: exp
     {: RESULT = exp; :};
-E6 ::= E6: exp CORCH_A expresion: exp CORCH_C
-    {: RESULT = sem.indexacion(exp, exp); :};
+E6 ::= E6: exp1 CORCH_A expresion: exp2 CORCH_C
+    {: RESULT = sem.indexacion(exp1, exp2); :};
 E6 ::= E6: exp PUNTO IDEN: id
-    {: RESULT = (Exp)sem.acceso(exp, id.str()).ponFila(id.fila()).ponCol(id.col()); :};
+    {: RESULT = (Exp)sem.acceso(exp, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 E6 ::= E6: exp CAPIROTE
     {: RESULT = sem.indireccion(exp); :};
 

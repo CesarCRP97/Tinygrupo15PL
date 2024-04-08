@@ -1,8 +1,5 @@
-package implementacion_cup.alex;
+package c_ast_ascendente;
 
-import implementacion_cup.asint.ClaseLexica;
-
-import implementacion_cup.errors.GestionErroresTiny.ErrorLexico;
 
 public class ALexOperations {
     public static class ECaracterInesperado extends RuntimeException {
@@ -222,9 +219,5 @@ public class ALexOperations {
 
    public UnidadLexica unidadEof() {
       return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.EOF,"<EOF>");
-   }
-
-   public void error() {
-      throw new ErrorLexico("***"+alex.fila()+","+alex.columna()+": Caracter inexperado: "+alex.lexema());
    }
 }
