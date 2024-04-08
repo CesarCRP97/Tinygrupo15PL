@@ -679,20 +679,17 @@ public class SintaxisAbstractaTiny {
     }
 
     public static class New extends Instr {
-        private String id;
         private Exp exp;
 
-        public New(String id, Exp exp) {
+        public New(Exp exp) {
             super();
-            this.id = id;
             this.exp = exp;
         }
 
-        public String iden() {return id;}
         public Exp exp() {return exp;}
 
         public String toString() {
-            return "new("+id+","+exp+")";
+            return "new("+exp+")";
         }
     }
 
@@ -1225,8 +1222,8 @@ public class SintaxisAbstractaTiny {
     public Instr nl() {
         return new NL();
     }
-    public Instr new_(String id, Exp exp) {
-        return new New(id,exp);
+    public Instr new_(Exp exp) {
+        return new New(exp);
     }
     public Instr delete(Exp exp) {
         return new Delete(exp);
