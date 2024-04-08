@@ -11,7 +11,7 @@ cleanjflex:
 
 cup: asint jflex cleancup
 	cup -parser ConstructorASTTiny -symbols ClaseLexica -destdir c_ast_ascendente c_ast_ascendente/spec.cup
-	javac c_ast_ascendente/*.java
+	javac -cp java-cup-11b-20160615-3.jar: c_ast_ascendente/*.java
 
 cleancup:
 	rm -f c_ast_ascendente/ConstructorASTTiny.java
