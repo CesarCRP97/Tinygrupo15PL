@@ -1,18 +1,22 @@
-jflex: cleanjflex
+asint: cleanasint
+	javac asint/*.java
+
+jflex: asint cleanjflex
 	jflex c_ast_ascendente/spec.jflex 
 
 cleanjflex:
 	rm -f c_ast_ascendente/AnalizadorLexicoTiny.java
 
-cup: cleancup
+cup: asint cleancup
 	cup -parser ConstructorASTTiny -symbols ClaseLexica -destdir c_ast_ascendente c_ast_ascendente/spec.cup
 
 cleancup:
 	rm -f c_ast_ascendente/ConstructorASTTiny.java
 	rm -f c_ast_ascendente/ClaseLexica.java
 
-javacc: cleanjavacc
+javacc: asint cleanjavacc
 	javacc -OUTPUT_DIRECTORY=c_ast_descendente c_ast_descendente/spec.jj
+	javac c_ast_descendente/*.java
 
 cleanjavacc:
 	rm -f c_ast_descendente/TokenMgrError.java
@@ -24,7 +28,7 @@ cleanjavacc:
 	rm -f c_ast_descendente/ConstructorASTsTinyTokenManager.java
 
 build: clean jflex cup javacc
-	javac -cp java-cup-11b-20160615-3.jar: asint/*.java c_ast_ascendente/*.java c_ast_descendente/*.java evaluador/*.java
+	javac -cp java-cup-11b-20160615-3.jar: c_ast_ascendente/*.java evaluador/*.java
 
 cleanasint:
 	rm -f asint/*.class
