@@ -1,10 +1,10 @@
-package evaluador;
+package procesamientos;
 
 import asint.SintaxisAbstractaTiny;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Evaluador extends SintaxisAbstractaTiny {
+public class Procesamiento_rec extends SintaxisAbstractaTiny {
     public class ECteNoDefinida extends RuntimeException {
         public ECteNoDefinida(String msg) {
             super(msg);
@@ -16,373 +16,343 @@ public class Evaluador extends SintaxisAbstractaTiny {
         }
     }
     private Map<String,Float> env;
-    public Evaluador() {
+    public Procesamiento_rec() {
         this.env = new HashMap<>();
     }
 
-    public void imprime(Prog p) {
-        imprime(p.bloque());
-        System.out.println("<EOF>");
+    public String imprime(Prog p) {
+        return imprime(p.bloque()) + "<EOF>\n";
     }
 
-    public void imprime(Bloque b) {
-        System.out.println("{");
-        imprime(b.decs());
-        imprime(b.insts());
-        System.out.println("}");
+    public String imprime(Bloque b) {
+        return "{\n" + imprime(b.decs()) + imprime(b.insts()) + "}\n";
     }
 
-    public void imprime(Decs d) {
+    public String imprime(Decs d) {
+        String result = "";
         if(claseDe(d, Si_decs.class)) {
-            imprime(d.ldecs());
+            result += imprime(d.ldecs());
         }
-        System.out.println("&&");
+        result += "&&\n";
+        return result;
     }
 
-    public void imprime(LDecs ldecs) {
-        if claseDe(ldecs, Muchas_decs.class) {
-            imprime(ldecs.ldecs());
-            System.out.println(";");
+    public String imprime(LDecs ldecs) {
+        String result = "";
+        if (claseDe(ldecs, Muchas_decs.class)) {
+            result += imprime(ldecs.ldecs()) + ";\n";
         }
-        imprime(ldecs.dec());
+        result += imprime(ldecs.dec());
+        return result;
     }
 
-    public void imprime(Dec dec) {
+    public String imprime(Dec dec) {
+        String result = "";
         if(claseDe(dec, Dec_variable.class)) {
-            imprime((Dec_variable)dec);
+            result += imprime((Dec_variable)dec);
         } else if(claseDe(dec, Dec_tipo.class)) {
-            imprime((Dec_tipo)dec);
+            result += imprime((Dec_tipo)dec);
         } else if (claseDe(dec, Dec_proc.class)) {
-            imprime((Dec_proc)dec);
+            result += imprime((Dec_proc)dec);
         }
+        return result;
     }
 
-    public void imprime(Dec_variable dec) {
-        imprime(dec.tipo());
-        imprime(dec.iden());
+    public String imprime(Dec_variable dec) {
+        return imprime(dec.tipo()) + imprime(dec.iden());
     }
 
-    public void imprime(Dec_tipo dec) {
-        System.out.println("<type>");
-        imprime(dec.tipo());
-        imprime(dec.iden());
+    public String imprime(Dec_tipo dec) {
+        return "<type>\n" + imprime(dec.tipo()) + imprime(dec.iden());
     }
 
-    public void imprime(Dec_proc dec) {
-        System.out.println("<proc>");
-        imprime(dec.iden());
-        imprime(dec.params_form();
-        imprime(dec.bloque());
+    public String imprime(Dec_proc dec) {
+        return "<proc>\n" + imprime(dec.iden())  + imprime(dec.params_form())  + imprime(dec.bloque()) ;
     }
 
-    public void imprime(Params_form pf) {
-        System.out.println("(");
+    public String imprime(Params_form pf) {
+        String result = "(\n";
         if(claseDe(pf, Si_params_form.class)) {
-            imprime(pf.lparams_form());
+            result += imprime(pf.lparams_form()) ;
         }
-        System.out.println(")");
+        result += ")\n";
+        return result;
     }
 
-    public void imprime(LParams_form lpf) {
-        if claseDe(lpf, Muchos_params_form.class) {
-            imprime(lpf.lparams_form());
-            System.out.println(",");
+    public String imprime(LParams_form lpf) {
+        String result = "";
+        if(claseDe(lpf, Muchos_params_form.class)) {
+            result += imprime(lpf.lparams_form()) + ",\n";
         }
-        imprime(lpf.param_form());
+        result += imprime(lpf.param_form());
+        return result;
     }
 
-    public void imprime(Param_form pf) {
-        imprime(pf.tipo());
-        if(claseDe(pf, Param_form_ref.class)) {
-            System.out.println("&");
-        }
-        imprime(pf.iden());
+    public String imprime(Param_form pf) {
+        return imprime(pf.tipo()) + (claseDe(pf, Param_form_ref.class) ? "&\n" : "")  + imprime(pf.iden());
     }
 
-    public void imprime(Tipo t) {
+    public String imprime(Tipo t) {
+        String result = "";
         if(claseDe(t, Tipo_int.class)) {
-            System.out.println("<int>");
+            result += "<int>\n";
         } else if(claseDe(t, Tipo_real.class)) {
-            System.out.println("<real>");
+            result += "<real>\n";
         } else if(claseDe(t, Tipo_bool.class)) {
-            System.out.println("<bool>");
+            result += "<bool>\n";
         } else if(claseDe(t, Tipo_string.class)) {
-            System.out.println("<string>");
+            result += "<string>\n";
         } else if(claseDe(t, Tipo_array.class)) {
-            System.out.println("[");
-            imprime(t.num());
-            System.out.println("]");
-            imprime(t.tipo());
+            result += "[\n" + imprime(t.num()) + "]\n" + imprime(t.tipo());
         } else if(claseDe(t, Tipo_puntero.class)) {
-            System.out.println("^");
-            imprime((t.tipo());
+            result += "^\n" + imprime(t.tipo());
         } else if(claseDe(t, Tipo_struct.class)) {
-            System.out.println("<struct>");
-            imprime(t.campos());
-            imprime(t.iden());
+            result += "<struct>\n" + imprime(t.campos())  + imprime(t.iden());
         } else if(claseDe(t, Tipo_iden.class)) {
-            imprime(t.iden());
+            result += imprime(t.iden());
         }
+        return result;
     }
 
-    public void imprime(Campos c) {
-        System.out.println("{");
-        imprime(c.lcampos());
-        System.out.println("}");
-    }
-
-    public void imprime(LCampos lc) {
-        if claseDe(lc, Muchos_campos.class) {
-            imprime(lc.lcampos());
-            System.out.println(",");
+    public String imprime(LCampos lc) {
+        String result = "";
+        if(claseDe(lc, Muchos_campos.class)) {
+            result += imprime(lc.lcampos()) + ",\n";
         }
-        imprime(lc.campo());
+        result += imprime(lc.campo());
+        return result;
     }
     
-    public void imprime(Campo c) {
-        imprime(c.tipo());
-        imprime(c.iden());
+    public String imprime(Campo c) {
+        return imprime(c.tipo())  + imprime(c.iden());
     }
 
-    public void imprime(Instrs i) {
+    public String imprime(Instrs i) {
+        String result = "";
         if(claseDe(i, Si_instrs.class)) {
-            imprime(i.linstrs());
+            result += imprime(i.linstrs());
         }
+        return result;
     }
 
-    public void imprime(LInstrs li) {
-        if claseDe(li, Muchas_instrs.class) {
-            imprime(li.linstrs());
-            System.out.println(";");
+    public String imprime(LInstrs li) {
+        String result = "";
+        if(claseDe(li, Muchas_instrs.class)) {
+            result += imprime(li.linstrs()) + ";\n";
         }
-        imprime(li.instr());
+        result += imprime(li.instr());
+        return result;
     }
 
-    public void imprime(Instr i) {
+    public String imprime(Instr i) {
+        String result = "";
         if(claseDe(i, Eval.class)) {
-            imprime((Eval)i);
+            result += imprime((Eval)i);
         } else if(claseDe(i, If.class)) {
-            imprime((If)i);
+            result += imprime((If)i);
         } else if(claseDe(i, IfElse.class)) {
-            imprime((IfElse)i);
+            result += imprime((IfElse)i);
         } else if(claseDe(i, While.class)) {
-            imprime((While)i);
+            result += imprime((While)i);
         } else if(claseDe(i, Write.class)) {
-            imprime((Write)i);
+            result += imprime((Write)i);
         } else if(claseDe(i, Read.class)) {
-            imprime((Read)i);
+            result += imprime((Read)i);
         } else if(claseDe(i, NL.class)) {
-            imprime((NL)i);
+            result += imprime((NL)i);
         } else if(claseDe(i, New.class)) {
-            imprime((New)i);
+            result += imprime((New)i);
         } else if(claseDe(i, Delete.class)) {
-            imprime((Delete)i);
+            result += imprime((Delete)i);
         } else if(claseDe(i, Invoc.class)) {
-            imprime((Invoc)i);
+            result += imprime((Invoc)i);
         } else if(claseDe(i, Instr_compuesta.class)) {
-            imprime((Instr_compuesta)i);
+            result += imprime((Instr_compuesta)i);
         }
+        return result;
     }
 
-    public void imprime(Eval e) {
-        System.out.println("@");
-        imprime(e.exp());
+    public String imprime(Eval e) {
+        return "@\n" + imprime(e.exp());
     }
 
-    public void imprime(If i) {
-        System.out.println("<if>");
-        imprime(i.exp());
-        imprime(i.bloque());
+    public String imprime(If i) {
+        return "<if>\n" + imprime(i.exp())  + imprime(i.bloque());
     }
 
-    public void imprime(IfElse ie) {
-        System.out.println("<if>");
-        imprime(ie.exp());
-        imprime(ie.bloque1());
-        System.out.println("<else>");
-        imprime(ie.bloque2());
+    public String imprime(IfElse ie) {
+        return "<if>\n" + imprime(ie.exp())  + imprime(ie.bloque1()) + "<else>\n" + imprime(ie.bloque2());
     }
 
-    public void imprime(While w) {
-        System.out.println("<while>");
-        imprime(w.exp());
-        imprime(w.bloque());
+    public String imprime(While w) {
+        return "<while>\n" + imprime(w.exp())  + imprime(w.bloque());
     }
 
-    public void imprime(Write w) {
-        System.out.println("<write>");
-        imprime(w.exp());
+    public String imprime(Write w) {
+        return "<write>\n" + imprime(w.exp());
     }
 
-    public void imprime(Read r) {
-        System.out.println("<read>");
-        imprime(r.exp());
+    public String imprime(Read r) {
+        return "<read>\n" + imprime(r.exp());
     }
 
-    public void imprime(NL nl) {
-        System.out.println("<nl>");
+    public String imprime(NL nl) {
+        return "<nl>\n";
     }
 
-    public void imprime(New n) {
-        System.out.println("<new>");
-        imprime(n.exp());
+    public String imprime(New n) {
+        return "<new>\n" + imprime(n.exp());
     }
 
-    public void imprime(Delete d) {
-        System.out.println("<delete>");
-        imprime(d.exp());
+    public String imprime(Delete d) {
+        return "<delete>\n" + imprime(d.exp());
     }
 
-    public void imprime(Invoc i) {
-        System.out.println("<invoc>");
-        imprime(i.iden());
-        imprime(i.params_reales());
+    public String imprime(Invoc i) {
+        return "<invoc>\n" + imprime(i.iden())  + imprime(i.params_reales());
     }
 
-    public void imprime(Inst_compuesta ic) {
-        imprime(ic.bloque());
+    public String imprime(Instr_compuesta ic) {
+        return imprime(ic.bloque());
     }
 
-    public void imprime(Params_reales pr) {
-        System.out.println("(");
+    public String imprime(Params_reales pr) {
+        String result = "(\n";
         if(claseDe(pr, Si_params_reales.class)) {
-            imprime(pr.lparams_reales());
+            result += imprime(pr.lparams_reales());
         }
-        System.out.println(")");
+        result += ")\n";
+        return result;
     }
 
-    public void imprime(LParams_reales lpr) {
-        if claseDe(lpr, Muchos_params_reales.class) {
-            imprime(lpr.lparams_reales());
-            System.out.println(",");
+    public String imprime(LParams_reales lpr) {
+        String result = "";
+        if(claseDe(lpr, Muchos_params_reales.class)) {
+            result += imprime(lpr.lparams_reales()) + ",\n";
         }
-        imprime(lpr.exp());
+        result += imprime(lpr.exp());
+        return result;
     }
 
-    public void imprime(Exp e) {
-        if(claseDe(e, ExpBin.class) {
-            imprime((ExpBin)e);
-        } else if(claseDe(e, Menos_unario.class) {
-            imprime((Menos_unario)e);
-        } else if(claseDe(e, Not.class) {
-            imprime((Not)e);
-        } else if(claseDe(e, Indexacion.class) {
-            imprime((Indexacion)e);
-        } else if(claseDe(e, Acceso.class) {
-            imprime((Acceso)e);
-        } else if(claseDe(e, Indireccion.class) {
-            imprime((Indireccion)e);
-        } else if(claseDe(e, Lit_ent.class) {
-            imprime((Lit_ent)e);
-        } else if(claseDe(e, Lit_real.class) {
-            imprime((Lit_real)e);
-        } else if(claseDe(e, True.class) {
-            imprime((True)e);
-        } else if(claseDe(e, False.class) {
-            imprime((False)e);
-        } else if(claseDe(e, Lit_cadena.class) {
-            imprime((Lit_cadena)e);
-        } else if(claseDe(e, Iden.class) {
-            imprime((Iden)e);
-        } else if(claseDe(e, Null.class) {
-            imprime((Null)e);
+    public String imprime(Exp e) {
+        String result = "";
+        if(claseDe(e, ExpBin.class)) {
+            result += imprime((ExpBin)e);
+        } else if(claseDe(e, Menos_unario.class)) {
+            result += imprime((Menos_unario)e);
+        } else if(claseDe(e, Not.class)) {
+            result += imprime((Not)e);
+        } else if(claseDe(e, Indexacion.class)) {
+            result += imprime((Indexacion)e);
+        } else if(claseDe(e, Acceso.class)) {
+            result += imprime((Acceso)e);
+        } else if(claseDe(e, Indireccion.class)) {
+            result += imprime((Indireccion)e);
+        } else if(claseDe(e, Lit_ent.class)) {
+            result += imprime((Lit_ent)e);
+        } else if(claseDe(e, Lit_real.class)) {
+            result += imprime((Lit_real)e);
+        } else if(claseDe(e, True.class)) {
+            result += imprime((True)e);
+        } else if(claseDe(e, False.class)) {
+            result += imprime((False)e);
+        } else if(claseDe(e, Lit_cadena.class)) {
+            result += imprime((Lit_cadena)e);
+        } else if(claseDe(e, Iden.class)) {
+            result += imprime((Iden)e);
+        } else if(claseDe(e, Null.class)) {
+            result += imprime((Null)e);
         }
+        return result;
     }
 
-    public void imprime(ExpBin exp) {
-        imprime(exp.opnd1());
-        System.out.println(opToString(exp)); 
-        imprime(exp.opnd2());
+    public String imprime(ExpBin exp) {
+        return imprime(exp.opnd1())  + opToString(exp)  + imprime(exp.opnd2());
     }
 
-    public void imprime(Menos_unario mu) {
-        System.out.println("-");
-        imprime(mu.opnd());
+    public String imprime(Menos_unario mu) {
+        return "-\n" + imprime(mu.opnd());
     }
 
-    public void imprime(Not n) {
-        System.out.println("!");
-        imprime(n.opnd());
+    public String imprime(Not n) {
+        return "!\n" + imprime(n.opnd());
     }
 
-    public void imprime(Indexacion i) {
-        imprime(i.opnd1());
-        System.out.println("[");
-        imprime(i.opnd2());
-        System.out.println("]");
+    public String imprime(Indexacion i) {
+        return imprime(i.opnd1())  + "[\n"  + imprime(i.opnd2())  + "]\n";
     }
 
-    public void imprime(Acceso a) {
-        imprime(a.opnd());
-        System.out.println(".");
-        imprime(a.iden());
+    public String imprime(Acceso a) {
+        return imprime(a.opnd())  + ".\n"  + imprime(a.iden());
     }
 
-    public void imprime(Indireccion i) {
-        imprime(i.opnd());
-        System.out.println("^");
+    public String imprime(Indireccion i) {
+        return imprime(i.opnd())  + "^\n";
     }
 
-
-    public void imprime(Lit_ent le) {
-        System.out.println(le.valor());
+    public String imprime(Lit_ent le) {
+        return le.valor() + "\n";
     }
 
-    public void imprime(Lit_real lr) {
-        System.out.println(lr.valor());
+    public String imprime(Lit_real lr) {
+        return lr.valor() + "\n";
     }
 
-    public void imprime(True t) {
-        System.out.println("<true>");
+    public String imprime(True t) {
+        return "<true>\n";
     }
 
-    public void imprime(False f) {
-        System.out.println("<false>");
+    public String imprime(False f) {
+        return "<false>\n";
     }
 
-    public void imprime(Lit_cadena lc) {
-        System.out.println(lc.valor());
+    public String imprime(Lit_cadena lc) {
+        return lc.valor() + "\n";
     }
 
-    public void imprime(Iden i) {
-        System.out.println(i.iden());
+    public String imprime(Iden i) {
+        return i.iden() + "\n";
     }
 
-    private String opToString(ExpBin e)
-        switch (e.getClass()) {
-            case Asignacion.class:
-                return "=";
-            case Suma.class:
-                return "+";
-            case Resta.class:
-                return "-";
-            case Mul.class:
-                return "*";
-            case Div.class:
-                return "/";
-            case Mod.class:
-                return "%";
-            case Menor_que.class:
-                return "<";
-            case Mayor_que.class:
-                return ">";
-            case Menor_igual.class:
-                return "<=";
-            case Mayor_igual.class:
-                return ">=";
-            case Igual_comp.class:
-                return "==";
-            case Distinto_comp.class:
-                return "!=";
-            case And.class:
-                return "<and>";
-            case Or.class:
-                return "<or>";
-            default:
-                throw new RuntimeException("Operador desconocido");
+    public String imprime(String iden) {
+        return iden + "\n";
+    }
+
+    private String opToString(ExpBin e) {
+        if(claseDe(e, Asignacion.class)) {
+            return "=\n";
+        } else if(claseDe(e, Suma.class)) {
+            return "+\n";
+        } else if(claseDe(e, Resta.class)) {
+            return "-\n";
+        } else if(claseDe(e, Mul.class)) {
+            return "*\n";
+        } else if(claseDe(e, Div.class)) {
+            return "/\n";
+        } else if(claseDe(e, Mod.class)) {
+            return "%\n";
+        } else if(claseDe(e, Menor_que.class)) {
+            return "<\n";
+        } else if(claseDe(e, Mayor_que.class)) {
+            return ">\n";
+        } else if(claseDe(e, Menor_igual.class)) {
+            return "<=\n";
+        } else if(claseDe(e, Mayor_igual.class)) {
+            return ">=\n";
+        } else if(claseDe(e, Igual_comp.class)) {
+            return "==\n";
+        } else if(claseDe(e, Distinto_comp.class)) {
+            return "!=\n";
+        } else if(claseDe(e, And.class)) {
+            return "<and>\n";
+        } else if(claseDe(e, Or.class)) {
+            return "<or>\n";
         }
+        throw new RuntimeException("Operador no reconocido");
+    }
     
     private boolean claseDe(Object o, Class c) {
         return o.getClass() == c;
     }    
 }
+
