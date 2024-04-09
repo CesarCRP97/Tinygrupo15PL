@@ -311,7 +311,7 @@ public class SintaxisAbstractaTiny {
 
         public Tipo tipo() {throw new UnsupportedOperationException();}
         public String num() {throw new UnsupportedOperationException();}
-        public LCampos campos() {throw new UnsupportedOperationException();}
+        public Campos campos() {throw new UnsupportedOperationException();}
         public String iden() {throw new UnsupportedOperationException();}
     }
 
@@ -389,17 +389,20 @@ public class SintaxisAbstractaTiny {
     }
 
     public static class Tipo_struct extends Tipo {
-        private LCampos campos;
+        private Campos campos;
+        private String iden;
 
-        public Tipo_struct(LCampos campos) {
+        public Tipo_struct(Campos campos, String iden) {
             super();
             this.campos = campos;
+            this.iden = iden;
         }
 
-        public LCampos campos() {return campos;}
+        public Campos campos() {return campos;}
+        public String iden() {return iden;}
 
         public String toString() {
-            return "tipo_struct("+campos+")";
+            return "tipo_struct("+campos+","+iden+")";
         }
     }
 
@@ -416,6 +419,17 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "tipo_iden("+id+")";
         }
+    }
+
+    public static class Campos extends Nodo {
+        private LCampos lcampos;
+
+        public Campos(LCampos lcampos) {
+            super();
+            this.lcampos = lcampos;
+        }
+
+        public LCampos lcampos() {return lcampos;}
     }
 
     public static abstract class LCampos extends Nodo {
@@ -828,7 +842,7 @@ public class SintaxisAbstractaTiny {
     }
    
     
-    private static abstract class ExpBin extends Exp {
+    protected static abstract class ExpBin extends Exp {
         protected Exp opnd0;
         protected Exp opnd1;
         public ExpBin(Exp opnd0, Exp opnd1) {
@@ -972,7 +986,7 @@ public class SintaxisAbstractaTiny {
             super();
             this.opnd = opnd;
         }
-        public Exp opnd0() {return opnd;}
+        public Exp opnd() {return opnd;}
         public String toString() {
             return "menos_unario("+opnd+")";
         } 
@@ -984,7 +998,7 @@ public class SintaxisAbstractaTiny {
             super();
             this.opnd = opnd;
         }
-        public Exp opnd0() {return opnd;}
+        public Exp opnd() {return opnd;}
         public String toString() {
             return "not("+opnd+")";
         } 
@@ -1062,7 +1076,7 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "true()";
-        } 
+        }
     }
 
     public static class False extends Exp {
@@ -1174,11 +1188,14 @@ public class SintaxisAbstractaTiny {
     public Tipo tipo_puntero(Tipo tipo) {
         return new Tipo_puntero(tipo);
     }
-    public Tipo tipo_struct(LCampos campos) {
-        return new Tipo_struct(campos);
+    public Tipo tipo_struct(Campos campos, String iden) {
+        return new Tipo_struct(campos,iden);
     }
     public Tipo tipo_iden(String id) {
         return new Tipo_iden(id);
+    }
+    public Campos campos(LCampos campos) {
+        return new Campos(campos);
     }
     public LCampos muchos_campos(LCampos campos, Campo campo) {
         return new Muchos_campos(campos,campo);

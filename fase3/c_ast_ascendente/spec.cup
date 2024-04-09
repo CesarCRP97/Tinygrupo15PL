@@ -45,7 +45,8 @@ non terminal Params_form parametros_form;
 non terminal LParams_form parametros_form_lista;
 non terminal Param_form parametro_form;
 non terminal Tipo tipo, tipo0, tipo1, tipo2;
-non terminal LCampos campos, campos_lista;
+non terminal Campos campos;
+non terminal LCampos campos_lista;
 non terminal Campo campo;
 non terminal Instrs instrucciones;
 non terminal LInstrs lista_instrucciones;
@@ -138,11 +139,11 @@ tipo2 ::= STRING
 tipo2 ::= IDEN: id
     {: RESULT = (Tipo)sem.tipo_iden(id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
-tipo2 ::= STRUCT campos: campos
-    {: RESULT = sem.tipo_struct(campos); :};
+tipo2 ::= STRUCT campos: campos IDEN: id
+    {: RESULT = (Tipo)sem.tipo_struct(campos, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
-campos ::= LLAVE_A campos_lista: campos LLAVE_C
-    {: RESULT = campos; :};
+campos ::= LLAVE_A campos_lista: lcampos LLAVE_C
+    {: RESULT = sem.campos(lcampos); :};
 
 campos_lista ::= campo: campo
     {: RESULT = sem.un_campo(campo); :};

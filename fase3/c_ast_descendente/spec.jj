@@ -189,19 +189,19 @@ PARSER_END(ConstructorASTsTiny)
         {return sem.tipo_puntero(tipo);}
     }
     Tipo tipo2(): 
-    {Tipo tipo; LCampos lcampos; Token id;} 
+    {Tipo tipo; Campos campos; Token id;} 
     { <INT> {return sem.tipo_int();}
     | <real> {return sem.tipo_real();}
     | <bool> {return sem.tipo_bool();}
     | <string> {return sem.tipo_string();}
-    | <struct> lcampos = campos() {return sem.tipo_struct(lcampos);}
+    | <struct> campos = campos() id = <iden> {return (Tipo)sem.tipo_struct(campos, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     | id = <iden> {return (Tipo)sem.tipo_iden(id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
 
-    LCampos campos(): 
+    Campos campos(): 
     {LCampos lcampos;} 
     { <llave_a> lcampos = campos_list() <llave_c>
-        {return lcampos;}
+        {return sem.campos(lcampos);}
     }
     LCampos campos_list(): 
     {LCampos lcampos; Campo campo;} 
