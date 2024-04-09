@@ -33,7 +33,7 @@ cleanjavacc:
 
 
 build: clean asint jflex cup javacc
-	javac -cp java-cup-11b-20160615-3.jar: evaluador/*.java
+	javac -cp java-cup-11b-20160615-3.jar: procesamientos/*.java
 
 cleanasint:
 	rm -f asint/*.class
@@ -48,8 +48,8 @@ cleandesc: cleanjavacc
 	rm -f c_ast_descendente/*~
 
 cleanev:
-	rm -f evaluador/*.class
-	rm -f evaluador/*~
+	rm -f procesamientos/*.class
+	rm -f procesamientos/*~
 
 clean: cleanasint cleanasc cleandesc cleanev
 	rm -f *.class
