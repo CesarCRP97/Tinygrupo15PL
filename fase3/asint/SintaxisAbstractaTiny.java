@@ -1027,7 +1027,7 @@ public class SintaxisAbstractaTiny {
             this.opnd = opnd;
             this.id = id;
         }
-        public Exp opnd0() {return opnd;}
+        public Exp opnd() {return opnd;}
         public String iden() {return id;}
         public String toString() {
             return "acceso("+opnd+","+id+")";
@@ -1040,7 +1040,7 @@ public class SintaxisAbstractaTiny {
             super();
             this.opnd = opnd;
         }
-        public Exp opnd0() {return opnd;}
+        public Exp opnd() {return opnd;}
         public String toString() {
             return "indireccion("+opnd+")";
         } 

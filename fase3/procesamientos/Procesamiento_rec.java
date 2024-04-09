@@ -114,6 +114,13 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
         return result;
     }
 
+    public String imprime(Campos c) {
+        String result = "{\n";
+        result += imprime(c.lcampos());
+        result += "}\n";
+        return result;
+    }
+
     public String imprime(LCampos lc) {
         String result = "";
         if(claseDe(lc, Muchos_campos.class)) {
@@ -267,7 +274,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(ExpBin exp) {
-        return imprime(exp.opnd1())  + opToString(exp)  + imprime(exp.opnd2());
+        return imprime(exp.opnd0())  + opToString(exp)  + imprime(exp.opnd1());
     }
 
     public String imprime(Menos_unario mu) {
@@ -279,7 +286,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(Indexacion i) {
-        return imprime(i.opnd1())  + "[\n"  + imprime(i.opnd2())  + "]\n";
+        return imprime(i.opnd0())  + "[\n"  + imprime(i.opnd1())  + "]\n";
     }
 
     public String imprime(Acceso a) {
