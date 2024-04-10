@@ -2,31 +2,54 @@ package asint;
 
 
 
+
 public class SintaxisAbstractaTiny {
 
-    public static abstract class Nodo {
-       public Nodo() {
-		   fila=col=-1;
-       }   
-	   private int fila;
-	   private int col;
-	   public Nodo ponFila(int fila) {
-		    this.fila = fila;
-            return this;			
-	   }
-	   public Nodo ponCol(int col) {
-		    this.col = col;
-            return this;			
-	   }
-	   public int leeFila() {
-		  return fila; 
-	   }
-	   public int leeCol() {
-		  return col; 
-	   }
+    public static void imprimeOpnd(Exp opnd, int np) {
+        if(opnd.prioridad() < np) {
+            System.out.println("(");
+            opnd.imprime();
+            System.out.println(")");
+        } else {
+            opnd.imprime();
+        }
     }
 
-     public static class Prog extends Nodo {
+    public static void imprimeExpBin(Exp opnd0, Exp opnd1, String op, int np0, int np1) {
+        imprimeOpnd(opnd0,np0);
+        System.out.println(op);
+        imprimeOpnd(opnd1,np1);
+    }
+
+    public static void imprimeExpUnPref(Exp opnd, String op, int np) {
+        System.out.println(op);
+        imprimeOpnd(opnd,np);
+    }
+
+    public static abstract class Nodo {
+        public Nodo() {
+            fila=col=-1;
+        }   
+        private int fila;
+        private int col;
+        public Nodo ponFila(int fila) {
+            this.fila = fila;
+            return this;			
+        }
+        public Nodo ponCol(int col) {
+            this.col = col;
+            return this;			
+        }
+        public int leeFila() {
+            return fila; 
+        }
+        public int leeCol() {
+            return col; 
+        }
+        public abstract void imprime();
+    }
+
+    public static class Prog extends Nodo {
         private Bloque bloque;
 
         public Prog(Bloque bloque) {
@@ -37,86 +60,113 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "prog("+bloque+")";
         }
+        public void imprime() {
+            bloque.imprime();
+        }
     }
 
     public static class Bloque extends Nodo {
-	   private Decs decs;
-       private Instrs insts;
+        private Decs decs;
+        private Instrs insts;
 
-       public Bloque(Decs decs, Instrs insts) {
-          super();
-          this.decs = decs;
-          this.insts = insts;
-       }
+        public Bloque(Decs decs, Instrs insts) {
+            super();
+            this.decs = decs;
+            this.insts = insts;
+        }
 
-       public Decs decs() {return decs;}
-       public Instrs insts() {return insts;}
+        public Decs decs() {return decs;}
+        public Instrs insts() {return insts;}
 
-       public String toString() {
+        public String toString() {
             return "bloque("+decs+","+insts+")";
+        }
+
+        public void imprime() {
+            System.out.println("{");
+            decs().imprime();
+            insts().imprime();
+            System.out.println("}");
         }
     }
 
     public static abstract class Decs extends Nodo {
-       public Decs() {
-       }
-       public LDecs ldecs() {throw new UnsupportedOperationException();}
+        public Decs() {
+        }
+        public LDecs ldecs() {throw new UnsupportedOperationException();}
 
     }
     public static class Si_decs extends Decs {
-       private LDecs decs; 
-       public Si_decs(LDecs decs) {
-          super();
-          this.decs = decs;
-       }   
+        private LDecs decs; 
+        public Si_decs(LDecs decs) {
+            super();
+            this.decs = decs;
+        }   
         public String toString() {
             return "si_decs("+decs+")";
         } 
         public LDecs ldecs() {return decs;}
- 
+
+        public void imprime() {
+            ldecs().imprime();
+            System.out.println("&&");
+        }
+
     }
     public static class No_decs extends Decs {
-       public No_decs() {
-          super();
-       }   
-       public String toString() {
+        public No_decs() {
+            super();
+        }   
+        public String toString() {
             return "no_decs()";
         } 
+        public void imprime() {
+            System.out.println("&&");
+        }
+
     }
 
     public static abstract class LDecs extends Nodo {
-       public LDecs() {
-		   super();
-       }
-       public Dec dec() {throw new UnsupportedOperationException();}
-       public LDecs ldecs() {throw new UnsupportedOperationException();}
+        public LDecs() {
+            super();
+        }
+        public Dec dec() {throw new UnsupportedOperationException();}
+        public LDecs ldecs() {throw new UnsupportedOperationException();}
     }
-    	
+
     public static class Muchas_decs extends LDecs {
-       private LDecs decs;
-       private Dec dec;
-       public Muchas_decs(LDecs decs, Dec dec) {
-          super();
-          this.dec = dec;
-          this.decs = decs;
-       }
-       public LDecs ldecs() {return decs;}
-       public Dec dec() {return dec;}
-       public String toString() {
+        private LDecs decs;
+        private Dec dec;
+        public Muchas_decs(LDecs decs, Dec dec) {
+            super();
+            this.dec = dec;
+            this.decs = decs;
+        }
+        public LDecs ldecs() {return decs;}
+        public Dec dec() {return dec;}
+        public String toString() {
             return "muchas_decs("+decs+","+dec+")";
         } 
+        public void imprime() {
+            decs.imprime();
+            System.out.println(";");
+            dec.imprime();
+        }
     }
 
     public static class Una_dec extends LDecs {
-       private Dec dec;
-       public Una_dec(Dec dec) {
-          super();
-          this.dec = dec;
-       }
-       public Dec dec() {return dec;}
-       public String toString() {
+        private Dec dec;
+        public Una_dec(Dec dec) {
+            super();
+            this.dec = dec;
+        }
+        public Dec dec() {return dec;}
+        public String toString() {
             return "una_dec("+dec+")";
-        } 
+        }
+        public void imprime() {
+            dec.imprime();
+        }
     }
 
     public static abstract class Dec extends Nodo {
@@ -144,6 +194,10 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "dec_variable("+tipo+","+id+")";
         }
+        public void imprime() {
+            tipo.imprime();
+            System.out.println(id);
+        }
     }
 
     public static class Dec_tipo extends Dec {
@@ -160,6 +214,11 @@ public class SintaxisAbstractaTiny {
         public String iden() {return id;}
         public String toString() {
             return "dec_tipo("+tipo+","+id+")";
+        }
+        public void imprime() {
+            System.out.println("<type>");
+            tipo.imprime();
+            System.out.println(id);
         }
     }
 
@@ -182,6 +241,12 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "dec_proc("+id+","+params_form+","+bloque+")";
         }
+        public void imprime() {
+            System.out.println("<proc>");
+            System.out.println(id);
+            params_form.imprime();
+            bloque.imprime();
+        }
     }
 
     public static abstract class Params_form extends Nodo {
@@ -191,7 +256,7 @@ public class SintaxisAbstractaTiny {
 
         public LParams_form lparams_form() {throw new UnsupportedOperationException();}
     }
-    
+
     public static class Si_params_form extends Params_form {
         private LParams_form lparams_form;
 
@@ -205,6 +270,11 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "si_params_form("+lparams_form+")";
         }
+        public void imprime() {
+            System.out.println("(");
+            lparams_form.imprime();
+            System.out.println(")");
+        }
     }
 
     public static class No_params_form extends Params_form {
@@ -214,6 +284,10 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "no_params_form()";
+        }
+        public void imprime() {
+            System.out.println("(");
+            System.out.println(")");
         }
     }
 
@@ -242,6 +316,11 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "muchos_params_form("+lparams_form+","+param_form+")";
         }
+        public void imprime() {
+            lparams_form.imprime();
+            System.out.println(",");
+            param_form.imprime();
+        }
     }
 
     public static class Un_param_form extends LParams_form {
@@ -256,6 +335,9 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "uno_param_form("+param_form+")";
+        }
+        public void imprime() {
+            param_form.imprime();
         }
     }
 
@@ -284,6 +366,10 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "param_form_normal("+tipo+","+id+")";
         }
+        public void imprime() {
+            tipo.imprime();
+            System.out.println(id);
+        }
     }
 
     public static class Param_form_ref extends Param_form {
@@ -301,6 +387,11 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "param_form_ref("+tipo+","+id+")";
+        }
+        public void imprime() {
+            tipo.imprime();
+            System.out.println("&");
+            System.out.println(id);
         }
     }
 
@@ -323,6 +414,9 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "tipo_int()";
         }
+        public void imprime() {
+            System.out.println("<int>");
+        }
     }
 
     public static class Tipo_real extends Tipo {
@@ -332,6 +426,9 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "tipo_real()";
+        }
+        public void imprime() {
+            System.out.println("<real>");
         }
     }
 
@@ -343,6 +440,9 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "tipo_bool()";
         }
+        public void imprime() {
+            System.out.println("<bool>");
+        }
     }
 
     public static class Tipo_string extends Tipo {
@@ -352,6 +452,9 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "tipo_string()";
+        }
+        public void imprime() {
+            System.out.println("<string>");
         }
     }
 
@@ -371,6 +474,12 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "tipo_array("+tipo+","+num+")";
         }
+        public void imprime() {
+            System.out.println("[");
+            System.out.println(num);
+            System.out.println("]");
+            tipo.imprime();
+        }
     }
 
     public static class Tipo_puntero extends Tipo {
@@ -385,6 +494,10 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "tipo_puntero("+tipo+")";
+        }
+        public void imprime() {
+            System.out.println("^");
+            tipo.imprime();
         }
     }
 
@@ -401,6 +514,10 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "tipo_struct("+campos+")";
         }
+        public void imprime() {
+            System.out.println("<struct>");
+            campos.imprime();
+        }
     }
 
     public static class Tipo_iden extends Tipo {
@@ -416,6 +533,9 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "tipo_iden("+id+")";
         }
+        public void imprime() {
+            System.out.println(id);
+        }
     }
 
     public static class Campos extends Nodo {
@@ -427,6 +547,15 @@ public class SintaxisAbstractaTiny {
         }
 
         public LCampos lcampos() {return lcampos;}
+
+        public String toString() {
+            return "campos("+lcampos+")";
+        }
+        public void imprime() {
+            System.out.println("{");
+            lcampos.imprime();
+            System.out.println("}");
+        }
     }
 
     public static abstract class LCampos extends Nodo {
@@ -454,6 +583,11 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "muchos_campos("+lcampos+","+campo+")";
         }
+        public void imprime() {
+            lcampos.imprime();
+            System.out.println(",");
+            campo.imprime();
+        }
     }
 
     public static class Un_campo extends LCampos {
@@ -468,6 +602,10 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "un_campo("+campo+")";
+        }
+
+        public void imprime() {
+            campo.imprime();
         }
     }
 
@@ -486,6 +624,10 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "campo("+tipo+","+id+")";
+        }
+        public void imprime() {
+            tipo.imprime();
+            System.out.println(id);
         }
     }
 
@@ -510,6 +652,9 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "si_instrs("+linstrs+")";
         }
+        public void imprime() {
+            linstrs.imprime();
+        }
     }
 
     public static class No_instrs extends Instrs {
@@ -519,6 +664,8 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "no_instrs()";
+        }
+        public void imprime() {
         }
     }
 
@@ -547,6 +694,11 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "muchas_instrs("+linstrs+","+instr+")";
         }
+        public void imprime() {
+            linstrs.imprime();
+            System.out.println(";");
+            instr.imprime();
+        }
     }
 
     public static class Una_instr extends LInstrs {
@@ -561,6 +713,9 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "una_instr("+instr+")";
+        }
+        public void imprime() {
+            instr.imprime();
         }
     }
 
@@ -590,6 +745,10 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "eval("+exp+")";
         }
+        public void imprime() {
+            System.out.println("@");
+            exp.imprime();
+        }
     }
 
     public static class If extends Instr {
@@ -607,6 +766,11 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "if("+exp+","+bloque+")";
+        }
+        public void imprime() {
+            System.out.println("<if>");
+            exp.imprime();
+            bloque.imprime();
         }
     }
 
@@ -629,6 +793,13 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "if_else("+exp+","+bloque1+","+bloque2+")";
         }
+        public void imprime() {
+            System.out.println("<if>");
+            exp.imprime();
+            bloque1.imprime();
+            System.out.println("<else>");
+            bloque2.imprime();
+        }
     }
 
     public static class While extends Instr {
@@ -647,6 +818,11 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "while("+exp+","+bloque+")";
         }
+        public void imprime() {
+            System.out.println("<while>");
+            exp.imprime();
+            bloque.imprime();
+        }
     }
 
     public static class Read extends Instr {
@@ -661,6 +837,10 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "read("+exp+")";
+        }
+        public void imprime() {
+            System.out.println("<read>");
+            exp.imprime();
         }
     }
 
@@ -677,6 +857,10 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "write("+exp+")";
         }
+        public void imprime() {
+            System.out.println("<write>");
+            exp.imprime();
+        }
     }
 
     public static class NL extends Instr {
@@ -686,6 +870,9 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "nl()";
+        }
+        public void imprime() {
+            System.out.println("<nl>");
         }
     }
 
@@ -702,11 +889,15 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "new("+exp+")";
         }
+        public void imprime() {
+            System.out.println("<new>");
+            exp.imprime();
+        }
     }
 
     public static class Delete extends Instr {
         private Exp exp; 
-        
+
         public Delete(Exp exp) {
             super();
             this.exp = exp;
@@ -716,6 +907,10 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "delete("+exp+")";
+        }
+        public void imprime() {
+            System.out.println("<delete>");
+            exp.imprime();
         }
     }
 
@@ -731,6 +926,9 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "instr_compuesta("+bloque+")";
+        }
+        public void imprime() {
+            bloque.imprime();
         }
     }
 
@@ -749,6 +947,11 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "invoc("+id+","+params_reales+")";
+        }
+        public void imprime() {
+            System.out.println("<call>");
+            System.out.println(id);
+            params_reales.imprime();
         }
     }
 
@@ -773,6 +976,11 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "si_params_reales("+lparams_reales+")";
         }
+        public void imprime() {
+            System.out.println("(");
+            lparams_reales.imprime();
+            System.out.println(")");
+        }
     }
 
     public static class No_params_reales extends Params_reales {
@@ -782,6 +990,10 @@ public class SintaxisAbstractaTiny {
 
         public String toString() {
             return "no_params_reales()";
+        }
+        public void imprime() {
+            System.out.println("(");
+            System.out.println(")");
         }
     }
 
@@ -810,6 +1022,11 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "muchos_params_reales("+lparams_reales+","+exp+")";
         }
+        public void imprime() {
+            lparams_reales.imprime();
+            System.out.println(",");
+            exp.imprime();
+        }
     }
 
     public static class Un_param_real extends LParams_reales {
@@ -825,20 +1042,24 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "un_param_real("+exp+")";
         }
+        public void imprime() {
+            exp.imprime();
+        }
     }
 
 
     public static abstract class Exp extends  Nodo {
-       public Exp() {
-		   super();
-       }   
-       public String iden() {throw new UnsupportedOperationException();}
-       public String valor() {throw new UnsupportedOperationException();}
-       public Exp opnd0() {throw new UnsupportedOperationException();}
-       public Exp opnd1() {throw new UnsupportedOperationException();}
+        public Exp() {
+            super();
+        }   
+        public String iden() {throw new UnsupportedOperationException();}
+        public String valor() {throw new UnsupportedOperationException();}
+        public Exp opnd0() {throw new UnsupportedOperationException();}
+        public Exp opnd1() {throw new UnsupportedOperationException();}
+        public abstract int prioridad();
     }
-   
-    
+
+
     protected static abstract class ExpBin extends Exp {
         protected Exp opnd0;
         protected Exp opnd1;
@@ -849,6 +1070,7 @@ public class SintaxisAbstractaTiny {
         }
         public Exp opnd0() {return opnd0;}
         public Exp opnd1() {return opnd1;}
+        
 
     }
 
@@ -858,7 +1080,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "asignacion("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 0;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"=",1,0);
+        }
     }
 
     public static class Igual_comp extends ExpBin {
@@ -868,6 +1096,12 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "igual_comp("+opnd0+","+opnd1+")";
         } 
+        public int prioridad() {
+            return 1;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"==",0,1);
+        }
     }
 
     public static class Distinto_comp extends ExpBin {
@@ -876,7 +1110,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "distinto_comp("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 1;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"!=",0,1);
+        }
     }
 
     public static class Menor_que extends ExpBin {
@@ -885,7 +1125,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "menor_que("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 1;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"<",0,1);
+        }
     }
 
     public static class Mayor_que extends ExpBin {
@@ -894,7 +1140,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "mayor_que("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 1;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,">",0,1);
+        }
     }
 
     public static class Menor_igual extends ExpBin {
@@ -903,7 +1155,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "menor_igual("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 1;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"<=",0,1);
+        }
     }
 
     public static class Mayor_igual extends ExpBin {
@@ -912,16 +1170,28 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "mayor_igual("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 1;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,">=",0,1);
+        }
     }
-            
+
     public static class Suma extends ExpBin {
         public Suma(Exp opnd0, Exp opnd1) {
             super(opnd0,opnd1);
         }
         public String toString() {
             return "suma("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 2;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"+",3,2);
+        }
     }
     public static class Resta extends ExpBin {
         public Resta(Exp opnd0, Exp opnd1) {
@@ -929,7 +1199,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "resta("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 2;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"-",3,3);
+        }
     }
 
     public static class And extends ExpBin {
@@ -938,7 +1214,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "and("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 3;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"<and>",4,3);
+        }
     }
 
     public static class Or extends ExpBin {
@@ -947,7 +1229,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "or("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 3;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"<or>",4,4);
+        }
     }
 
     public static class Mul extends ExpBin {
@@ -956,7 +1244,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "mul("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 4;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"*",4,5);
+        }
     }
 
     public static class Div extends ExpBin {
@@ -965,7 +1259,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "div("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 4;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"/",4,5);
+        }
     }
 
     public static class Mod extends ExpBin {
@@ -974,7 +1274,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "mod("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 4;
+        }
+        public void imprime() {
+            imprimeExpBin(opnd0,opnd1,"%",4,5);
+        }
     }
 
     public static class Menos_unario extends Exp {
@@ -986,7 +1292,13 @@ public class SintaxisAbstractaTiny {
         public Exp opnd() {return opnd;}
         public String toString() {
             return "menos_unario("+opnd+")";
-        } 
+        }
+        public int prioridad() {
+            return 5;
+        }
+        public void imprime() {
+            imprimeExpUnPref(opnd,"-",5);
+        }
     }
 
     public static class Not extends Exp {
@@ -998,7 +1310,13 @@ public class SintaxisAbstractaTiny {
         public Exp opnd() {return opnd;}
         public String toString() {
             return "not("+opnd+")";
-        } 
+        }
+        public int prioridad() {
+            return 5;
+        }
+        public void imprime() {
+            imprimeExpUnPref(opnd,"not",5);
+        }
     }
 
     public static class Indexacion extends Exp {
@@ -1013,7 +1331,16 @@ public class SintaxisAbstractaTiny {
         public Exp opnd1() {return opnd1;}
         public String toString() {
             return "indexacion("+opnd0+","+opnd1+")";
-        } 
+        }
+        public int prioridad() {
+            return 6;
+        }
+        public void imprime() {
+            System.out.println("[");
+            opnd1.imprime();
+            System.out.println("]");
+            imprimeOpnd(opnd0, 6);
+        }
     }
 
     public class Acceso extends Exp {
@@ -1028,7 +1355,15 @@ public class SintaxisAbstractaTiny {
         public String iden() {return id;}
         public String toString() {
             return "acceso("+opnd+","+id+")";
-        } 
+        }
+        public int prioridad() {
+            return 6;
+        }
+        public void imprime() {
+            System.out.println(".");
+            System.out.println(id);
+            imprimeOpnd(opnd, 6);
+        }
     }
 
     public static class Indireccion extends Exp {
@@ -1040,9 +1375,16 @@ public class SintaxisAbstractaTiny {
         public Exp opnd() {return opnd;}
         public String toString() {
             return "indireccion("+opnd+")";
-        } 
+        }
+        public int prioridad() {
+            return 6;
+        }
+        public void imprime() {
+            System.out.println("^");
+            imprimeOpnd(opnd, 6);
+        }
     }
-    
+
     public static class Lit_ent extends Exp {
         private String num;
         public Lit_ent(String num) {
@@ -1052,7 +1394,13 @@ public class SintaxisAbstractaTiny {
         public String valor() {return num;}
         public String toString() {
             return "lit_ent("+num+"["+leeFila()+","+leeCol()+"])";
-        } 
+        }
+        public int prioridad() {
+            return 7;
+        }
+        public void imprime() {
+            System.out.println(num);
+        }
     }
 
     public static class Lit_real extends Exp {
@@ -1064,7 +1412,13 @@ public class SintaxisAbstractaTiny {
         public String valor() {return num;}
         public String toString() {
             return "lit_real("+num+"["+leeFila()+","+leeCol()+"])";
-        } 
+        }
+        public int prioridad() {
+            return 7;
+        }
+        public void imprime() {
+            System.out.println(num);
+        }
     }
 
     public static class True extends Exp {
@@ -1074,6 +1428,12 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "true()";
         }
+        public int prioridad() {
+            return 7;
+        }
+        public void imprime() {
+            System.out.println("<true>");
+        }
     }
 
     public static class False extends Exp {
@@ -1082,7 +1442,13 @@ public class SintaxisAbstractaTiny {
         }
         public String toString() {
             return "false()";
-        } 
+        }
+        public int prioridad() {
+            return 7;
+        }
+        public void imprime() {
+            System.out.println("<false>");
+        }
     }
 
     public static class Lit_cadena extends Exp {
@@ -1094,9 +1460,15 @@ public class SintaxisAbstractaTiny {
         public String valor() {return cadena;}
         public String toString() {
             return "lit_cadena("+cadena+"["+leeFila()+","+leeCol()+"])";
-        } 
+        }
+        public int prioridad() {
+            return 7;
+        }
+        public void imprime() {
+            System.out.println(cadena);
+        }
     }
-	
+
     public static class Iden extends Exp {
         private String id;
         public Iden(String id) {
@@ -1106,7 +1478,13 @@ public class SintaxisAbstractaTiny {
         public String iden() {return id;}
         public String toString() {
             return "iden("+id+"["+leeFila()+","+leeCol()+"])";
-        } 
+        }
+        public int prioridad() {
+            return 7;
+        }
+        public void imprime() {
+            System.out.println(id);
+        }
     }
 
     public static class Null extends Exp {
@@ -1116,11 +1494,17 @@ public class SintaxisAbstractaTiny {
         public String toString() {
             return "null()";
         }
+        public int prioridad() {
+            return 7;
+        }
+        public void imprime() {
+            System.out.println("<null>");
+        }
     }
 
 
 
-     // Constructoras    
+    // Constructoras    
     //
     public Prog prog(Bloque bloque) {
         return new Prog(bloque);
@@ -1338,4 +1722,4 @@ public class SintaxisAbstractaTiny {
     public Exp null_() {
         return new Null();
     }
-   }
+}
