@@ -1,3 +1,4 @@
+a
 {
 type ^tNodo tArbol;     
 type struct{ 
@@ -117,7 +118,7 @@ proc construye_arbol() {
       }
   } ## del procedimiento escribe_nombres
  &&         
-     ## Programa principal
+      ## Programa principal
 
     call lee_nombres(nombres);
     call construye_arbol();
@@ -125,4 +126,4 @@ proc construye_arbol() {
     write "---------------------------"; nl;
     call escribe_nombres(arbol)
 
-} ## fin programa 
+} ## fin programa

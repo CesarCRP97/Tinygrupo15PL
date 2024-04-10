@@ -1,5 +1,0 @@
-{
-@
-x
-=
-ERROR_LEXICO
