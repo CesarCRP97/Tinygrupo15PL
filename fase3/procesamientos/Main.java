@@ -10,8 +10,8 @@ import java.io.Reader;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        if(args.length != 2) {
-            System.err.println("Uso: java -jar Procesamientos.jar <fichero> <rec|inter|vis> <asc|desc>");
+        if(args.length != 3) {
+            System.err.println("Uso: java -cp java-cup-11b-29160615-3.jar:. procesamientos.Main <fichero> <rec|inter|vis> <asc|desc>");
             System.exit(1);
         }
         String file = args[0];
@@ -24,19 +24,30 @@ public class Main {
             Reader input = new InputStreamReader(new FileInputStream(file));
             AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
             c_ast_ascendente.ConstructorASTTiny asint_asc = new c_ast_ascendente.ConstructorASTTiny(alex);
-            prog_asc = (Prog)asint_asc.parse().value;
+            try {
+                prog_asc = (Prog)asint_asc.parse().value;
+            } catch (Exception|Error e) {
+                System.err.println(e.getMessage());
+                System.exit(0);
+            }
         } else if (tipo.equals("desc")) {
             c_ast_descendente.ConstructorASTsTiny asint_desc = new c_ast_descendente.ConstructorASTsTiny(new FileReader(file));
             asint_desc.disable_tracing();
-            prog_desc = asint_desc.analiza();
+            try {
+                prog_desc = asint_desc.analiza();
+            } catch (Exception|Error e) {
+                System.err.println(e.getMessage());
+                System.exit(0);
+            }
         } else {
-            System.err.println("Uso: java -jar Procesamientos.jar <fichero> <rec|inter|vis> <asc|desc>");
+            System.err.println("Uso: java -cp java-cup-11b-29160615-3.jar:. procesamientos.Main <fichero> <rec|inter|vis> <asc|desc>");
             System.exit(1);
         }
 
         if(proc.equals("rec")) {
             if(tipo.equals("asc")) {
                 System.out.println(new Procesamiento_rec().imprime(prog_asc));
+
             }
             else if (tipo.equals("desc")) {
                 System.out.println(new Procesamiento_rec().imprime(prog_desc));
