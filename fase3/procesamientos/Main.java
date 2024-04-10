@@ -59,6 +59,16 @@ public class Main {
             else if(tipo.equals("desc")) {
                 prog_desc.imprime();
             }
+        } else if (proc.equals("vis")) {
+            if(tipo.equals("asc")) {
+                prog_asc.procesa(new Procesamiento_vis());
+            }
+            else if(tipo.equals("desc")) {
+                prog_desc.procesa(new Procesamiento_vis());
+            }
+        } else {
+            System.err.println("Uso: java -cp java-cup-11b-29160615-3.jar:. procesamientos.Main <fichero> <rec|inter|vis> <asc|desc>");
+            System.exit(1);
         }
     }
 }   
