@@ -1,11 +1,8 @@
 package asint;
 
-
-
-
 public class SintaxisAbstractaTiny {
 
-    public static void imprimeOpnd(Exp opnd, int np) {
+    private static void imprimeOpnd(Exp opnd, int np) {
         if(opnd.prioridad() < np) {
             System.out.println("(");
             opnd.imprime();
@@ -15,13 +12,13 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public static void imprimeExpBin(Exp opnd0, Exp opnd1, String op, int np0, int np1) {
+    private static void imprimeExpBin(Exp opnd0, Exp opnd1, String op, int np0, int np1) {
         imprimeOpnd(opnd0,np0);
         System.out.println(op);
         imprimeOpnd(opnd1,np1);
     }
 
-    public static void imprimeExpUn(Exp opnd, String op, int np) {
+    private static void imprimeExpUn(Exp opnd, String op, int np) {
         System.out.println(op);
         imprimeOpnd(opnd,np);
     }

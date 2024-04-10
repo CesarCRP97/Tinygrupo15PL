@@ -6,15 +6,15 @@ import java.util.Map;
 
 public class Procesamiento_rec extends SintaxisAbstractaTiny {
 
-    public String imprimeExpBin_rec(Exp opnd0, Exp opnd1, String op, int np0, int np1) {
-        return imprimeOpnd_rec(opnd0, np0) + op + "\n" + imprimeOpnd_rec(opnd1, np1);
+    private String imprimeExpBin(Exp opnd0, Exp opnd1, String op, int np0, int np1) {
+        return imprimeOpnd(opnd0, np0) + op + "\n" + imprimeOpnd(opnd1, np1);
     }
 
-    public String imprimeExpUn_rec(Exp opnd, String op, int np) {
-        return op + "\n" + imprimeOpnd_rec(opnd, np);
+    private String imprimeExpUn(Exp opnd, String op, int np) {
+        return op + "\n" + imprimeOpnd(opnd, np);
     }
 
-    public String imprimeOpnd_rec(Exp opnd, int np) {
+    private String imprimeOpnd(Exp opnd, int np) {
         if(prioridad(opnd) < np) {
             return "(\n" + imprime(opnd) + ")\n";
         } else {
@@ -107,7 +107,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
         } else if(claseDe(t, Tipo_string.class)) {
             result += "<string>\n";
         } else if(claseDe(t, Tipo_array.class)) {
-            result += "[\n" + imprime(t.num()) + "]\n" + imprime(t.tipo());
+            result += imprime(t.tipo()) + "[\n" + imprime(t.num()) + "]\n";
         } else if(claseDe(t, Tipo_puntero.class)) {
             result += "^\n" + imprime(t.tipo());
         } else if(claseDe(t, Tipo_struct.class)) {
@@ -326,79 +326,79 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(Asignacion a) {
-        return imprimeExpBin_rec(a.opnd0(), a.opnd1(), "=", 1, 0);
+        return imprimeExpBin(a.opnd0(), a.opnd1(), "=", 1, 0);
     }
 
     public String imprime(Igual_comp ic) {
-        return imprimeExpBin_rec(ic.opnd0(), ic.opnd1(), "==", 0, 1);
+        return imprimeExpBin(ic.opnd0(), ic.opnd1(), "==", 0, 1);
     }
 
     public String imprime(Distinto_comp dc) {
-        return imprimeExpBin_rec(dc.opnd0(), dc.opnd1(), "!=", 0, 1);
+        return imprimeExpBin(dc.opnd0(), dc.opnd1(), "!=", 0, 1);
     }
 
     public String imprime(Menor_que mq) {
-        return imprimeExpBin_rec(mq.opnd0(), mq.opnd1(), "<", 0, 1);
+        return imprimeExpBin(mq.opnd0(), mq.opnd1(), "<", 0, 1);
     }
 
     public String imprime(Mayor_que mg) {
-        return imprimeExpBin_rec(mg.opnd0(), mg.opnd1(), ">", 0, 1);
+        return imprimeExpBin(mg.opnd0(), mg.opnd1(), ">", 0, 1);
     }
 
     public String imprime(Menor_igual mi) {
-        return imprimeExpBin_rec(mi.opnd0(), mi.opnd1(), "<=", 0, 1);
+        return imprimeExpBin(mi.opnd0(), mi.opnd1(), "<=", 0, 1);
     }
 
     public String imprime(Mayor_igual mg) {
-        return imprimeExpBin_rec(mg.opnd0(), mg.opnd1(), ">=", 0, 1);
+        return imprimeExpBin(mg.opnd0(), mg.opnd1(), ">=", 0, 1);
     }
 
     public String imprime(Suma s) {
-        return imprimeExpBin_rec(s.opnd0(), s.opnd1(), "+", 3, 2);
+        return imprimeExpBin(s.opnd0(), s.opnd1(), "+", 3, 2);
     }
 
     public String imprime(Resta r) {
-        return imprimeExpBin_rec(r.opnd0(), r.opnd1(), "-", 3, 3);
+        return imprimeExpBin(r.opnd0(), r.opnd1(), "-", 3, 3);
     }
 
     public String imprime(And a) {
-        return imprimeExpBin_rec(a.opnd0(), a.opnd1(), "<and>", 4, 3);
+        return imprimeExpBin(a.opnd0(), a.opnd1(), "<and>", 4, 3);
     }
 
     public String imprime(Or o) {
-        return imprimeExpBin_rec(o.opnd0(), o.opnd1(), "<or>", 4, 4);
+        return imprimeExpBin(o.opnd0(), o.opnd1(), "<or>", 4, 4);
     }
 
     public String imprime(Mul m) {
-        return imprimeExpBin_rec(m.opnd0(), m.opnd1(), "*", 4, 5);
+        return imprimeExpBin(m.opnd0(), m.opnd1(), "*", 4, 5);
     }
 
     public String imprime(Div d) {
-        return imprimeExpBin_rec(d.opnd0(), d.opnd1(), "/", 4, 5);
+        return imprimeExpBin(d.opnd0(), d.opnd1(), "/", 4, 5);
     }
 
     public String imprime(Mod m) {
-        return imprimeExpBin_rec(m.opnd0(), m.opnd1(), "%", 4, 5);
+        return imprimeExpBin(m.opnd0(), m.opnd1(), "%", 4, 5);
     }
 
     public String imprime(Menos_unario mu) {
-        return imprimeExpUn_rec(mu.opnd(), "-", 5);
+        return imprimeExpUn(mu.opnd(), "-", 5);
     }
 
     public String imprime(Not n) {
-        return imprimeExpUn_rec(n.opnd(), "<not>", 5);
+        return imprimeExpUn(n.opnd(), "<not>", 5);
     }
 
     public String imprime(Indexacion i) {
-        return imprimeOpnd_rec(i.opnd0(), 6)  + "[\n"  + imprime(i.opnd1())  + "]\n";
+        return imprimeOpnd(i.opnd0(), 6)  + "[\n"  + imprime(i.opnd1())  + "]\n";
     }
 
     public String imprime(Acceso a) {
-        return imprimeOpnd_rec(a.opnd(), 6)  + ".\n"  + imprime(a.iden());
+        return imprimeOpnd(a.opnd(), 6)  + ".\n"  + imprime(a.iden());
     }
 
     public String imprime(Indireccion i) {
-        return imprimeOpnd_rec(i.opnd(), 6)  + "^\n";
+        return imprimeOpnd(i.opnd(), 6)  + "^\n";
     }
 
     public String imprime(Lit_ent le) {
