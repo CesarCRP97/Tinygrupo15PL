@@ -91,7 +91,7 @@ PARSER_END(AnalizadorSintacticoTiny)
   void tipo0() : {} { tipo1() RTipo0() }
   void RTipo0() : {} { <corch_a> <litEntero> <corch_c> RTipo0() | {}}
   void tipo1() : {} { tipo2() | <capirote> tipo1()}
-  void tipo2() : {} { <INT> | <real> | <bool> | <string> | <struct> campos() | <iden> }
+  void tipo2() : {} { <INT> | <real> | <bool> | <string> | <struct> campos() <iden> | <iden> }
 
   void campos() : {} { <llave_a> campos_list() <llave_c>}
   void campos_list() : {} { campo() rcampos_list()}
