@@ -21,7 +21,7 @@ public class SintaxisAbstractaTiny {
         imprimeOpnd(opnd1,np1);
     }
 
-    public static void imprimeExpUnPref(Exp opnd, String op, int np) {
+    public static void imprimeExpUn(Exp opnd, String op, int np) {
         System.out.println(op);
         imprimeOpnd(opnd,np);
     }
@@ -1297,7 +1297,7 @@ public class SintaxisAbstractaTiny {
             return 5;
         }
         public void imprime() {
-            imprimeExpUnPref(opnd,"-",5);
+            imprimeExpUn(opnd,"-",5);
         }
     }
 
@@ -1315,7 +1315,7 @@ public class SintaxisAbstractaTiny {
             return 5;
         }
         public void imprime() {
-            imprimeExpUnPref(opnd,"not",5);
+            imprimeExpUn(opnd,"not",5);
         }
     }
 
@@ -1336,10 +1336,10 @@ public class SintaxisAbstractaTiny {
             return 6;
         }
         public void imprime() {
+            imprimeOpnd(opnd0, 6);
             System.out.println("[");
             opnd1.imprime();
             System.out.println("]");
-            imprimeOpnd(opnd0, 6);
         }
     }
 
@@ -1360,9 +1360,9 @@ public class SintaxisAbstractaTiny {
             return 6;
         }
         public void imprime() {
+            imprimeOpnd(opnd, 6);
             System.out.println(".");
             System.out.println(id);
-            imprimeOpnd(opnd, 6);
         }
     }
 
@@ -1380,8 +1380,8 @@ public class SintaxisAbstractaTiny {
             return 6;
         }
         public void imprime() {
-            System.out.println("^");
             imprimeOpnd(opnd, 6);
+            System.out.println("^");
         }
     }
 

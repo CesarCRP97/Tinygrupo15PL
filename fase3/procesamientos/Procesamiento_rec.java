@@ -5,20 +5,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Procesamiento_rec extends SintaxisAbstractaTiny {
-    public class ECteNoDefinida extends RuntimeException {
-        public ECteNoDefinida(String msg) {
-            super(msg);
+
+    public String imprimeExpBin_rec(Exp opnd0, Exp opnd1, String op, int np0, int np1) {
+        return imprimeOpnd_rec(opnd0, np0) + op + "\n" + imprimeOpnd_rec(opnd1, np1);
+    }
+
+    public String imprimeExpUn_rec(Exp opnd, String op, int np) {
+        return op + "\n" + imprimeOpnd_rec(opnd, np);
+    }
+
+    public String imprimeOpnd_rec(Exp opnd, int np) {
+        if(prioridad(opnd) < np) {
+            return "(\n" + imprime(opnd) + ")\n";
+        } else {
+            return imprime(opnd);
         }
     }
-    public class ECteDuplicada extends RuntimeException {
-        public ECteDuplicada(String msg) {
-            super(msg);
-        }
-    }
-    private Map<String,Float> env;
-    public Procesamiento_rec() {
-        this.env = new HashMap<>();
-    }
+
+    public Procesamiento_rec() {}
 
     public String imprime(Prog p) {
         return imprime(p.bloque()) + "<EOF>\n";
@@ -243,8 +247,34 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
 
     public String imprime(Exp e) {
         String result = "";
-        if(claseDe(e, ExpBin.class)) {
-            result += imprime((ExpBin)e);
+        if(claseDe(e, Asignacion.class)) {
+            result += imprime((Asignacion)e);
+        } else if(claseDe(e, Igual_comp.class)) {
+            result += imprime((Igual_comp)e);
+        } else if(claseDe(e, Distinto_comp.class)) {
+            result += imprime((Distinto_comp)e);
+        } else if(claseDe(e, Menor_que.class)) {
+            result += imprime((Menor_que)e);
+        } else if(claseDe(e, Mayor_que.class)) {
+            result += imprime((Mayor_que)e);
+        } else if(claseDe(e, Menor_igual.class)) {
+            result += imprime((Menor_igual)e);
+        } else if(claseDe(e, Mayor_igual.class)) {
+            result += imprime((Mayor_igual)e);
+        } else if(claseDe(e, Suma.class)) {
+            result += imprime((Suma)e);
+        } else if(claseDe(e, Resta.class)) {
+            result += imprime((Resta)e);
+        } else if(claseDe(e, Mul.class)) {
+            result += imprime((Mul)e);
+        } else if(claseDe(e, Div.class)) {
+            result += imprime((Div)e);
+        } else if(claseDe(e, Mod.class)) {
+            result += imprime((Mod)e);
+        } else if(claseDe(e, And.class)) {
+            result += imprime((And)e);
+        } else if(claseDe(e, Or.class)) {
+            result += imprime((Or)e);
         } else if(claseDe(e, Menos_unario.class)) {
             result += imprime((Menos_unario)e);
         } else if(claseDe(e, Not.class)) {
@@ -273,28 +303,102 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
         return result;
     }
 
-    public String imprime(ExpBin exp) {
-        return imprime(exp.opnd0())  + opToString(exp)  + imprime(exp.opnd1());
+    public int prioridad(Exp e) {
+        if(claseDe(e, Asignacion.class)) {
+            return 0;
+        } else if(claseDe(e, Igual_comp.class) || claseDe(e, Distinto_comp.class) || claseDe(e, Menor_que.class) || claseDe(e, Mayor_que.class) || claseDe(e, Menor_igual.class) || claseDe(e, Mayor_igual.class)) {
+            return 1;
+        } else if(claseDe(e, Suma.class) || claseDe(e, Resta.class)) {
+            return 2;
+        } else if(claseDe(e, And.class) || claseDe(e, Or.class)) {
+            return 3;
+        } else if(claseDe(e, Mul.class) || claseDe(e, Div.class) || claseDe(e, Mod.class)) {
+            return 4;
+        } else if(claseDe(e, Menos_unario.class) || claseDe(e, Not.class)) {
+            return 5;
+        } else if(claseDe(e, Indexacion.class) || claseDe(e, Acceso.class) || claseDe(e, Indireccion.class)) {
+            return 6;
+        } else if(claseDe(e, Lit_ent.class) || claseDe(e, Lit_real.class) || claseDe(e, True.class) || claseDe(e, False.class) || claseDe(e, Lit_cadena.class) || claseDe(e, Iden.class) || claseDe(e, Null.class)) {
+            return 7;
+        } else {
+            throw new RuntimeException("Expresion no reconocida");
+        }
+    }
+
+    public String imprime(Asignacion a) {
+        return imprimeExpBin_rec(a.opnd0(), a.opnd1(), "=", 1, 0);
+    }
+
+    public String imprime(Igual_comp ic) {
+        return imprimeExpBin_rec(ic.opnd0(), ic.opnd1(), "==", 0, 1);
+    }
+
+    public String imprime(Distinto_comp dc) {
+        return imprimeExpBin_rec(dc.opnd0(), dc.opnd1(), "!=", 0, 1);
+    }
+
+    public String imprime(Menor_que mq) {
+        return imprimeExpBin_rec(mq.opnd0(), mq.opnd1(), "<", 0, 1);
+    }
+
+    public String imprime(Mayor_que mg) {
+        return imprimeExpBin_rec(mg.opnd0(), mg.opnd1(), ">", 0, 1);
+    }
+
+    public String imprime(Menor_igual mi) {
+        return imprimeExpBin_rec(mi.opnd0(), mi.opnd1(), "<=", 0, 1);
+    }
+
+    public String imprime(Mayor_igual mg) {
+        return imprimeExpBin_rec(mg.opnd0(), mg.opnd1(), ">=", 0, 1);
+    }
+
+    public String imprime(Suma s) {
+        return imprimeExpBin_rec(s.opnd0(), s.opnd1(), "+", 3, 2);
+    }
+
+    public String imprime(Resta r) {
+        return imprimeExpBin_rec(r.opnd0(), r.opnd1(), "-", 3, 3);
+    }
+
+    public String imprime(And a) {
+        return imprimeExpBin_rec(a.opnd0(), a.opnd1(), "<and>", 4, 3);
+    }
+
+    public String imprime(Or o) {
+        return imprimeExpBin_rec(o.opnd0(), o.opnd1(), "<or>", 4, 4);
+    }
+
+    public String imprime(Mul m) {
+        return imprimeExpBin_rec(m.opnd0(), m.opnd1(), "*", 4, 5);
+    }
+
+    public String imprime(Div d) {
+        return imprimeExpBin_rec(d.opnd0(), d.opnd1(), "/", 4, 5);
+    }
+
+    public String imprime(Mod m) {
+        return imprimeExpBin_rec(m.opnd0(), m.opnd1(), "%", 4, 5);
     }
 
     public String imprime(Menos_unario mu) {
-        return "-\n" + imprime(mu.opnd());
+        return imprimeExpUn_rec(mu.opnd(), "-", 5);
     }
 
     public String imprime(Not n) {
-        return "!\n" + imprime(n.opnd());
+        return imprimeExpUn_rec(n.opnd(), "<not>", 5);
     }
 
     public String imprime(Indexacion i) {
-        return imprime(i.opnd0())  + "[\n"  + imprime(i.opnd1())  + "]\n";
+        return imprimeOpnd_rec(i.opnd0(), 6)  + "[\n"  + imprime(i.opnd1())  + "]\n";
     }
 
     public String imprime(Acceso a) {
-        return imprime(a.opnd())  + ".\n"  + imprime(a.iden());
+        return imprimeOpnd_rec(a.opnd(), 6)  + ".\n"  + imprime(a.iden());
     }
 
     public String imprime(Indireccion i) {
-        return imprime(i.opnd())  + "^\n";
+        return imprimeOpnd_rec(i.opnd(), 6)  + "^\n";
     }
 
     public String imprime(Lit_ent le) {
