@@ -35,6 +35,16 @@ cleanjavacc:
 build: clean asint jflex cup javacc
 	javac -cp java-cup-11b-20160615-3.jar: procesamientos/*.java
 
+runasc: build
+	for i in "1" "2" "3" "4"; do \
+		java -cp java-cup-11b-20160615-3.jar:. procesamientos.Main asc pruebas_tiny/input$$i.txt; \
+	done
+
+rundesc: build
+	for i in "1" "2" "3" "4"; do \
+		java -cp java-cup-11b-20160615-3.jar:. procesamientos.Main desc pruebas_tiny/input$$i.txt; \
+	done
+
 cleanasint:
 	rm -f asint/*.class
 	rm -f asint/*~
