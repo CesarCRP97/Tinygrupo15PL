@@ -93,7 +93,13 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(Param_form pf) {
-        return imprime(pf.tipo()) + (claseDe(pf, Param_form_ref.class) ? "&\n" : "")  + imprime(pf.iden());
+        if (claseDe(pf, Param_form_normal.class)) {
+            return imprime(pf.tipo()) + imprime(pf.iden());
+        } else if (claseDe(pf, Param_form_ref.class)) {
+            return imprime(pf.tipo()) + "&\n" + imprime(pf.iden());
+        } else {
+            throw new RuntimeException("Parametro no reconocido");
+        }
     }
 
     public String imprime(Tipo t) {
@@ -423,6 +429,10 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
 
     public String imprime(Iden i) {
         return i.iden() + "\n";
+    }
+
+    public String imprime(Null n) {
+        return "<null>\n";
     }
 
     public String imprime(String iden) {

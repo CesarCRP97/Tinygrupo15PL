@@ -272,7 +272,7 @@ public class Procesamiento_vis extends ProcesamientoDef {
         System.out.println("]");
     }
     public void procesa(Acceso exp) {
-        imprimeOpnd(exp.opnd0(), 6);
+        imprimeOpnd(exp.opnd(), 6);
         System.out.println(".");
         System.out.println(exp.iden());
     }
