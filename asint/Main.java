@@ -10,9 +10,9 @@ public class Main {
         String archivo = args[0];
         String op = args[1];
         try{
-            if (op.equals("asc")) {
+            if (op.equals("desc")) {
                 implementacion_javacc.asint.Launcher_javacc.launch(archivo);
-            } else if (op.equals("desc")) {
+            } else if (op.equals("asc")) {
                 implementacion_cup.asint.Launcher_cup.launch(archivo);
             } else {
                 System.out.println("Operación no válida");
