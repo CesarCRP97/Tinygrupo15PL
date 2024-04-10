@@ -200,17 +200,17 @@ PARSER_END(ConstructorASTsTiny)
 
     Campos campos(): 
     {LCampos lcampos;} 
-    { <llave_a> lcampos = campos_list() <llave_c>
+    { <llave_a> lcampos = campos_lista() <llave_c>
         {return sem.campos(lcampos);}
     }
-    LCampos campos_list(): 
+    LCampos campos_lista(): 
     {LCampos lcampos; Campo campo;} 
-    { campo = campo() lcampos = rcampos_list(sem.un_campo(campo))
+    { campo = campo() lcampos = rcampos_lista(sem.un_campo(campo))
         {return lcampos;}
     }
-    LCampos rcampos_list(LCampos lcamposh):
+    LCampos rcampos_lista(LCampos lcamposh):
     {LCampos lcampos; Campo campo;} 
-    { <coma> campo = campo() lcampos = rcampos_list(sem.muchos_campos(lcamposh, campo))
+    { <coma> campo = campo() lcampos = rcampos_lista(sem.muchos_campos(lcamposh, campo))
         {return lcampos;}
         | 
         {return lcamposh;}
