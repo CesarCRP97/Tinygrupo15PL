@@ -107,7 +107,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
         } else if(claseDe(t, Tipo_puntero.class)) {
             result += "^\n" + imprime(t.tipo());
         } else if(claseDe(t, Tipo_struct.class)) {
-            result += "<struct>\n" + imprime(t.campos())  + imprime(t.iden());
+            result += "<struct>\n" + imprime(t.campos());
         } else if(claseDe(t, Tipo_iden.class)) {
             result += imprime(t.iden());
         }

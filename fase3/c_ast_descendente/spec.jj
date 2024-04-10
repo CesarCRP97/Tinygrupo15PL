@@ -134,9 +134,15 @@ PARSER_END(ConstructorASTsTiny)
         {return (Dec)sem.dec_proc(id.image, params_form, bloque).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
     Params_form parametros_form(): 
-    {LParams_form lparams_form;} 
-    { <par_a> lparams_form = parametros_form_list() <par_c> 
-        {return sem.si_params_form(lparams_form);} |
+    {Params_form params_form;} 
+    { <par_a> params_form = parametros_form_opt() <par_c> 
+        {return params_form;}
+    }
+    Params_form parametros_form_opt():
+    {LParams_form lparams;}
+    {lparams = parametros_form_list() 
+        {return sem.si_params_form(lparams);}
+        | 
         {return sem.no_params_form();}
     }
     LParams_form parametros_form_list(): 
@@ -322,12 +328,19 @@ PARSER_END(ConstructorASTsTiny)
     }
 
     Params_reales parametros_reales(): 
+    {Params_reales params;} 
+    { <par_a> params = parametros_reales_opt() <par_c>
+        {return params;}
+    }
+    
+    Params_reales parametros_reales_opt():
     {LParams_reales lparams;} 
-    { <par_a> lparams = parametros_reales_list() <par_c>
+    {lparams = parametros_reales_list() 
         {return sem.si_params_reales(lparams);}
         | 
         {return sem.no_params_reales();}
     }
+
     LParams_reales parametros_reales_list(): 
     {Exp exp; LParams_reales lparams;} 
     { exp = expresion() lparams = rparametros_reales_list(sem.un_param_real(exp)) 
