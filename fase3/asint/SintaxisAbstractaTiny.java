@@ -390,19 +390,16 @@ public class SintaxisAbstractaTiny {
 
     public static class Tipo_struct extends Tipo {
         private Campos campos;
-        private String iden;
 
-        public Tipo_struct(Campos campos, String iden) {
+        public Tipo_struct(Campos campos) {
             super();
             this.campos = campos;
-            this.iden = iden;
         }
 
         public Campos campos() {return campos;}
-        public String iden() {return iden;}
 
         public String toString() {
-            return "tipo_struct("+campos+","+iden+")";
+            return "tipo_struct("+campos+")";
         }
     }
 
@@ -1188,8 +1185,8 @@ public class SintaxisAbstractaTiny {
     public Tipo tipo_puntero(Tipo tipo) {
         return new Tipo_puntero(tipo);
     }
-    public Tipo tipo_struct(Campos campos, String iden) {
-        return new Tipo_struct(campos,iden);
+    public Tipo tipo_struct(Campos campos) {
+        return new Tipo_struct(campos);
     }
     public Tipo tipo_iden(String id) {
         return new Tipo_iden(id);

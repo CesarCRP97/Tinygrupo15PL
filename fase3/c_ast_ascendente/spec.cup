@@ -140,7 +140,7 @@ tipo2 ::= IDEN: id
     {: RESULT = (Tipo)sem.tipo_iden(id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
 tipo2 ::= STRUCT campos: campos IDEN: id
-    {: RESULT = (Tipo)sem.tipo_struct(campos, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
+    {: RESULT = sem.tipo_struct(campos); :};
 
 campos ::= LLAVE_A campos_lista: lcampos LLAVE_C
     {: RESULT = sem.campos(lcampos); :};

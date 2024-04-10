@@ -194,7 +194,7 @@ PARSER_END(ConstructorASTsTiny)
     | <real> {return sem.tipo_real();}
     | <bool> {return sem.tipo_bool();}
     | <string> {return sem.tipo_string();}
-    | <struct> campos = campos() id = <iden> {return (Tipo)sem.tipo_struct(campos, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+    | <struct> campos = campos() {return sem.tipo_struct(campos);}
     | id = <iden> {return (Tipo)sem.tipo_iden(id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
 
