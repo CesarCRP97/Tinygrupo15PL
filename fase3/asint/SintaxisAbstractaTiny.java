@@ -12,15 +12,19 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    private static void imprimeExpBin(Exp opnd0, Exp opnd1, String op, int np0, int np1) {
+    private static void imprimeExpBin(Exp opnd0, Exp opnd1, String op, int np0, int np1, Exp vinc) {
         imprimeOpnd(opnd0,np0);
-        System.out.println(op);
+        System.out.println(op + infoVinculo(vinc));
         imprimeOpnd(opnd1,np1);
     }
 
-    private static void imprimeExpUn(Exp opnd, String op, int np) {
-        System.out.println(op);
+    private static void imprimeExpUn(Exp opnd, String op, int np, Exp vinc) {
+        System.out.println(op + infoVinculo(vinc));
         imprimeOpnd(opnd,np);
+    }
+
+    private static String infoVinculo(Nodo nodo) {
+        return "$f:"+nodo.leeFila()+",c:"+nodo.leeCol() + "$";
     }
 
     public static abstract class Nodo {
@@ -212,7 +216,7 @@ public class SintaxisAbstractaTiny {
         }
         public void imprime() {
             tipo.imprime();
-            System.out.println(id);
+            System.out.println(id + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -237,7 +241,7 @@ public class SintaxisAbstractaTiny {
         public void imprime() {
             System.out.println("<type>");
             tipo.imprime();
-            System.out.println(id);
+            System.out.println(id + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -265,7 +269,7 @@ public class SintaxisAbstractaTiny {
         }
         public void imprime() {
             System.out.println("<proc>");
-            System.out.println(id);
+            System.out.println(id + infoVinculo(this));
             params_form.imprime();
             bloque.imprime();
         }
@@ -405,7 +409,7 @@ public class SintaxisAbstractaTiny {
         }
         public void imprime() {
             tipo.imprime();
-            System.out.println(id);
+            System.out.println(id + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -431,7 +435,7 @@ public class SintaxisAbstractaTiny {
         public void imprime() {
             tipo.imprime();
             System.out.println("&");
-            System.out.println(id);
+            System.out.println(id + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -533,7 +537,7 @@ public class SintaxisAbstractaTiny {
             tipo.imprime();
             System.out.println("[");
             System.out.println(num);
-            System.out.println("]");
+            System.out.println("]" + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -598,7 +602,7 @@ public class SintaxisAbstractaTiny {
             return "tipo_iden("+id+")";
         }
         public void imprime() {
-            System.out.println(id);
+            System.out.println(id + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -703,7 +707,7 @@ public class SintaxisAbstractaTiny {
         }
         public void imprime() {
             tipo.imprime();
-            System.out.println(id);
+            System.out.println(id + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1071,7 +1075,7 @@ public class SintaxisAbstractaTiny {
         }
         public void imprime() {
             System.out.println("<call>");
-            System.out.println(id);
+            System.out.println(id + infoVinculo(this));
             params_reales.imprime();
         }
         public void procesa(Procesamiento p) {
@@ -1221,7 +1225,7 @@ public class SintaxisAbstractaTiny {
             return 0;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"=",1,0);
+            imprimeExpBin(opnd0,opnd1,"=",1,0,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1239,7 +1243,7 @@ public class SintaxisAbstractaTiny {
             return 1;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"==",0,1);
+            imprimeExpBin(opnd0,opnd1,"==",0,1,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1257,7 +1261,7 @@ public class SintaxisAbstractaTiny {
             return 1;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"!=",0,1);
+            imprimeExpBin(opnd0,opnd1,"!=",0,1,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1275,7 +1279,7 @@ public class SintaxisAbstractaTiny {
             return 1;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"<",0,1);
+            imprimeExpBin(opnd0,opnd1,"<",0,1,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1293,7 +1297,7 @@ public class SintaxisAbstractaTiny {
             return 1;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,">",0,1);
+            imprimeExpBin(opnd0,opnd1,">",0,1,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1311,7 +1315,7 @@ public class SintaxisAbstractaTiny {
             return 1;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"<=",0,1);
+            imprimeExpBin(opnd0,opnd1,"<=",0,1,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1329,7 +1333,7 @@ public class SintaxisAbstractaTiny {
             return 1;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,">=",0,1);
+            imprimeExpBin(opnd0,opnd1,">=",0,1,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1347,7 +1351,7 @@ public class SintaxisAbstractaTiny {
             return 2;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"+",3,2);
+            imprimeExpBin(opnd0,opnd1,"+",3,2,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1364,7 +1368,7 @@ public class SintaxisAbstractaTiny {
             return 2;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"-",3,3);
+            imprimeExpBin(opnd0,opnd1,"-",3,3,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1382,7 +1386,7 @@ public class SintaxisAbstractaTiny {
             return 3;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"<and>",4,3);
+            imprimeExpBin(opnd0,opnd1,"<and>",4,3,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1400,7 +1404,7 @@ public class SintaxisAbstractaTiny {
             return 3;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"<or>",4,4);
+            imprimeExpBin(opnd0,opnd1,"<or>",4,4,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1418,7 +1422,7 @@ public class SintaxisAbstractaTiny {
             return 4;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"*",4,5);
+            imprimeExpBin(opnd0,opnd1,"*",4,5,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1436,7 +1440,7 @@ public class SintaxisAbstractaTiny {
             return 4;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"/",4,5);
+            imprimeExpBin(opnd0,opnd1,"/",4,5,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1454,7 +1458,7 @@ public class SintaxisAbstractaTiny {
             return 4;
         }
         public void imprime() {
-            imprimeExpBin(opnd0,opnd1,"%",4,5);
+            imprimeExpBin(opnd0,opnd1,"%",4,5,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1475,7 +1479,7 @@ public class SintaxisAbstractaTiny {
             return 5;
         }
         public void imprime() {
-            imprimeExpUn(opnd,"-",5);
+            imprimeExpUn(opnd,"-",5,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1496,7 +1500,7 @@ public class SintaxisAbstractaTiny {
             return 5;
         }
         public void imprime() {
-            imprimeExpUn(opnd,"<not>",5);
+            imprimeExpUn(opnd,"<not>",5,this);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1521,7 +1525,7 @@ public class SintaxisAbstractaTiny {
         }
         public void imprime() {
             imprimeOpnd(opnd0, 6);
-            System.out.println("[");
+            System.out.println("[" + infoVinculo(this));
             opnd1.imprime();
             System.out.println("]");
         }
@@ -1549,7 +1553,7 @@ public class SintaxisAbstractaTiny {
         public void imprime() {
             imprimeOpnd(opnd, 6);
             System.out.println(".");
-            System.out.println(id);
+            System.out.println(id + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1571,7 +1575,7 @@ public class SintaxisAbstractaTiny {
         }
         public void imprime() {
             imprimeOpnd(opnd, 6);
-            System.out.println("^");
+            System.out.println("^" + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1592,7 +1596,7 @@ public class SintaxisAbstractaTiny {
             return 7;
         }
         public void imprime() {
-            System.out.println(num);
+            System.out.println(num + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1613,7 +1617,7 @@ public class SintaxisAbstractaTiny {
             return 7;
         }
         public void imprime() {
-            System.out.println(num);
+            System.out.println(num + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1631,7 +1635,7 @@ public class SintaxisAbstractaTiny {
             return 7;
         }
         public void imprime() {
-            System.out.println("<true>");
+            System.out.println("<true>" + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1649,7 +1653,7 @@ public class SintaxisAbstractaTiny {
             return 7;
         }
         public void imprime() {
-            System.out.println("<false>");
+            System.out.println("<false>" + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1670,7 +1674,7 @@ public class SintaxisAbstractaTiny {
             return 7;
         }
         public void imprime() {
-            System.out.println(cadena);
+            System.out.println(cadena + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1691,7 +1695,7 @@ public class SintaxisAbstractaTiny {
             return 7;
         }
         public void imprime() {
-            System.out.println(id);
+            System.out.println(id + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
