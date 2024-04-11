@@ -9,47 +9,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 public class Main {
-    public static void launch(String[] args) throws Exception {
 
-        char tipo;
-        Prog prog = null;
-
-        tipo = (char) System.in.read();
-        
-        //Inicializamos el arbol de sintaxis abstracta que vayamos a usar
-        if(tipo == 'a') {
-
-            System.out.prinln("CONSTRUCCION AST ASCENDENTE");
-
-            Reader input = new InputStreamReader(System.in);
-            AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
-            c_ast_ascendente.ConstructorASTTiny asint_asc = new c_ast_ascendente.ConstructorASTTiny(alex);
-            try {
-                prog = (Prog)asint_asc.debug_parse().value;
-            } catch (Exception|Error e) {
-                System.err.println(e.getMessage());
-                System.exit(0);
-            }
-        } else if (tipo == 'd') {
-            c_ast_descendente.ConstructorASTsTiny asint_desc = new c_ast_descendente.ConstructorASTsTiny(System.in);
-            asint_desc.disable_tracing();
-            try {
-                prog = asint_desc.analiza();
-            } catch (Exception|Error e) {
-                System.err.println(e.getMessage());
-                System.exit(0);
-            }
-        } else {
-            prog = null;
-        }
-        
-        System.out.println("IMPRESION RECURSIVA");
-        System.out.println(new Procesamiento_rec().imprime(prog));
-        System.out.println("IMPRESION INTERPRETE");
-        prog.imprime();
-        System.out.println("IMPRESION VISITANTE");
-        prog.procesa(new Procesamiento_vis());
-    }
 
 
     public static void main(String[] args) throws Exception {
