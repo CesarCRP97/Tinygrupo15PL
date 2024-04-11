@@ -60,6 +60,7 @@ public class SintaxisAbstractaTiny {
         }
         public void imprime() {
             bloque.imprime();
+            System.out.println("<EOF>");
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -128,7 +129,6 @@ public class SintaxisAbstractaTiny {
             return "no_decs()";
         } 
         public void imprime() {
-            System.out.println("&&");
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -530,10 +530,10 @@ public class SintaxisAbstractaTiny {
             return "tipo_array("+tipo+","+num+")";
         }
         public void imprime() {
+            tipo.imprime();
             System.out.println("[");
             System.out.println(num);
             System.out.println("]");
-            tipo.imprime();
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1496,7 +1496,7 @@ public class SintaxisAbstractaTiny {
             return 5;
         }
         public void imprime() {
-            imprimeExpUn(opnd,"not",5);
+            imprimeExpUn(opnd,"<not>",5);
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
