@@ -1,8 +1,8 @@
-package procesamientos;
-
 import asint.SintaxisAbstractaTiny.Prog;
 import c_ast_ascendente.AnalizadorLexicoTiny;
 import c_ast_descendente.ConstructorASTsTiny;
+import procesamientos.Procesamiento_rec;
+import procesamientos.Procesamiento_vis;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
