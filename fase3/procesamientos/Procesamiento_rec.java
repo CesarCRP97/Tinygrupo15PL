@@ -6,12 +6,12 @@ import java.util.Map;
 
 public class Procesamiento_rec extends SintaxisAbstractaTiny {
 
-    private String imprimeExpBin(Exp opnd0, Exp opnd1, String op, int np0, int np1) {
-        return imprimeOpnd(opnd0, np0) + op + "\n" + imprimeOpnd(opnd1, np1);
+    private String imprimeExpBin(Exp opnd0, Exp opnd1, String op, int np0, int np1, Nodo vinc) {
+        return imprimeOpnd(opnd0, np0) + op + infoVinculo(vinc) + "\n" + imprimeOpnd(opnd1, np1);
     }
 
-    private String imprimeExpUn(Exp opnd, String op, int np) {
-        return op + "\n" + imprimeOpnd(opnd, np);
+    private String imprimeExpUn(Exp opnd, String op, int np, Nodo vinc) {
+        return op + infoVinculo(vinc) + "\n" + imprimeOpnd(opnd, np);
     }
 
     private String imprimeOpnd(Exp opnd, int np) {
@@ -20,6 +20,10 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
         } else {
             return imprime(opnd);
         }
+    }
+
+    private String infoVinculo(Nodo n) {
+        return "$f:" + n.leeFila() + ",c:" + n.leeCol() + "$";
     }
 
     public Procesamiento_rec() {}
@@ -63,15 +67,15 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(Dec_variable dec) {
-        return imprime(dec.tipo()) + imprime(dec.iden());
+        return imprime(dec.tipo()) + imprime(dec.iden(), dec);
     }
 
     public String imprime(Dec_tipo dec) {
-        return "<type>\n" + imprime(dec.tipo()) + imprime(dec.iden());
+        return "<type>\n" + imprime(dec.tipo()) + imprime(dec.iden(), dec);
     }
 
     public String imprime(Dec_proc dec) {
-        return "<proc>\n" + imprime(dec.iden())  + imprime(dec.params_form())  + imprime(dec.bloque()) ;
+        return "<proc>\n" + imprime(dec.iden(), dec)  + imprime(dec.params_form())  + imprime(dec.bloque()) ;
     }
 
     public String imprime(Params_form pf) {
@@ -94,9 +98,9 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
 
     public String imprime(Param_form pf) {
         if (claseDe(pf, Param_form_normal.class)) {
-            return imprime(pf.tipo()) + imprime(pf.iden());
+            return imprime(pf.tipo()) + imprime(pf.iden(), pf);
         } else if (claseDe(pf, Param_form_ref.class)) {
-            return imprime(pf.tipo()) + "&\n" + imprime(pf.iden());
+            return imprime(pf.tipo()) + "&\n" + imprime(pf.iden(), pf);
         } else {
             throw new RuntimeException("Parametro no reconocido");
         }
@@ -113,13 +117,13 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
         } else if(claseDe(t, Tipo_string.class)) {
             result += "<string>\n";
         } else if(claseDe(t, Tipo_array.class)) {
-            result += imprime(t.tipo()) + "[\n" + imprime(t.num()) + "]\n";
+            result += imprime(t.tipo()) + "[\n" + imprime(t.num(), t) + "]\n";
         } else if(claseDe(t, Tipo_puntero.class)) {
             result += "^\n" + imprime(t.tipo());
         } else if(claseDe(t, Tipo_struct.class)) {
             result += "<struct>\n" + imprime(t.campos());
         } else if(claseDe(t, Tipo_iden.class)) {
-            result += imprime(t.iden());
+            result += imprime(t.iden(), t);
         }
         return result;
     }
@@ -141,7 +145,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
     
     public String imprime(Campo c) {
-        return imprime(c.tipo())  + imprime(c.iden());
+        return imprime(c.tipo())  + imprime(c.iden(), c);
     }
 
     public String imprime(Instrs i) {
@@ -226,7 +230,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(Invoc i) {
-        return "<call>\n" + imprime(i.iden())  + imprime(i.params_reales());
+        return "<call>\n" + imprime(i.iden(), i)  + imprime(i.params_reales());
     }
 
     public String imprime(Instr_compuesta ic) {
@@ -332,111 +336,111 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(Asignacion a) {
-        return imprimeExpBin(a.opnd0(), a.opnd1(), "=", 1, 0);
+        return imprimeExpBin(a.opnd0(), a.opnd1(), "=", 1, 0,a);
     }
 
     public String imprime(Igual_comp ic) {
-        return imprimeExpBin(ic.opnd0(), ic.opnd1(), "==", 0, 1);
+        return imprimeExpBin(ic.opnd0(), ic.opnd1(), "==", 0, 1,ic);
     }
 
     public String imprime(Distinto_comp dc) {
-        return imprimeExpBin(dc.opnd0(), dc.opnd1(), "!=", 0, 1);
+        return imprimeExpBin(dc.opnd0(), dc.opnd1(), "!=", 0, 1,dc);
     }
 
     public String imprime(Menor_que mq) {
-        return imprimeExpBin(mq.opnd0(), mq.opnd1(), "<", 0, 1);
+        return imprimeExpBin(mq.opnd0(), mq.opnd1(), "<", 0, 1,mq);
     }
 
     public String imprime(Mayor_que mg) {
-        return imprimeExpBin(mg.opnd0(), mg.opnd1(), ">", 0, 1);
+        return imprimeExpBin(mg.opnd0(), mg.opnd1(), ">", 0, 1,mg);
     }
 
     public String imprime(Menor_igual mi) {
-        return imprimeExpBin(mi.opnd0(), mi.opnd1(), "<=", 0, 1);
+        return imprimeExpBin(mi.opnd0(), mi.opnd1(), "<=", 0, 1,mi);
     }
 
     public String imprime(Mayor_igual mg) {
-        return imprimeExpBin(mg.opnd0(), mg.opnd1(), ">=", 0, 1);
+        return imprimeExpBin(mg.opnd0(), mg.opnd1(), ">=", 0, 1,mg);
     }
 
     public String imprime(Suma s) {
-        return imprimeExpBin(s.opnd0(), s.opnd1(), "+", 3, 2);
+        return imprimeExpBin(s.opnd0(), s.opnd1(), "+", 3, 2,s);
     }
 
     public String imprime(Resta r) {
-        return imprimeExpBin(r.opnd0(), r.opnd1(), "-", 3, 3);
+        return imprimeExpBin(r.opnd0(), r.opnd1(), "-", 3, 3,r);
     }
 
     public String imprime(And a) {
-        return imprimeExpBin(a.opnd0(), a.opnd1(), "<and>", 4, 3);
+        return imprimeExpBin(a.opnd0(), a.opnd1(), "<and>", 4, 3,a);
     }
 
     public String imprime(Or o) {
-        return imprimeExpBin(o.opnd0(), o.opnd1(), "<or>", 4, 4);
+        return imprimeExpBin(o.opnd0(), o.opnd1(), "<or>", 4, 4,o);
     }
 
     public String imprime(Mul m) {
-        return imprimeExpBin(m.opnd0(), m.opnd1(), "*", 4, 5);
+        return imprimeExpBin(m.opnd0(), m.opnd1(), "*", 4, 5,m);
     }
 
     public String imprime(Div d) {
-        return imprimeExpBin(d.opnd0(), d.opnd1(), "/", 4, 5);
+        return imprimeExpBin(d.opnd0(), d.opnd1(), "/", 4, 5,d);
     }
 
     public String imprime(Mod m) {
-        return imprimeExpBin(m.opnd0(), m.opnd1(), "%", 4, 5);
+        return imprimeExpBin(m.opnd0(), m.opnd1(), "%", 4, 5,m);
     }
 
     public String imprime(Menos_unario mu) {
-        return imprimeExpUn(mu.opnd(), "-", 5);
+        return imprimeExpUn(mu.opnd(), "-", 5,mu);
     }
 
     public String imprime(Not n) {
-        return imprimeExpUn(n.opnd(), "<not>", 5);
+        return imprimeExpUn(n.opnd(), "<not>", 5,n);
     }
 
     public String imprime(Indexacion i) {
-        return imprimeOpnd(i.opnd0(), 6)  + "[\n"  + imprime(i.opnd1())  + "]\n";
+        return imprimeOpnd(i.opnd0(), 6)  + "[" + infoVinculo(i) + "\n"  + imprime(i.opnd1())  + "]\n";
     }
 
     public String imprime(Acceso a) {
-        return imprimeOpnd(a.opnd(), 6)  + ".\n"  + imprime(a.iden());
+        return imprimeOpnd(a.opnd(), 6)  + ".\n"  + imprime(a.iden(), a);
     }
 
     public String imprime(Indireccion i) {
-        return imprimeOpnd(i.opnd(), 6)  + "^\n";
+        return imprimeOpnd(i.opnd(), 6)  + "^" + infoVinculo(i) + "\n";
     }
 
     public String imprime(Lit_ent le) {
-        return le.valor() + "\n";
+        return le.valor() + infoVinculo(le) + "\n";
     }
 
     public String imprime(Lit_real lr) {
-        return lr.valor() + "\n";
+        return lr.valor() + infoVinculo(lr) + "\n";
     }
 
     public String imprime(True t) {
-        return "<true>\n";
+        return "<true>" + infoVinculo(t) + "\n";
     }
 
     public String imprime(False f) {
-        return "<false>\n";
+        return "<false>" + infoVinculo(f) + "\n";
     }
 
     public String imprime(Lit_cadena lc) {
-        return lc.valor() + "\n";
+        return lc.valor() + infoVinculo(lc) + "\n";
     }
 
     public String imprime(Iden i) {
-        return i.iden() + "\n";
+        return i.iden() + infoVinculo(i) + "\n";
     }
 
     public String imprime(Null n) {
         return "<null>\n";
     }
 
-    public String imprime(String iden) {
-        return iden + "\n";
+    public String imprime(String iden, Nodo n) {
+        return iden + infoVinculo(n) + "\n";
     }
 
     private String opToString(ExpBin e) {
