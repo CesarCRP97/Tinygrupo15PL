@@ -25,7 +25,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     public Procesamiento_rec() {}
 
     public String imprime(Prog p) {
-        return imprime(p.bloque()) + "<EOF>\n";
+        return imprime(p.bloque()) + "<EOF>";
     }
 
     public String imprime(Bloque b) {
@@ -36,8 +36,8 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
         String result = "";
         if(claseDe(d, Si_decs.class)) {
             result += imprime(d.ldecs());
+            result += "&&\n";
         }
-        result += "&&\n";
         return result;
     }
 
@@ -226,7 +226,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(Invoc i) {
-        return "<invoc>\n" + imprime(i.iden())  + imprime(i.params_reales());
+        return "<call>\n" + imprime(i.iden())  + imprime(i.params_reales());
     }
 
     public String imprime(Instr_compuesta ic) {
