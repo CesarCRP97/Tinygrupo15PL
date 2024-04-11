@@ -165,9 +165,9 @@ PARSER_END(ConstructorASTsTiny)
     Param_form ampersand_opt(Tipo tipoh): 
     {Token id;} 
     { <ampersand> id = <iden>
-        {return (Param_form)sem.param_form_normal(tipoh, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
-        | id = <iden>
         {return (Param_form)sem.param_form_ref(tipoh, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+        | id = <iden>
+        {return (Param_form)sem.param_form_normal(tipoh, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
     }
   
     Tipo tipo(): 
@@ -182,8 +182,8 @@ PARSER_END(ConstructorASTsTiny)
     }
     Tipo RTipo0(Tipo tipoh): 
     {Tipo tipo; Token num;} 
-    { <corch_a> num = <litEntero> <corch_c> tipo = RTipo0(tipoh) 
-        {return (Tipo)sem.tipo_array(tipo, num.image).ponFila(num.beginLine).ponCol(num.beginColumn);}
+    { <corch_a> num = <litEntero> <corch_c> tipo = RTipo0((Tipo)sem.tipo_array(tipoh, num.image).ponFila(num.beginLine).ponCol(num.beginColumn))
+        {return tipo;}
         | 
         {return tipoh;}
     }  
