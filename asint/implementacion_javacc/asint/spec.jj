@@ -1,151 +1,153 @@
 options  {
-  STATIC=false;
-  DEBUG_PARSER=true;
+    STATIC=false;
+    DEBUG_PARSER=true;
 }  
 PARSER_BEGIN(AnalizadorSintacticoTiny)
-package implementacion_javacc.asint;
+    package implementacion_javacc.asint;
 
-public class AnalizadorSintacticoTiny {}
+    public class AnalizadorSintacticoTiny {}
 PARSER_END(AnalizadorSintacticoTiny)
-  TOKEN:{<#letra:["a"-"z","A"-"Z"]>}
-  TOKEN:{<#caracter:"_" | <letra> | <digito>>}
-  TOKEN:{<#digitoPositivo:["1"-"9"]>}
-  TOKEN:{<#digito:<digitoPositivo>|"0">} 
-  TOKEN:{<#parteEntera:<digitoPositivo> (<digito>)* | "0" >} 
-  TOKEN:{<#parteDecimal: "." (<digito>)* <digitoPositivo> | "0">}
-  TOKEN:{<#segParteReal: <parteDecimal>|<parteExponencial>|<parteDecimal><parteExponencial>>}
-  TOKEN:{<#parteExponencial: ["e","E"] <litEntero>>}
-  SKIP:{<["\t"," ","\r","\b","\n"]>}  
-  SKIP:{<"##"(~["\n"])*>}  
-  TOKEN[IGNORE_CASE]: {<bool:"bool">}
-  TOKEN[IGNORE_CASE]: {<real:"real">}
-  TOKEN[IGNORE_CASE]: {<INT:"int">}
-  TOKEN[IGNORE_CASE]: {<string:"string">}
-  TOKEN[IGNORE_CASE]: {<and:"and">}
-  TOKEN[IGNORE_CASE]: {<or:"or">}
-  TOKEN[IGNORE_CASE]: {<not:"not">}
-  TOKEN[IGNORE_CASE]: {<NULL:"null">}
-  TOKEN[IGNORE_CASE]: {<TRUE:"true">}
-  TOKEN[IGNORE_CASE]: {<FALSE:"false">}
-  TOKEN[IGNORE_CASE]: {<IF:"if">}
-  TOKEN[IGNORE_CASE]: {<ELSE:"else">}
-  TOKEN[IGNORE_CASE]: {<WHILE:"while">}
-  TOKEN[IGNORE_CASE]: {<struct:"struct">}
-  TOKEN[IGNORE_CASE]: {<NEW:"new">}
-  TOKEN[IGNORE_CASE]: {<delete:"delete">}
-  TOKEN[IGNORE_CASE]: {<read:"read">}
-  TOKEN[IGNORE_CASE]: {<write:"write">}
-  TOKEN[IGNORE_CASE]: {<nl:"nl">}
-  TOKEN[IGNORE_CASE]: {<type:"type">}
-  TOKEN[IGNORE_CASE]: {<call:"call">}
-  TOKEN[IGNORE_CASE]: {<proc:"proc">}
-  TOKEN:{<suma:"+">}
-  TOKEN:{<resta:"-">}
-  TOKEN:{<mult:"*">}
-  TOKEN:{<div:"/">}
-  TOKEN:{<porcentaje:"%">}
-  TOKEN:{<menorque:"<">}
-  TOKEN:{<mayorque:">">}
-  TOKEN:{<menorigual:"<=">}
-  TOKEN:{<mayorigual:">=">}
-  TOKEN:{<igual_comp:"==">}
-  TOKEN:{<noigual_comp:"!=">}
-  TOKEN:{<par_a:"(">}
-  TOKEN:{<par_c:")">}
-  TOKEN:{<puntoycoma:";">}
-  TOKEN:{<igual_op:"=">}
-  TOKEN:{<corch_a:"[">}
-  TOKEN:{<corch_c:"]">}
-  TOKEN:{<punto:".">}
-  TOKEN:{<capirote:"^">}
-  TOKEN:{<coma:",">}
-  TOKEN:{<llave_a:"{">}
-  TOKEN:{<llave_c:"}">}
-  TOKEN:{<dobleampersand:"&&">}
-  TOKEN:{<ampersand:"&">}
-  TOKEN:{<arroba:"@">}
-  TOKEN:{<litEntero:(["+","-"])?<parteEntera>>}
-  TOKEN:{<litReal:<litEntero><segParteReal>>}
-  TOKEN:{<litCadena: "\"" ( ~["\""] )* "\"">}
-  TOKEN:{<iden:(<letra>|"_")(<caracter>)*>}
 
-  void analiza()   : {} {programa() <EOF> }
-  void programa()  : {} { bloque() }
-  void bloque()    : {} { <llave_a> declaraciones_opt() instrucciones_opt() <llave_c> }
-  void declaraciones_opt() : {} {declaraciones() | {}}
-  void declaraciones() : {} {lista_declaraciones() <dobleampersand>}
-  void lista_declaraciones() : {} {declaracion() rlista_decs()}
-  void rlista_decs() : {} {<puntoycoma> declaracion() rlista_decs() | {}}
-  void declaracion() : {} {dec_variable() | dec_tipo() | dec_procedimiento() }
-  void dec_variable() : {} {tipo() <iden>}
-  void dec_tipo() : {} {<type> tipo() <iden>}
-  void dec_procedimiento() : {} {<proc> <iden> parametros_form() bloque()}
-  void parametros_form() : {} {<par_a> parametros_form_list_opt() <par_c>}
-  void parametros_form_list_opt() : {} {parametros_form_list() | {}}
-  void parametros_form_list() : {} {parametro_form() rparametros_form_list()}
-  void rparametros_form_list() : {} {<coma> parametro_form() rparametros_form_list() | {}}
-  void parametro_form() : {} {tipo() ampersand_opt() <iden>}
-  void ampersand_opt() : {} {<ampersand> | {}}
-  
-  void tipo(): {} { tipo0() }
-  void tipo0() : {} { tipo1() RTipo0() }
-  void RTipo0() : {} { <corch_a> <litEntero> <corch_c> RTipo0() | {}}
-  void tipo1() : {} { tipo2() | <capirote> tipo1()}
-  void tipo2() : {} { <INT> | <real> | <bool> | <string> | <struct> campos() <iden> | <iden> }
 
-  void campos() : {} { <llave_a> campos_list() <llave_c>}
-  void campos_list() : {} { campo() rcampos_list()}
-  void rcampos_list() : {} { <coma> campo() rcampos_list() | {}}
-  void campo() : {} { tipo() <iden>}
+    TOKEN:{<#letra:["a"-"z","A"-"Z"]>}
+    TOKEN:{<#caracter:"_" | <letra> | <digito>>}
+    TOKEN:{<#digitoPositivo:["1"-"9"]>}
+    TOKEN:{<#digito:<digitoPositivo>|"0">} 
+    TOKEN:{<#parteEntera:<digitoPositivo> (<digito>)* | "0" >} 
+    TOKEN:{<#parteDecimal: "." (<digito>)* <digitoPositivo> | "0">}
+    TOKEN:{<#segParteReal: <parteDecimal>|<parteExponencial>|<parteDecimal><parteExponencial>>}
+    TOKEN:{<#parteExponencial: ["e","E"] <litEntero>>}
+    SKIP:{<["\t"," ","\r","\b","\n"]>}  
+    SKIP:{<"##"(~["\n"])*>}  
+    TOKEN[IGNORE_CASE]: {<bool:"bool">}
+    TOKEN[IGNORE_CASE]: {<real:"real">}
+    TOKEN[IGNORE_CASE]: {<INT:"int">}
+    TOKEN[IGNORE_CASE]: {<string:"string">}
+    TOKEN[IGNORE_CASE]: {<and:"and">}
+    TOKEN[IGNORE_CASE]: {<or:"or">}
+    TOKEN[IGNORE_CASE]: {<not:"not">}
+    TOKEN[IGNORE_CASE]: {<NULL:"null">}
+    TOKEN[IGNORE_CASE]: {<TRUE:"true">}
+    TOKEN[IGNORE_CASE]: {<FALSE:"false">}
+    TOKEN[IGNORE_CASE]: {<IF:"if">}
+    TOKEN[IGNORE_CASE]: {<ELSE:"else">}
+    TOKEN[IGNORE_CASE]: {<WHILE:"while">}
+    TOKEN[IGNORE_CASE]: {<struct:"struct">}
+    TOKEN[IGNORE_CASE]: {<NEW:"new">}
+    TOKEN[IGNORE_CASE]: {<delete:"delete">}
+    TOKEN[IGNORE_CASE]: {<read:"read">}
+    TOKEN[IGNORE_CASE]: {<write:"write">}
+    TOKEN[IGNORE_CASE]: {<nl:"nl">}
+    TOKEN[IGNORE_CASE]: {<type:"type">}
+    TOKEN[IGNORE_CASE]: {<call:"call">}
+    TOKEN[IGNORE_CASE]: {<proc:"proc">}
+    TOKEN:{<suma:"+">}
+    TOKEN:{<resta:"-">}
+    TOKEN:{<mult:"*">}
+    TOKEN:{<div:"/">}
+    TOKEN:{<porcentaje:"%">}
+    TOKEN:{<menorque:"<">}
+    TOKEN:{<mayorque:">">}
+    TOKEN:{<menorigual:"<=">}
+    TOKEN:{<mayorigual:">=">}
+    TOKEN:{<igual_comp:"==">}
+    TOKEN:{<noigual_comp:"!=">}
+    TOKEN:{<par_a:"(">}
+    TOKEN:{<par_c:")">}
+    TOKEN:{<puntoycoma:";">}
+    TOKEN:{<igual_op:"=">}
+    TOKEN:{<corch_a:"[">}
+    TOKEN:{<corch_c:"]">}
+    TOKEN:{<punto:".">}
+    TOKEN:{<capirote:"^">}
+    TOKEN:{<coma:",">}
+    TOKEN:{<llave_a:"{">}
+    TOKEN:{<llave_c:"}">}
+    TOKEN:{<dobleampersand:"&&">}
+    TOKEN:{<ampersand:"&">}
+    TOKEN:{<arroba:"@">}
+    TOKEN:{<litEntero:(["+","-"])?<parteEntera>>}
+    TOKEN:{<litReal:<litEntero><segParteReal>>}
+    TOKEN:{<litCadena: "\"" ( ~["\""] )* "\"">}
+    TOKEN:{<iden:(<letra>|"_")(<caracter>)*>}
 
-  void instrucciones_opt() : {} {instrucciones() | {}}
-  void instrucciones() : {} {instruccion() rinstrucciones()}
-  void rinstrucciones() : {} {<puntoycoma> instruccion() rinstrucciones() | {}}
-  void instruccion() : {} { instr_eval() | instr_ifelse() | instr_while() | instr_read() | instr_write() | instr_nl() | instr_reserva() | instr_liberacion() | instr_invocacion() | instr_compuesta() }
-  void instr_eval() : {} {<arroba> expresion()}
-  void instr_ifelse() : {} { <IF> expresion() bloque() else_opt() }
-  void else_opt() : {} { <ELSE> bloque() | {}}
-  void instr_while() : {} { <WHILE> expresion() bloque() }
-  void instr_read() : {} { <read> expresion() }
-  void instr_write() : {} { <write> expresion() }
-  void instr_nl() : {} { <nl> }
-  void instr_reserva() : {} { <NEW> expresion() }
-  void instr_liberacion() : {} { <delete> expresion() }
-  void instr_compuesta() : {} { bloque() }
-  void instr_invocacion() : {} { <call> <iden> parametros_reales() }
+void analiza()   : {} {programa() <EOF> }
+void programa()  : {} { bloque() }
+void bloque()    : {} { <llave_a> declaraciones_opt() instrucciones_opt() <llave_c> }
+void declaraciones_opt() : {} {declaraciones() | {}}
+void declaraciones() : {} {lista_declaraciones() <dobleampersand>}
+void lista_declaraciones() : {} {declaracion() rlista_decs()}
+void rlista_decs() : {} {<puntoycoma> declaracion() rlista_decs() | {}}
+void declaracion() : {} {dec_variable() | dec_tipo() | dec_procedimiento() }
+void dec_variable() : {} {tipo() <iden>}
+void dec_tipo() : {} {<type> tipo() <iden>}
+void dec_procedimiento() : {} {<proc> <iden> parametros_form() bloque()}
+void parametros_form() : {} {<par_a> parametros_form_list_opt() <par_c>}
+void parametros_form_list_opt() : {} {parametros_form_list() | {}}
+void parametros_form_list() : {} {parametro_form() rparametros_form_list()}
+void rparametros_form_list() : {} {<coma> parametro_form() rparametros_form_list() | {}}
+void parametro_form() : {} {tipo() ampersand_opt() <iden>}
+void ampersand_opt() : {} {<ampersand> | {}}
 
-  void parametros_reales() : {} { <par_a> parametros_reales_list_opt() <par_c>}
-  void parametros_reales_list_opt() : {} { parametros_reales_list() | {}}
-  void parametros_reales_list() : {} { expresion() rparametros_reales_list()}
-  void rparametros_reales_list() : {} { <coma> expresion() rparametros_reales_list() | {}}
+void tipo(): {} { tipo0() }
+void tipo0() : {} { tipo1() RTipo0() }
+void RTipo0() : {} { <corch_a> <litEntero> <corch_c> RTipo0() | {}}
+void tipo1() : {} { tipo2() | <capirote> tipo1()}
+void tipo2() : {} { <INT> | <real> | <bool> | <string> | <struct> campos() <iden> | <iden> }
 
-  void expresion() : {} { e0() }
-  void e0() : {} { e1() re0() }
-  void re0() : {} { op0() e0() | {}}
-  void e1() : {} { e2() re1() }
-  void re1() : {} { op1() e2() re1() | {}}
-  void e2() : {} { e3() re2() re21() }
-  void re2() : {} { op2_noasoc() e3() | {}}
-  void re21() : {} { op2_izq() e3() re21() | {}}
-  void e3() : {} { e4() re3() }
-  void re3() : {} { op3_der() e3() | op3_noasoc() e4() | {}}
-  void e4() : {} { e5() re4() }
-  void re4() : {} { op4() e5() re4() | {}}
-  void e5() : {} { e6() | op5() e5() }
-  void e6() : {} { e7() re6() }
-  void re6() : {} { op6() re6() | {}}
-  void e7() : {} { <par_a> e0() <par_c> | <iden> | <litEntero> | <litReal> | <litCadena> | <NULL> | <TRUE> | <FALSE> }
+void campos() : {} { <llave_a> campos_list() <llave_c>}
+void campos_list() : {} { campo() rcampos_list()}
+void rcampos_list() : {} { <coma> campo() rcampos_list() | {}}
+void campo() : {} { tipo() <iden>}
 
-  void op0() : {} { <igual_op> }
-  void op1() : {} { <igual_comp> | <noigual_comp> | <menorque> | <mayorque> | <menorigual> | <mayorigual> }
-  void op2_izq() : {} { <suma> }
-  void op2_noasoc() : {} { <resta> }
-  void op3_der() : {} { <and> }
-  void op3_noasoc() : {} { <or> }
-  void op4() : {} { <mult> | <div> | <porcentaje> }
-  void op5() : {} { <resta> | <not> }
-  void op6() : {} { op_indexacion() | op_acceso_registro() | op_indireccion() }
-  void op_indexacion() : {} { <corch_a> e0() <corch_c> }
-  void op_acceso_registro() : {} { <punto> <iden> }
-  void op_indireccion() : {} { <capirote> }
+void instrucciones_opt() : {} {instrucciones() | {}}
+void instrucciones() : {} {instruccion() rinstrucciones()}
+void rinstrucciones() : {} {<puntoycoma> instruccion() rinstrucciones() | {}}
+void instruccion() : {} { instr_eval() | instr_ifelse() | instr_while() | instr_read() | instr_write() | instr_nl() | instr_reserva() | instr_liberacion() | instr_invocacion() | instr_compuesta() }
+void instr_eval() : {} {<arroba> expresion()}
+void instr_ifelse() : {} { <IF> expresion() bloque() else_opt() }
+void else_opt() : {} { <ELSE> bloque() | {}}
+void instr_while() : {} { <WHILE> expresion() bloque() }
+void instr_read() : {} { <read> expresion() }
+void instr_write() : {} { <write> expresion() }
+void instr_nl() : {} { <nl> }
+void instr_reserva() : {} { <NEW> expresion() }
+void instr_liberacion() : {} { <delete> expresion() }
+void instr_compuesta() : {} { bloque() }
+void instr_invocacion() : {} { <call> <iden> parametros_reales() }
+
+void parametros_reales() : {} { <par_a> parametros_reales_list_opt() <par_c>}
+void parametros_reales_list_opt() : {} { parametros_reales_list() | {}}
+void parametros_reales_list() : {} { expresion() rparametros_reales_list()}
+void rparametros_reales_list() : {} { <coma> expresion() rparametros_reales_list() | {}}
+
+void expresion() : {} { e0() }
+void e0() : {} { e1() re0() }
+void re0() : {} { op0() e0() | {}}
+void e1() : {} { e2() re1() }
+void re1() : {} { op1() e2() re1() | {}}
+void e2() : {} { e3() re2() re21() }
+void re2() : {} { op2_noasoc() e3() | {}}
+void re21() : {} { op2_izq() e3() re21() | {}}
+void e3() : {} { e4() re3() }
+void re3() : {} { op3_der() e3() | op3_noasoc() e4() | {}}
+void e4() : {} { e5() re4() }
+void re4() : {} { op4() e5() re4() | {}}
+void e5() : {} { e6() | op5() e5() }
+void e6() : {} { e7() re6() }
+void re6() : {} { op6() re6() | {}}
+void e7() : {} { <par_a> e0() <par_c> | <iden> | <litEntero> | <litReal> | <litCadena> | <NULL> | <TRUE> | <FALSE> }
+
+void op0() : {} { <igual_op> }
+void op1() : {} { <igual_comp> | <noigual_comp> | <menorque> | <mayorque> | <menorigual> | <mayorigual> }
+void op2_izq() : {} { <suma> }
+void op2_noasoc() : {} { <resta> }
+void op3_der() : {} { <and> }
+void op3_noasoc() : {} { <or> }
+void op4() : {} { <mult> | <div> | <porcentaje> }
+void op5() : {} { <resta> | <not> }
+void op6() : {} { op_indexacion() | op_acceso_registro() | op_indireccion() }
+void op_indexacion() : {} { <corch_a> e0() <corch_c> }
+void op_acceso_registro() : {} { <punto> <iden> }
+void op_indireccion() : {} { <capirote> }
 
