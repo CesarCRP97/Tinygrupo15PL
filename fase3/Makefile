@@ -19,7 +19,7 @@ cleancup:
 
 
 javacc: asint jflex cup cleanjavacc
-	javacc -OUTPUT_DIRECTORY=c_ast_descendente c_ast_descendente/spec.jj
+	java -cp javacc.jar javacc -OUTPUT_DIRECTORY=c_ast_descendente c_ast_descendente/spec.jj
 	javac c_ast_descendente/*.java
 
 cleanjavacc:
@@ -33,7 +33,7 @@ cleanjavacc:
 
 
 build: clean asint jflex cup javacc
-	javac -cp java-cup-11b-20160615-3.jar: procesamientos/*.java Main.java
+	javac -cp java-cup-11b-20160615-3.jar: procesamientos/*.java Main.java DomJudge.java
 
 cleanasint:
 	rm -f asint/*.class
