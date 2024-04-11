@@ -79,7 +79,7 @@ PARSER_END(ConstructorASTsTiny)
 
     Prog analiza(): 
     {Prog prog;} 
-    { prog = programa() <EOF> 
+    { prog = programa() <EOF>
         {return prog;}
     }
     Prog programa(): 
