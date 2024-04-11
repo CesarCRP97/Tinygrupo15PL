@@ -41,12 +41,11 @@ public class Procesamiento_vis extends ProcesamientoDef {
         System.out.println("&&");
     }
     public void procesa(No_decs decs) {
-        System.out.println("&&");
     }
     public void procesa(Muchas_decs decs) {
-        decs.dec().procesa(this);
-        System.out.println(";");
         decs.ldecs().procesa(this);
+        System.out.println(";");
+        decs.dec().procesa(this);
     }
     public void procesa(Una_dec dec) {
         dec.dec().procesa(this);
@@ -76,9 +75,9 @@ public class Procesamiento_vis extends ProcesamientoDef {
         System.out.println(")");
     }
     public void procesa(Muchos_params_form params) {
-        params.param_form().procesa(this);
-        System.out.println(",");
         params.lparams_form().procesa(this);
+        System.out.println(",");
+        params.param_form().procesa(this);
     }
     public void procesa(Un_param_form params) {
         params.param_form().procesa(this);
@@ -109,7 +108,6 @@ public class Procesamiento_vis extends ProcesamientoDef {
     }
     public void procesa(Tipo_string tipo) {
         System.out.println("<string>");
-        tipo.tipo().procesa(this);
     }
     public void procesa(Tipo_puntero tipo) {
         System.out.println("^");
@@ -128,9 +126,9 @@ public class Procesamiento_vis extends ProcesamientoDef {
         System.out.println("}");
     }
     public void procesa(Muchos_campos campos) {
-        campos.campo().procesa(this);
-        System.out.println(",");
         campos.lcampos().procesa(this);
+        System.out.println(",");
+        campos.campo().procesa(this);
     }
     public void procesa(Un_campo campo) {
         campo.campo().procesa(this);
@@ -145,9 +143,9 @@ public class Procesamiento_vis extends ProcesamientoDef {
     public void procesa(No_instrs instrs) {
     }
     public void procesa(Muchas_instrs instrs) {
-        instrs.instr().procesa(this);
-        System.out.println(";");
         instrs.linstrs().procesa(this);
+        System.out.println(";");
+        instrs.instr().procesa(this);
     }
     public void procesa(Una_instr instr) {
         instr.instr().procesa(this);
@@ -210,9 +208,9 @@ public class Procesamiento_vis extends ProcesamientoDef {
         System.out.println(")");
     }
     public void procesa(Muchos_params_reales params) {
-        params.exp().procesa(this);
-        System.out.println(",");
         params.lparams_reales().procesa(this);
+        System.out.println(",");
+        params.exp().procesa(this);
     }
     public void procesa(Un_param_real params) {
         params.exp().procesa(this);
@@ -277,8 +275,8 @@ public class Procesamiento_vis extends ProcesamientoDef {
         System.out.println(exp.iden());
     }
     public void procesa(Indireccion exp) {
-        System.out.println("^");
         imprimeOpnd(exp.opnd(), 6);
+        System.out.println("^");
     }
     public void procesa(Lit_ent exp) {
         System.out.println(exp.valor());
