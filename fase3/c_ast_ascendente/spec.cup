@@ -104,10 +104,10 @@ parametros_form_lista ::= parametros_form_lista: lparam COMA parametro_form: par
     {: RESULT = sem.muchos_params_form(lparam, param); :};
 
 parametro_form ::= tipo: tipo AMPERSAND IDEN: id
-    {: RESULT = (Param_form)sem.param_form_normal(tipo, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
+    {: RESULT = (Param_form)sem.param_form_ref(tipo, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
 parametro_form ::= tipo: tipo IDEN: id
-    {: RESULT = (Param_form)sem.param_form_ref(tipo, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
+    {: RESULT = (Param_form)sem.param_form_normal(tipo, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
 tipo ::= tipo0: tipo
     {: RESULT = tipo;  :};
