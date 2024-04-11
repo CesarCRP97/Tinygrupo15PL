@@ -1,6 +1,6 @@
 import asint.SintaxisAbstractaTiny.Prog;
 import c_ast_ascendente.AnalizadorLexicoTiny;
-import c_ast_descendente.ConstructorASTsTiny;
+import c_ast_descendente.ConstructorASTsTinyDJ;
 import procesamientos.Procesamiento_rec;
 import procesamientos.Procesamiento_vis;
 import java.io.FileInputStream;
@@ -74,8 +74,7 @@ public class Main {
                 System.exit(0);
             }
         } else if (tipo.equals("desc")) {
-            c_ast_descendente.ConstructorASTsTiny asint_desc = new c_ast_descendente.ConstructorASTsTiny(new FileReader(file));
-            asint_desc.disable_tracing();
+            c_ast_descendente.ConstructorASTsTinyDJ asint_desc = new c_ast_descendente.ConstructorASTsTinyDJ(new FileReader(file));
             try {
                 prog = asint_desc.analiza();
             } catch (Exception|Error e) {
