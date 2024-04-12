@@ -154,3 +154,8 @@ runvisdesc4:
 	java -cp java-cup-11b-20160615-3.jar:. Main pruebas_tiny/input4.txt vis desc > output4visdesc.txt
 	diff output4visdesc.txt pruebas_tiny/output4.txt
 
+runcasosprueba:
+	for i in "1" "2" "3" "4" "5"; do
+		cat casos_prueba_dj/sample"$i"a.in | java -cp java-cup-11b-20160615-3.jar: DomJudge > sample"$i"a.outh;
+		cat casos_prueba_dj/sample"$i"d.in | java -cp java-cup-11b-20160615-3.jar: DomJudge > sample"$i"d.outh;
+	done
