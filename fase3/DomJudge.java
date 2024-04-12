@@ -23,7 +23,6 @@ public class DomJudge {
             c_ast_ascendente.ConstructorASTTinyDJ asint_asc = new c_ast_ascendente.ConstructorASTTinyDJ(alex);
             try {
                 prog = (Prog)asint_asc.debug_parse().value;
-                System.out.println("Analisis sintactico correcto");
             } catch (Exception E) {
                 System.out.println("ERROR_SINTACTICO");
                 System.exit(0);
