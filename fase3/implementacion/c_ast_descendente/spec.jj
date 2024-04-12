@@ -19,7 +19,7 @@ PARSER_END(ConstructorASTsTiny)
     TOKEN:{<#digitoPositivo:["1"-"9"]>}
     TOKEN:{<#digito:<digitoPositivo>|"0">} 
     TOKEN:{<#parteEntera:<digitoPositivo> (<digito>)* | "0" >} 
-    TOKEN:{<#parteDecimal: "." (<digito>)* <digitoPositivo> | "0">}
+    TOKEN:{<#parteDecimal: "." (<digito>)* <digitoPositivo> | "." "0">}
     TOKEN:{<#segParteReal: <parteDecimal>|<parteExponencial>|<parteDecimal><parteExponencial>>}
     TOKEN:{<#parteExponencial: ["e","E"] <litEntero>>}
     SKIP:{<["\t"," ","\r","\b","\n"]>}  
