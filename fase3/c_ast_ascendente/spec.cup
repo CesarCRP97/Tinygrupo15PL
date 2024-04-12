@@ -25,16 +25,13 @@ action code {:
 :}
 
 
-terminal	BOOL, REAL, INT, STRING, AND, OR, NOT, NULL, 
-			TRUE, FALSE, IF, ELSE, WHILE, STRUCT, NEW, 
+terminal	BOOL, REAL, INT, STRING, TRUE, FALSE, 
+            IF, ELSE, WHILE, STRUCT, NEW, 
 			DELETE, READ, WRITE, NL, TYPE, CALL, PROC,
-			SUMA, RESTA, MULT, DIV, PORCENTAJE, MENORQUE,
-			MAYORQUE, MENORIGUAL, MAYORIGUAL, IGUAL_COMP,
-			NOIGUAL_COMP, PAR_A, PAR_C, PUNTYCOMA, IGUAL_OP,
-			CORCH_A, CORCH_C, PUNTO, CAPIROTE, COMA, LLAVE_A,
+			PAR_A, PAR_C, PUNTYCOMA, CORCH_C, PUNTO, COMA, LLAVE_A,
 			LLAVE_C, DOBLEAMPERSAND, AMPERSAND, ARROBA;
 
-terminal StringLocalizado IDEN, LIT_CADENA, LIT_ENTERO, LIT_REAL;
+terminal StringLocalizado IDEN, LIT_CADENA, LIT_ENTERO, LIT_REAL, CORCH_A, CAPIROTE, SUMA, RESTA, MULT, DIV, PORCENTAJE, IGUAL_COMP, NOIGUAL_COMP, MENORQUE, MAYORQUE, MENORIGUAL, MAYORIGUAL, IGUAL_OP, AND, OR, NOT, NULL;
 
 non terminal Prog programa;
 non terminal Bloque bloque;
@@ -52,7 +49,7 @@ non terminal Instrs instrucciones;
 non terminal LInstrs lista_instrucciones;
 non terminal Instr instruccion, instr_eval, instr_if, instr_if_else, instr_while, instr_read, instr_write, instr_nl, instr_reserva, instr_liberacion, instr_invocacion, instr_compuesta;
 non terminal Exp expresion, expresion_basica, E0, E1, E2, E3, E4, E5, E6, E7;
-non terminal String op0, op1, op2_izq, op2_noasoc, op3_der, op3_noasoc, op4, op5;
+non terminal StringLocalizado op0, op1, op2_izq, op2_noasoc, op3_der, op3_noasoc, op4, op5;
 non terminal Params_reales parametros_reales;
 non terminal LParams_reales parametros_reales_lista;
 
@@ -256,8 +253,8 @@ expresion_basica ::= LIT_CADENA: cad
 expresion_basica ::= IDEN: id
     {: RESULT = (Exp)sem.iden(id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
 
-expresion_basica ::= NULL
-    {: RESULT = sem.null_(); :};
+expresion_basica ::= NULL: n
+    {: RESULT = (Exp)sem.null_().ponFila(n.fila()).ponCol(n.columna()); :};
 
 expresion_basica ::= TRUE
     {: RESULT = sem.true_(); :};
@@ -271,88 +268,88 @@ expresion ::= E0 : exp
 E0 ::= E1: exp
     {: RESULT = exp; :};
 E0 ::= E1: exp1 op0: op E0: exp2
-    {: RESULT = sem.mkop(op, exp1, exp2); :};
+    {: RESULT = (Exp)sem.mkop(op.str(), exp1, exp2).ponFila(op.fila()).ponCol(op.columna()); :};
 
 E1 ::= E2: exp
     {: RESULT = exp; :};
-E1 ::= E1: exp1 op1:op E2:exp2
-    {: RESULT = sem.mkop(op, exp1, exp2); :};
+E1 ::= E1: exp1 op1: op E2:exp2
+    {: RESULT = (Exp)sem.mkop(op.str(), exp1, exp2).ponFila(op.fila()).ponCol(op.columna()); :};
 
 E2 ::= E3:exp
     {: RESULT = exp; :};
 E2 ::= E2: exp1 op2_izq: op E3: exp2 
-    {: RESULT = sem.mkop(op, exp1, exp2); :};
+    {: RESULT = (Exp)sem.mkop(op.str(), exp1, exp2).ponFila(op.fila()).ponCol(op.columna()); :};
 E2 ::= E2: exp1 op2_noasoc: op E3: exp2
-    {: RESULT = sem.mkop(op, exp1, exp2); :};
+    {: RESULT = (Exp)sem.mkop(op.str(), exp1, exp2).ponFila(op.fila()).ponCol(op.columna()); :};
 
 E3 ::= E4: exp
     {: RESULT = exp; :};
 E3 ::= E4: exp1 op3_der: op E3: exp2 
-    {: RESULT = sem.mkop(op, exp1, exp2); :};
+    {: RESULT = (Exp)sem.mkop(op.str(), exp1, exp2).ponFila(op.fila()).ponCol(op.columna()); :};
 E3 ::= E4: exp1 op3_noasoc: op E4: exp2
-    {: RESULT = sem.mkop(op, exp1, exp2); :};
+    {: RESULT = (Exp)sem.mkop(op.str(), exp1, exp2).ponFila(op.fila()).ponCol(op.columna()); :};
 
 E4 ::= E5: exp
     {: RESULT = exp; :};
 E4 ::= E4: exp1 op4: op E5: exp2
-    {: RESULT = sem.mkop(op, exp1, exp2); :};
+    {: RESULT = (Exp)sem.mkop(op.str(), exp1, exp2).ponFila(op.fila()).ponCol(op.columna()); :};
 
 E5 ::= E6: exp
     {: RESULT = exp; :};
 E5 ::= op5: op E5: exp
-    {: RESULT = sem.mkopun(op, exp); :};
+    {: RESULT = (Exp)sem.mkopun(op.str(), exp).ponFila(op.fila()).ponCol(op.columna()); :};
 
 E6 ::= E7: exp
     {: RESULT = exp; :};
-E6 ::= E6: exp1 CORCH_A expresion: exp2 CORCH_C
-    {: RESULT = sem.indexacion(exp1, exp2); :};
+E6 ::= E6: exp1 CORCH_A: corch expresion: exp2 CORCH_C
+    {: RESULT = (Exp)sem.indexacion(exp1, exp2).ponFila(corch.fila()).ponCol(corch.columna()); :};
 E6 ::= E6: exp PUNTO IDEN: id
     {: RESULT = (Exp)sem.acceso(exp, id.str()).ponFila(id.fila()).ponCol(id.columna()); :};
-E6 ::= E6: exp CAPIROTE
-    {: RESULT = sem.indireccion(exp); :};
+E6 ::= E6: exp CAPIROTE: cap
+    {: RESULT = (Exp)sem.indireccion(exp).ponFila(cap.fila()).ponCol(cap.columna()); :};
 
 E7 ::= PAR_A E0: exp PAR_C
     {: RESULT = exp; :};
 E7 ::= expresion_basica: exp
     {: RESULT = exp; :};
 
-op0 ::= IGUAL_OP
-    {: RESULT = "="; :};
+op0 ::= IGUAL_OP: op
+    {: RESULT = op; :};
 
-op1 ::= IGUAL_COMP 
-    {: RESULT = "=="; :};
-op1 ::= NOIGUAL_COMP
-    {: RESULT = "!="; :};
-op1 ::= MENORQUE
-    {: RESULT = "<"; :};
-op1 ::= MAYORQUE
-    {: RESULT = ">"; :};
-op1 ::= MENORIGUAL
-    {: RESULT = "<="; :};
-op1 ::= MAYORIGUAL
-    {: RESULT = ">="; :};
+op1 ::= IGUAL_COMP: op
+    {: RESULT = op; :};
+op1 ::= NOIGUAL_COMP: op
+    {: RESULT = op; :};
+op1 ::= MENORQUE: op
+    {: RESULT = op; :};
+op1 ::= MAYORQUE: op
+    {: RESULT = op; :};
+op1 ::= MENORIGUAL: op
+    {: RESULT = op; :};
+op1 ::= MAYORIGUAL: op
+    {: RESULT = op; :};
 
-op2_izq ::= SUMA
-    {: RESULT = "+"; :};
+op2_izq ::= SUMA: op
+    {: RESULT = op; :};
 
-op2_noasoc ::= RESTA
-    {: RESULT = "-"; :};
+op2_noasoc ::= RESTA: op
+    {: RESULT = op; :};
 
-op3_der ::= AND
-    {: RESULT = "and"; :};
+op3_der ::= AND: op
+    {: RESULT = op; :};
 
-op3_noasoc ::= OR
-    {: RESULT = "or"; :};
+op3_noasoc ::= OR: op
+    {: RESULT = op; :};
 
-op4 ::= MULT 
-    {: RESULT = "*"; :};
-op4 ::= DIV
-    {: RESULT = "/"; :};
-op4 ::= PORCENTAJE
-    {: RESULT = "%"; :};
+op4 ::= MULT: op
+    {: RESULT = op; :};
+op4 ::= DIV: op
+    {: RESULT = op; :};
+op4 ::= PORCENTAJE: op
+    {: RESULT = op; :};
 
-op5 ::= RESTA 
-    {: RESULT = "-"; :};
-op5 ::= NOT
-    {: RESULT = "not"; :};
+op5 ::= RESTA: op
+    {: RESULT = op; :};
+op5 ::= NOT: op
+    {: RESULT = op; :};
 

@@ -64,7 +64,6 @@ public class SintaxisAbstractaTiny {
         }
         public void imprime() {
             bloque.imprime();
-            System.out.println("<EOF>");
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
@@ -1713,7 +1712,7 @@ public class SintaxisAbstractaTiny {
             return 7;
         }
         public void imprime() {
-            System.out.println("<null>");
+            System.out.println("<null>" + infoVinculo(this));
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);

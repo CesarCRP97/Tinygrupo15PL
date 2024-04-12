@@ -29,11 +29,11 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     public Procesamiento_rec() {}
 
     public String imprime(Prog p) {
-        return imprime(p.bloque()) + "<EOF>";
+        return imprime(p.bloque());
     }
 
     public String imprime(Bloque b) {
-        return "{\n" + imprime(b.decs()) + imprime(b.insts()) + "}\n";
+        return "{\n" + imprime(b.decs()) + imprime(b.insts()) + "}";
     }
 
     public String imprime(Decs d) {
@@ -75,7 +75,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(Dec_proc dec) {
-        return "<proc>\n" + imprime(dec.iden(), dec)  + imprime(dec.params_form())  + imprime(dec.bloque()) ;
+        return "<proc>\n" + imprime(dec.iden(), dec)  + imprime(dec.params_form())  + imprime(dec.bloque())  + "\n";
     }
 
     public String imprime(Params_form pf) {
@@ -117,7 +117,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
         } else if(claseDe(t, Tipo_string.class)) {
             result += "<string>\n";
         } else if(claseDe(t, Tipo_array.class)) {
-            result += imprime(t.tipo()) + "[\n" + imprime(t.num(), t) + "]\n";
+            result += imprime(t.tipo()) + "[\n" + t.num() + "\n" + "]" + infoVinculo(t) + "\n";
         } else if(claseDe(t, Tipo_puntero.class)) {
             result += "^\n" + imprime(t.tipo());
         } else if(claseDe(t, Tipo_struct.class)) {
@@ -198,15 +198,15 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(If i) {
-        return "<if>\n" + imprime(i.exp())  + imprime(i.bloque());
+        return "<if>\n" + imprime(i.exp())  + imprime(i.bloque()) + "\n";
     }
 
     public String imprime(IfElse ie) {
-        return "<if>\n" + imprime(ie.exp())  + imprime(ie.bloque1()) + "<else>\n" + imprime(ie.bloque2());
+        return "<if>\n" + imprime(ie.exp())  + imprime(ie.bloque1()) + "\n" + "<else>\n" + imprime(ie.bloque2()) + "\n";
     }
 
     public String imprime(While w) {
-        return "<while>\n" + imprime(w.exp())  + imprime(w.bloque());
+        return "<while>\n" + imprime(w.exp())  + imprime(w.bloque()) + "\n";
     }
 
     public String imprime(Write w) {
@@ -234,7 +234,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(Instr_compuesta ic) {
-        return imprime(ic.bloque());
+        return imprime(ic.bloque()) + "\n";
     }
 
     public String imprime(Params_reales pr) {
@@ -436,7 +436,7 @@ public class Procesamiento_rec extends SintaxisAbstractaTiny {
     }
 
     public String imprime(Null n) {
-        return "<null>\n";
+        return "<null>" + infoVinculo(n) + "\n";
     }
 
     public String imprime(String iden, Nodo n) {

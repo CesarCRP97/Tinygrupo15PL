@@ -365,9 +365,9 @@ PARSER_END(ConstructorASTsTiny)
         {return exp2;}
     }
     Exp re0(Exp exph): 
-    {String op; Exp exp;} 
+    {Token op; Exp exp;} 
     { op = op0() exp = e0() 
-        {return sem.mkop(op, exph, exp);}
+        {return (Exp)sem.mkop(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
     | 
         {return exph;}
     }
@@ -377,8 +377,8 @@ PARSER_END(ConstructorASTsTiny)
         {return exp2;}
     }
     Exp re1(Exp exph): 
-    {String op; Exp exp1, exp2;}
-    { op = op1() exp1 = e2() exp2 = re1(sem.mkop(op, exph, exp1))
+    {Token op; Exp exp1, exp2;}
+    { op = op1() exp1 = e2() exp2 = re1((Exp)sem.mkop(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn))
         {return exp2;}
         |
         {return exph;}
@@ -389,16 +389,16 @@ PARSER_END(ConstructorASTsTiny)
         {return exp3;}
     }
     Exp re2(Exp exph): 
-    {Exp exp; String op;} 
+    {Exp exp; Token op;} 
     { op = op2_noasoc() exp = e3() 
-        {return sem.mkop(op, exph, exp);}
+        {return (Exp)sem.mkop(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
         |
         {return exph;}
     }
     Exp re21(Exp exph): 
-    {Exp exp1, exp2; String op;} 
+    {Exp exp1, exp2; Token op;} 
     { op = op2_izq() exp1 = e3() exp2 = re21(exph) 
-        {return sem.mkop(op, exph, exp1);}
+        {return (Exp)sem.mkop(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn);}
         |
         {return exph;}
     }
@@ -408,12 +408,12 @@ PARSER_END(ConstructorASTsTiny)
         {return exp2;}
     }
     Exp re3(Exp exph): 
-    {Exp exp; String op;} 
+    {Exp exp; Token op;} 
     { op = op3_der() exp = e3() 
-        {return sem.mkop(op, exph, exp);}
+        {return (Exp)sem.mkop(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
         | 
         op = op3_noasoc() exp = e4() 
-        {return sem.mkop(op, exph, exp);}
+        {return (Exp)sem.mkop(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
         | 
         {return exph;}
     }
@@ -423,19 +423,19 @@ PARSER_END(ConstructorASTsTiny)
         {return exp2;}
     }
     Exp re4(Exp exph): 
-    {Exp exp1, exp2; String op;} 
-    { op = op4() exp1 = e5() exp2 = re4(sem.mkop(op, exph, exp1)) 
+    {Exp exp1, exp2; Token op;} 
+    { op = op4() exp1 = e5() exp2 = re4((Exp)sem.mkop(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn)) 
         {return exp2;}
         | 
         {return exph;}
     }
     Exp e5(): 
-    {Exp exp; String op;} 
+    {Exp exp; Token op;} 
     { exp = e6() 
         {return exp;}
         | 
         op = op5() exp = e5() 
-        {return sem.mkopun(op, exp);}
+        {return (Exp)sem.mkopun(op.image, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
     }
     Exp e6(): 
     {Exp exp1, exp2;} 
@@ -475,69 +475,69 @@ PARSER_END(ConstructorASTsTiny)
         {return (Exp)sem.false_().ponFila(t.beginLine).ponCol(t.beginColumn);}
     }
 
-    String op0(): 
-    {} 
-    { <igual_op> 
-        {return "=";}
+    Token op0(): 
+    {Token t;} 
+    { t = <igual_op> 
+        {return t;}
     }
-    String op1(): 
-    {} 
-    { <igual_comp> 
-        {return "==";}
+    Token op1(): 
+    {Token t;} 
+    { t = <igual_comp> 
+        {return t;}
         | 
-        <noigual_comp> 
-        {return "!=";}
+        t = <noigual_comp> 
+        {return t;}
         |
-        <menorque>
-        {return "<";}
+        t = <menorque>
+        {return t;}
         |
-        <mayorque>
-        {return ">";}
+        t = <mayorque>
+        {return t;}
         |
-        <menorigual>
-        {return "<=";}
+        t = <menorigual>
+        {return t;}
         |
-        <mayorigual>
-        {return ">=";}
+        t = <mayorigual>
+        {return t;}
     }
-    String op2_izq(): 
-    {} 
-    { <suma> 
-        {return "+";}
+    Token op2_izq(): 
+    {Token t;} 
+    { t = <suma> 
+        {return t;}
     }
-    String op2_noasoc(): 
-    {} 
-    { <resta> 
-        {return "-";}
+    Token op2_noasoc(): 
+    {Token t;} 
+    { t = <resta> 
+        {return t;}
     }
-    String op3_der(): 
-    {} 
-    { <and> 
-        {return "and";}
+    Token op3_der(): 
+    {Token t;} 
+    { t = <and> 
+        {return t;}
     }
-    String op3_noasoc(): 
-    {} 
-    { <or> 
-        {return "or";}
+    Token op3_noasoc(): 
+    {Token t;} 
+    { t = <or> 
+        {return t;}
     }
-    String op4(): 
-    {} 
-    { <mult> 
-        {return "*";}
+    Token op4(): 
+    {Token t;} 
+    { t = <mult> 
+        {return t;}
         | 
-        <div> 
-        {return "/";}
+        t = <div> 
+        {return t;}
         | 
-        <porcentaje> 
-        {return "%";}
+        t = <porcentaje> 
+        {return t;}
     }
-    String op5(): 
-    {} 
-    { <resta> 
-        {return "-";}
+    Token op5(): 
+    {Token t;} 
+    { t = <resta> 
+        {return t;}
         | 
-        <not> 
-        {return "not";}
+        t = <not> 
+        {return t;}
     }
     Exp op6(Exp exph): 
     {Exp exp;} 
@@ -551,9 +551,9 @@ PARSER_END(ConstructorASTsTiny)
         {return exp;}
     }
     Exp op_indexacion(Exp exph): 
-    {Exp exp;} 
-    { <corch_a> exp = e0() <corch_c> 
-        {return sem.indexacion(exph, exp);}
+    {Exp exp; Token t;} 
+    { t = <corch_a> exp = e0() <corch_c> 
+        {return (Exp)sem.indexacion(exph, exp).ponFila(t.beginLine).ponCol(t.beginColumn);}
     }
     Exp op_acceso_registro(Exp exph): 
     {Token t;} 
@@ -561,7 +561,7 @@ PARSER_END(ConstructorASTsTiny)
         {return (Exp)sem.acceso(exph, t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
     }
     Exp op_indireccion(Exp exph): 
-    {} 
-    { <capirote> 
-        {return sem.indireccion(exph);}
+    {Token t;} 
+    { t = <capirote> 
+        {return (Exp)sem.indireccion(exph).ponFila(t.beginLine).ponCol(t.beginColumn);}
     }
