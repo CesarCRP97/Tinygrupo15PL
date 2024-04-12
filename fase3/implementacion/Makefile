@@ -59,6 +59,7 @@ clean: cleanasint cleanasc cleandesc cleanev cleanrun
 	rm -f *.class
 	rm -f *~
 	rm -f sample*.outh
+	rm -f PLG15fase3DJ.zip
 
 runrecasc1:
 	java -cp java-cup-11b.jar:. Main ../pruebas/pruebas_tiny/input1.txt rec asc > output1recasc.txt
