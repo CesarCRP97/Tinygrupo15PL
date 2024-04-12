@@ -33,6 +33,9 @@ cleanjavacc:
 build: clean asint jflex cup javacc
 	javac -cp cup.jar: c_ast_ascendente/*.java c_ast_descendente/*.java procesamientos/*.java Main.java DomJudge.java
 
+zipdj:
+	zip -r PLG15fase3DJ.zip asint c_ast_ascendente c_ast_descendente DomJudge.java procesamientos ruta_* cup_options
+
 cleanasint:
 	rm -f asint/*.class
 	rm -f asint/*~
