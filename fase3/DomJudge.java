@@ -25,7 +25,6 @@ public class DomJudge {
                 prog = (Prog)asint_asc.debug_parse().value;
             } catch (Exception e) {
                 System.out.println("ERROR_SINTACTICO");
-                System.out.println(e.getMessage());
                 System.exit(0);
             } catch (Error e) {
                 System.out.println("ERROR_LEXICO");
