@@ -367,7 +367,7 @@ PARSER_END(ConstructorASTsTiny)
     Exp re0(Exp exph): 
     {Token op; Exp exp;} 
     { op = op0() exp = e0() 
-        {return (Exp)sem.mkop(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
+        {return (Exp)sem.mkop_desc(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
     | 
         {return exph;}
     }
@@ -378,7 +378,7 @@ PARSER_END(ConstructorASTsTiny)
     }
     Exp re1(Exp exph): 
     {Token op; Exp exp1, exp2;}
-    { op = op1() exp1 = e2() exp2 = re1((Exp)sem.mkop(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn))
+    { op = op1() exp1 = e2() exp2 = re1((Exp)sem.mkop_desc(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn))
         {return exp2;}
         |
         {return exph;}
@@ -391,14 +391,14 @@ PARSER_END(ConstructorASTsTiny)
     Exp re2(Exp exph): 
     {Exp exp; Token op;} 
     { op = op2_noasoc() exp = e3() 
-        {return (Exp)sem.mkop(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
+        {return (Exp)sem.mkop_desc(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
         |
         {return exph;}
     }
     Exp re21(Exp exph): 
     {Exp exp1, exp2; Token op;} 
     { op = op2_izq() exp1 = e3() exp2 = re21(exph) 
-        {return (Exp)sem.mkop(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn);}
+        {return (Exp)sem.mkop_desc(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn);}
         |
         {return exph;}
     }
@@ -410,10 +410,10 @@ PARSER_END(ConstructorASTsTiny)
     Exp re3(Exp exph): 
     {Exp exp; Token op;} 
     { op = op3_der() exp = e3() 
-        {return (Exp)sem.mkop(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
+        {return (Exp)sem.mkop_desc(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
         | 
         op = op3_noasoc() exp = e4() 
-        {return (Exp)sem.mkop(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
+        {return (Exp)sem.mkop_desc(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
         | 
         {return exph;}
     }
@@ -424,7 +424,7 @@ PARSER_END(ConstructorASTsTiny)
     }
     Exp re4(Exp exph): 
     {Exp exp1, exp2; Token op;} 
-    { op = op4() exp1 = e5() exp2 = re4((Exp)sem.mkop(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn)) 
+    { op = op4() exp1 = e5() exp2 = re4((Exp)sem.mkop_desc(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn)) 
         {return exp2;}
         | 
         {return exph;}
@@ -435,7 +435,7 @@ PARSER_END(ConstructorASTsTiny)
         {return exp;}
         | 
         op = op5() exp = e5() 
-        {return (Exp)sem.mkopun(op.image, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
+        {return (Exp)sem.mkopun_desc(op.image, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
     }
     Exp e6(): 
     {Exp exp1, exp2;} 
