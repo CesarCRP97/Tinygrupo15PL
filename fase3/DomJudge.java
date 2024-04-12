@@ -23,10 +23,11 @@ public class DomJudge {
             c_ast_ascendente.ConstructorASTTinyDJ asint_asc = new c_ast_ascendente.ConstructorASTTinyDJ(alex);
             try {
                 prog = (Prog)asint_asc.debug_parse().value;
-            } catch (Exception E) {
+            } catch (Exception e) {
                 System.out.println("ERROR_SINTACTICO");
+                System.out.println(e.getMessage());
                 System.exit(0);
-            } catch (Error E) {
+            } catch (Error e) {
                 System.out.println("ERROR_LEXICO");
                 System.exit(0);
             }
@@ -37,8 +38,11 @@ public class DomJudge {
             c_ast_descendente.ConstructorASTsTinyDJ asint_desc = new c_ast_descendente.ConstructorASTsTinyDJ(System.in);
             try {
                 prog = asint_desc.analiza();
-            } catch (Exception|Error e) {
-                System.err.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("ERROR_SINTACTICO");
+                System.exit(0);
+            } catch (Error e) {
+                System.out.println("ERROR_LEXICO");
                 System.exit(0);
             }
         }         
