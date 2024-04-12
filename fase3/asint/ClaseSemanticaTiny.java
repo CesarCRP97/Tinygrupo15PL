@@ -17,8 +17,8 @@ public class ClaseSemanticaTiny extends SintaxisAbstractaTiny {
             case ">=": return mayor_igual(opnd1,opnd2);
             case "+": return suma(opnd1,opnd2);
             case "-": return resta(opnd1,opnd2);
-            case "and": return and(opnd1,opnd2);
-            case "or": return or(opnd1,opnd2);
+            case "<and>": return and(opnd1,opnd2);
+            case "<or>": return or(opnd1,opnd2);
             case "*": return mul(opnd1,opnd2);
             case "/": return div(opnd1,opnd2);
             case "%": return mod(opnd1,opnd2);
@@ -29,7 +29,7 @@ public class ClaseSemanticaTiny extends SintaxisAbstractaTiny {
     public Exp mkopun(String op, Exp opnd) {
         switch(op) {
             case "-": return menos_unario(opnd);
-            case "not": return not(opnd);
+            case "<not>": return not(opnd);
             default: throw new UnsupportedOperationException("Bad op");
         }
     }

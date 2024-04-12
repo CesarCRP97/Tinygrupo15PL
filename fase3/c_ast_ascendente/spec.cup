@@ -25,13 +25,16 @@ action code {:
 :}
 
 
-terminal	BOOL, REAL, INT, STRING, TRUE, FALSE, 
+terminal	BOOL, REAL, INT, STRING,
             IF, ELSE, WHILE, STRUCT, NEW, 
 			DELETE, READ, WRITE, NL, TYPE, CALL, PROC,
 			PAR_A, PAR_C, PUNTYCOMA, CORCH_C, PUNTO, COMA, LLAVE_A,
 			LLAVE_C, DOBLEAMPERSAND, AMPERSAND, ARROBA;
 
-terminal StringLocalizado IDEN, LIT_CADENA, LIT_ENTERO, LIT_REAL, CORCH_A, CAPIROTE, SUMA, RESTA, MULT, DIV, PORCENTAJE, IGUAL_COMP, NOIGUAL_COMP, MENORQUE, MAYORQUE, MENORIGUAL, MAYORIGUAL, IGUAL_OP, AND, OR, NOT, NULL;
+terminal StringLocalizado IDEN, LIT_CADENA, LIT_ENTERO, LIT_REAL, 
+            CORCH_A, CAPIROTE, SUMA, RESTA, MULT, DIV, PORCENTAJE, 
+            IGUAL_COMP, NOIGUAL_COMP, MENORQUE, MAYORQUE, MENORIGUAL, 
+            MAYORIGUAL, IGUAL_OP, AND, OR, NOT, NULL, TRUE, FALSE;
 
 non terminal Prog programa;
 non terminal Bloque bloque;
@@ -256,11 +259,11 @@ expresion_basica ::= IDEN: id
 expresion_basica ::= NULL: n
     {: RESULT = (Exp)sem.null_().ponFila(n.fila()).ponCol(n.columna()); :};
 
-expresion_basica ::= TRUE
-    {: RESULT = sem.true_(); :};
+expresion_basica ::= TRUE: b
+    {: RESULT = (Exp)sem.true_().ponFila(b.fila()).ponCol(b.columna()); :};
 
-expresion_basica ::= FALSE
-    {: RESULT = sem.false_(); :};
+expresion_basica ::= FALSE: b
+    {: RESULT = (Exp)sem.false_().ponFila(b.fila()).ponCol(b.columna()); :};
 
 expresion ::= E0 : exp
     {: RESULT = exp; :};
