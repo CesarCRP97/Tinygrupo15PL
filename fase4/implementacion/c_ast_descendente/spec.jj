@@ -1,0 +1,567 @@
+options  {
+    STATIC=false;
+    DEBUG_PARSER=true;
+}  
+PARSER_BEGIN(ConstructorASTsTiny)
+    package c_ast_descendente;
+    import asint.ClaseSemanticaTiny;
+    import asint.SintaxisAbstractaTiny.*;
+    import c_ast_ascendente.UnidadLexica.StringLocalizado;
+
+    public class ConstructorASTsTiny {
+        private ClaseSemanticaTiny sem = new ClaseSemanticaTiny();   
+    }
+PARSER_END(ConstructorASTsTiny)
+
+
+    TOKEN:{<#letra:["a"-"z","A"-"Z"]>}
+    TOKEN:{<#caracter:"_" | <letra> | <digito>>}
+    TOKEN:{<#digitoPositivo:["1"-"9"]>}
+    TOKEN:{<#digito:<digitoPositivo>|"0">} 
+    TOKEN:{<#parteEntera:<digitoPositivo> (<digito>)* | "0" >} 
+    TOKEN:{<#parteDecimal: "." (<digito>)* <digitoPositivo> | "." "0">}
+    TOKEN:{<#segParteReal: <parteDecimal>|<parteExponencial>|<parteDecimal><parteExponencial>>}
+    TOKEN:{<#parteExponencial: ["e","E"] <litEntero>>}
+    SKIP:{<["\t"," ","\r","\b","\n"]>}  
+    SKIP:{<"##"(~["\n"])*>}  
+    TOKEN[IGNORE_CASE]: {<bool:"bool">}
+    TOKEN[IGNORE_CASE]: {<real:"real">}
+    TOKEN[IGNORE_CASE]: {<INT:"int">}
+    TOKEN[IGNORE_CASE]: {<string:"string">}
+    TOKEN[IGNORE_CASE]: {<and:"and">}
+    TOKEN[IGNORE_CASE]: {<or:"or">}
+    TOKEN[IGNORE_CASE]: {<not:"not">}
+    TOKEN[IGNORE_CASE]: {<NULL:"null">}
+    TOKEN[IGNORE_CASE]: {<TRUE:"true">}
+    TOKEN[IGNORE_CASE]: {<FALSE:"false">}
+    TOKEN[IGNORE_CASE]: {<IF:"if">}
+    TOKEN[IGNORE_CASE]: {<ELSE:"else">}
+    TOKEN[IGNORE_CASE]: {<WHILE:"while">}
+    TOKEN[IGNORE_CASE]: {<struct:"struct">}
+    TOKEN[IGNORE_CASE]: {<NEW:"new">}
+    TOKEN[IGNORE_CASE]: {<delete:"delete">}
+    TOKEN[IGNORE_CASE]: {<read:"read">}
+    TOKEN[IGNORE_CASE]: {<write:"write">}
+    TOKEN[IGNORE_CASE]: {<nl:"nl">}
+    TOKEN[IGNORE_CASE]: {<type:"type">}
+    TOKEN[IGNORE_CASE]: {<call:"call">}
+    TOKEN[IGNORE_CASE]: {<proc:"proc">}
+    TOKEN:{<suma:"+">}
+    TOKEN:{<resta:"-">}
+    TOKEN:{<mult:"*">}
+    TOKEN:{<div:"/">}
+    TOKEN:{<porcentaje:"%">}
+    TOKEN:{<menorque:"<">}
+    TOKEN:{<mayorque:">">}
+    TOKEN:{<menorigual:"<=">}
+    TOKEN:{<mayorigual:">=">}
+    TOKEN:{<igual_comp:"==">}
+    TOKEN:{<noigual_comp:"!=">}
+    TOKEN:{<par_a:"(">}
+    TOKEN:{<par_c:")">}
+    TOKEN:{<puntoycoma:";">}
+    TOKEN:{<igual_op:"=">}
+    TOKEN:{<corch_a:"[">}
+    TOKEN:{<corch_c:"]">}
+    TOKEN:{<punto:".">}
+    TOKEN:{<capirote:"^">}
+    TOKEN:{<coma:",">}
+    TOKEN:{<llave_a:"{">}
+    TOKEN:{<llave_c:"}">}
+    TOKEN:{<dobleampersand:"&&">}
+    TOKEN:{<ampersand:"&">}
+    TOKEN:{<arroba:"@">}
+    TOKEN:{<litEntero:(["+","-"])?<parteEntera>>}
+    TOKEN:{<litReal:<litEntero><segParteReal>>}
+    TOKEN:{<litCadena: "\"" ( ~["\""] )* "\"">}
+    TOKEN:{<iden:(<letra>|"_")(<caracter>)*>}
+
+
+    Prog analiza(): 
+    {Prog prog;} 
+    { prog = programa() <EOF>
+        {return prog;}
+    }
+    Prog programa(): 
+    {Bloque bloque;} 
+    { bloque = bloque() 
+        {return sem.prog(bloque);}
+    }
+    Bloque bloque(): 
+    {Decs decs; Instrs insts;} 
+    { <llave_a> decs = declaraciones() insts = instrucciones_opt() <llave_c> 
+        {return sem.bloque(decs, insts);}
+    }
+    Decs declaraciones(): 
+    {LDecs decs;} 
+    { decs = lista_declaraciones() 
+        {return sem.si_decs(decs);} |
+        {return sem.no_decs();}
+    }
+    LDecs lista_declaraciones(): 
+    {LDecs decs; Dec dec;} 
+    {dec = declaracion() decs = rlista_decs(sem.una_dec(dec)) <dobleampersand>
+        {return decs;}
+    }
+    LDecs rlista_decs(LDecs decsh):
+    {LDecs decs; Dec dec;} 
+    { <puntoycoma> dec = declaracion() decs = rlista_decs(sem.muchas_decs(decsh, dec)) 
+        {return decs;}
+    | 
+        {return decsh;}
+    } 
+    Dec declaracion(): 
+    {Dec dec;} 
+    { dec = dec_variable() {return dec;}
+        | 
+        dec = dec_tipo() {return dec;}
+        | 
+        dec = dec_procedimiento() {return dec;}
+        }
+    Dec dec_variable(): 
+    {Tipo tipo; Token id;} 
+    {tipo = tipo() id = <iden> 
+        {return (Dec)sem.dec_variable(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+    }
+    Dec dec_tipo(): 
+    {Tipo tipo; Token id;} 
+    { <type> tipo = tipo() id = <iden>
+        {return (Dec)sem.dec_tipo(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+    }
+    Dec dec_procedimiento(): 
+    {Token id; Params_form params_form; Bloque bloque;} 
+    {<proc> id = <iden> params_form = parametros_form() bloque = bloque()
+        {return (Dec)sem.dec_proc(id.image, params_form, bloque).ponFila(id.beginLine).ponCol(id.beginColumn);}
+    }
+    Params_form parametros_form(): 
+    {Params_form params_form;} 
+    { <par_a> params_form = parametros_form_opt() <par_c> 
+        {return params_form;}
+    }
+    Params_form parametros_form_opt():
+    {LParams_form lparams;}
+    {lparams = parametros_form_list() 
+        {return sem.si_params_form(lparams);}
+        | 
+        {return sem.no_params_form();}
+    }
+    LParams_form parametros_form_list(): 
+    {Param_form param_form; LParams_form lparams_form;} 
+    { param_form = parametro_form() lparams_form = rparametros_form_list(sem.un_param_form(param_form))
+        {return lparams_form;}
+    }
+    LParams_form rparametros_form_list(LParams_form lparams_formh): 
+    {LParams_form lparams_form; Param_form param_form;} {<coma> param_form = parametro_form() lparams_form = rparametros_form_list(sem.muchos_params_form(lparams_formh, param_form)) 
+        {return lparams_form;} 
+        | 
+        {return lparams_formh;}
+    }
+    Param_form parametro_form(): 
+    {Tipo tipo; Param_form param_form;} 
+    {tipo = tipo() param_form = ampersand_opt(tipo)
+        {return param_form;}
+        }
+
+    Param_form ampersand_opt(Tipo tipoh): 
+    {Token id;} 
+    { <ampersand> id = <iden>
+        {return (Param_form)sem.param_form_ref(tipoh, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+        | id = <iden>
+        {return (Param_form)sem.param_form_normal(tipoh, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+    }
+  
+    Tipo tipo(): 
+    {Tipo tipo;} 
+    { tipo = tipo0() 
+        {return tipo;}
+    }
+    Tipo tipo0(): 
+    {Tipo tipo1, tipo2;} 
+    { tipo1 = tipo1() tipo2 = RTipo0(tipo1) 
+        {return tipo2;}
+    }
+    Tipo RTipo0(Tipo tipoh): 
+    {Tipo tipo; Token num;} 
+    { <corch_a> num = <litEntero> <corch_c> tipo = RTipo0((Tipo)sem.tipo_array(tipoh, num.image).ponFila(num.beginLine).ponCol(num.beginColumn))
+        {return tipo;}
+        | 
+        {return tipoh;}
+    }  
+    Tipo tipo1(): 
+    {Tipo tipo;} { tipo = tipo2()
+        {return tipo;}
+        | 
+        <capirote> tipo = tipo1()
+        {return sem.tipo_puntero(tipo);}
+    }
+    Tipo tipo2(): 
+    {Tipo tipo; Campos campos; Token id;} 
+    { <INT> {return sem.tipo_int();}
+    | <real> {return sem.tipo_real();}
+    | <bool> {return sem.tipo_bool();}
+    | <string> {return sem.tipo_string();}
+    | <struct> campos = campos() {return sem.tipo_struct(campos);}
+    | id = <iden> {return (Tipo)sem.tipo_iden(id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+    }
+
+    Campos campos(): 
+    {LCampos lcampos;} 
+    { <llave_a> lcampos = campos_lista() <llave_c>
+        {return sem.campos(lcampos);}
+    }
+    LCampos campos_lista(): 
+    {LCampos lcampos; Campo campo;} 
+    { campo = campo() lcampos = rcampos_lista(sem.un_campo(campo))
+        {return lcampos;}
+    }
+    LCampos rcampos_lista(LCampos lcamposh):
+    {LCampos lcampos; Campo campo;} 
+    { <coma> campo = campo() lcampos = rcampos_lista(sem.muchos_campos(lcamposh, campo))
+        {return lcampos;}
+        | 
+        {return lcamposh;}
+    }
+    Campo campo(): 
+    {Tipo tipo; Token id;} 
+    { tipo = tipo() id = <iden>
+        {return (Campo)sem.campo(tipo, id.image).ponFila(id.beginLine).ponCol(id.beginColumn);}
+    }
+
+    Instrs instrucciones_opt(): 
+    {LInstrs insts;} 
+    { insts = instrucciones() 
+        {return sem.si_instrs(insts);}
+        | 
+        {return sem.no_instrs();}
+    }
+    LInstrs instrucciones(): 
+    {Instr inst; LInstrs insts;} 
+    { inst = instruccion() insts = rinstrucciones(sem.una_instr(inst)) 
+        {return insts;}
+    }
+    LInstrs rinstrucciones(LInstrs instsh):
+    {Instr inst; LInstrs insts;} 
+    { <puntoycoma> inst = instruccion() insts = rinstrucciones(sem.muchas_instrs(instsh, inst)) 
+        {return insts;}
+        | 
+        {return instsh;}
+    }
+    Instr instruccion(): 
+    {Instr inst;} 
+    { inst = instr_eval() 
+        {return inst;}
+        | 
+        inst = instr_ifelse() {return inst;}
+        | 
+        inst = instr_while() {return inst;}
+        | 
+        inst = instr_read() {return inst;}
+        | 
+        inst = instr_write() {return inst;}
+        | 
+        inst = instr_nl() {return inst;}
+        | 
+        inst = instr_reserva() {return inst;}
+        | 
+        inst = instr_liberacion() {return inst;}
+        | 
+        inst = instr_invocacion() {return inst;}
+        | 
+        inst = instr_compuesta() {return inst;}
+    }
+    Instr instr_eval(): 
+    {Exp exp;} 
+    { <arroba> exp = expresion()
+        {return sem.eval(exp);}
+    }
+    Instr instr_ifelse():
+    {Exp exp; Bloque bloque; Instr inst;} 
+    { <IF> exp = expresion() bloque = bloque() inst = else_opt(exp, bloque)
+        {return inst;}
+    }
+    Instr else_opt(Exp exph, Bloque bloqueh): 
+    {Bloque bloque;} 
+    { <ELSE> bloque = bloque() 
+        {return sem.if_else(exph, bloqueh, bloque);}
+        | 
+        {return sem.if_(exph, bloqueh);}
+    }
+    Instr instr_while(): 
+    {Exp exp; Bloque bloque;} 
+    { <WHILE> exp = expresion() bloque = bloque() 
+        {return sem.while_(exp, bloque);}
+    }
+    Instr instr_read(): 
+    {Exp exp;}
+    { <read> exp = expresion() 
+        {return sem.read(exp);}
+    }
+    Instr instr_write(): 
+    {Exp exp;} 
+    { <write> exp = expresion() 
+        {return sem.write(exp);}
+    }
+    Instr instr_nl(): 
+    {} 
+    { <nl> 
+        {return sem.nl();}
+    }
+    Instr instr_reserva(): 
+    {Exp exp;}
+    { <NEW> exp = expresion() 
+        {return sem.new_(exp);}
+    }
+    Instr instr_liberacion(): 
+    {Exp exp;}
+    { <delete> exp = expresion() 
+        {return sem.delete(exp);}
+    }
+    Instr instr_compuesta(): 
+    {Bloque bloque;} 
+    { bloque = bloque() 
+        {return sem.instr_compuesta(bloque);}
+    }
+    Instr instr_invocacion(): 
+    {Token id; Params_reales params;} 
+    { <call> id = <iden> params = parametros_reales() 
+        {return (Instr)sem.invoc(id.image, params).ponFila(id.beginLine).ponCol(id.beginColumn);}
+    }
+
+    Params_reales parametros_reales(): 
+    {Params_reales params;} 
+    { <par_a> params = parametros_reales_opt() <par_c>
+        {return params;}
+    }
+    
+    Params_reales parametros_reales_opt():
+    {LParams_reales lparams;} 
+    {lparams = parametros_reales_list() 
+        {return sem.si_params_reales(lparams);}
+        | 
+        {return sem.no_params_reales();}
+    }
+
+    LParams_reales parametros_reales_list(): 
+    {Exp exp; LParams_reales lparams;} 
+    { exp = expresion() lparams = rparametros_reales_list(sem.un_param_real(exp)) 
+        {return lparams;}
+    }
+    LParams_reales rparametros_reales_list(LParams_reales lparamsh):
+    {Exp exp; LParams_reales lparams;} 
+    { <coma> exp = expresion() lparams = rparametros_reales_list(sem.muchos_params_reales(lparamsh, exp)) 
+        {return lparams;}
+        | 
+        {return lparamsh;}
+    }
+
+    Exp expresion(): 
+    {Exp exp;} 
+    { exp = e0() 
+        {return exp;}
+    }
+    Exp e0():
+    {Exp exp1, exp2;} 
+    { exp1 = e1() exp2 = re0(exp1) 
+        {return exp2;}
+    }
+    Exp re0(Exp exph): 
+    {Token op; Exp exp;} 
+    { op = op0() exp = e0() 
+        {return (Exp)sem.mkop_desc(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
+    | 
+        {return exph;}
+    }
+    Exp e1(): 
+    {Exp exp1, exp2;} 
+    { exp1 = e2() exp2 = re1(exp1)
+        {return exp2;}
+    }
+    Exp re1(Exp exph): 
+    {Token op; Exp exp1, exp2;}
+    { op = op1() exp1 = e2() exp2 = re1((Exp)sem.mkop_desc(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn))
+        {return exp2;}
+        |
+        {return exph;}
+    }
+    Exp e2(): 
+    {Exp exp1, exp2, exp3;} 
+    { exp1 = e3() exp2 = re2(exp1) exp3 = re21(exp2) 
+        {return exp3;}
+    }
+    Exp re2(Exp exph): 
+    {Exp exp; Token op;} 
+    { op = op2_noasoc() exp = e3() 
+        {return (Exp)sem.mkop_desc(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
+        |
+        {return exph;}
+    }
+    Exp re21(Exp exph): 
+    {Exp exp1, exp2; Token op;} 
+    { op = op2_izq() exp1 = e3() exp2 = re21(exph) 
+        {return (Exp)sem.mkop_desc(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn);}
+        |
+        {return exph;}
+    }
+    Exp e3(): 
+    {Exp exp1, exp2;} 
+    { exp1 = e4() exp2 = re3(exp1) 
+        {return exp2;}
+    }
+    Exp re3(Exp exph): 
+    {Exp exp; Token op;} 
+    { op = op3_der() exp = e3() 
+        {return (Exp)sem.mkop_desc(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
+        | 
+        op = op3_noasoc() exp = e4() 
+        {return (Exp)sem.mkop_desc(op.image, exph, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
+        | 
+        {return exph;}
+    }
+    Exp e4(): 
+    {Exp exp1, exp2;} 
+    { exp1 = e5() exp2 = re4(exp1) 
+        {return exp2;}
+    }
+    Exp re4(Exp exph): 
+    {Exp exp1, exp2; Token op;} 
+    { op = op4() exp1 = e5() exp2 = re4((Exp)sem.mkop_desc(op.image, exph, exp1).ponFila(op.beginLine).ponCol(op.beginColumn)) 
+        {return exp2;}
+        | 
+        {return exph;}
+    }
+    Exp e5(): 
+    {Exp exp; Token op;} 
+    { exp = e6() 
+        {return exp;}
+        | 
+        op = op5() exp = e5() 
+        {return (Exp)sem.mkopun_desc(op.image, exp).ponFila(op.beginLine).ponCol(op.beginColumn);}
+    }
+    Exp e6(): 
+    {Exp exp1, exp2;} 
+    { exp1 = e7() exp2 = re6(exp1) 
+        {return exp2;}
+    }
+    Exp re6(Exp exph):
+    {Exp exp1, exp2;} { exp1 = op6(exph) exp2 = re6(exp1) 
+        {return exp2;}
+        | 
+        {return exph;}
+    }
+    Exp e7(): 
+    {Exp exp; Token t;} 
+    { <par_a> exp = e0() <par_c> 
+        {return exp;}
+        | 
+        t = <iden> 
+        {return (Exp)sem.iden(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
+        |
+        t = <litEntero>
+        {return (Exp)sem.lit_ent(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
+        |
+        t = <litReal>
+        {return (Exp)sem.lit_real(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
+        |
+        t = <litCadena>
+        {return (Exp)sem.lit_cadena(t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
+        |
+        t = <NULL>
+        {return (Exp)sem.null_().ponFila(t.beginLine).ponCol(t.beginColumn);}
+        |
+        t = <TRUE>
+        {return (Exp)sem.true_().ponFila(t.beginLine).ponCol(t.beginColumn);}
+        |
+        t = <FALSE>
+        {return (Exp)sem.false_().ponFila(t.beginLine).ponCol(t.beginColumn);}
+    }
+
+    Token op0(): 
+    {Token t;} 
+    { t = <igual_op> 
+        {return t;}
+    }
+    Token op1(): 
+    {Token t;} 
+    { t = <igual_comp> 
+        {return t;}
+        | 
+        t = <noigual_comp> 
+        {return t;}
+        |
+        t = <menorque>
+        {return t;}
+        |
+        t = <mayorque>
+        {return t;}
+        |
+        t = <menorigual>
+        {return t;}
+        |
+        t = <mayorigual>
+        {return t;}
+    }
+    Token op2_izq(): 
+    {Token t;} 
+    { t = <suma> 
+        {return t;}
+    }
+    Token op2_noasoc(): 
+    {Token t;} 
+    { t = <resta> 
+        {return t;}
+    }
+    Token op3_der(): 
+    {Token t;} 
+    { t = <and> 
+        {return t;}
+    }
+    Token op3_noasoc(): 
+    {Token t;} 
+    { t = <or> 
+        {return t;}
+    }
+    Token op4(): 
+    {Token t;} 
+    { t = <mult> 
+        {return t;}
+        | 
+        t = <div> 
+        {return t;}
+        | 
+        t = <porcentaje> 
+        {return t;}
+    }
+    Token op5(): 
+    {Token t;} 
+    { t = <resta> 
+        {return t;}
+        | 
+        t = <not> 
+        {return t;}
+    }
+    Exp op6(Exp exph): 
+    {Exp exp;} 
+    { exp = op_indexacion(exph) 
+        {return exp;}
+        | 
+        exp = op_acceso_registro(exph) 
+        {return exp;}
+        | 
+        exp = op_indireccion(exph)
+        {return exp;}
+    }
+    Exp op_indexacion(Exp exph): 
+    {Exp exp; Token t;} 
+    { t = <corch_a> exp = e0() <corch_c> 
+        {return (Exp)sem.indexacion(exph, exp).ponFila(t.beginLine).ponCol(t.beginColumn);}
+    }
+    Exp op_acceso_registro(Exp exph): 
+    {Token t;} 
+    { <punto> t = <iden> 
+        {return (Exp)sem.acceso(exph, t.image).ponFila(t.beginLine).ponCol(t.beginColumn);}
+    }
+    Exp op_indireccion(Exp exph): 
+    {Token t;} 
+    { t = <capirote> 
+        {return (Exp)sem.indireccion(exph).ponFila(t.beginLine).ponCol(t.beginColumn);}
+    }
