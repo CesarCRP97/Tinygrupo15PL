@@ -4,6 +4,7 @@ import c_ast_descendente.ConstructorASTsTinyDJ;
 import procesamientos.Procesamiento_rec;
 import procesamientos.Procesamiento_vis;
 import procesamientos.Vinculacion;
+import procesamientos.Vinculacion.ErrorVinculacion;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -14,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         if(args.length != 2) {
-            System.err.println("Uso: java -cp java-cup-11b-29160615-3.jar:. procesamientos.Main <fichero> <asc|desc>");
+            System.err.println("Uso: java -cp java-cup-11b.jar:. Main <fichero> <asc|desc>");
             System.exit(1);
         }
         String file = args[0];
@@ -40,18 +41,23 @@ public class Main {
                 System.exit(0);
             }
         } else {
-            System.err.println("Uso: java -cp java-cup-11b-29160615-3.jar:. procesamientos.Main <fichero> <asc|desc>");
+            System.err.println("Uso: java -cp java-cup-11b.jar:. Main <fichero> <asc|desc>");
             System.exit(1);
         }
 
+        try {
         prog.procesa(new Vinculacion());
+        } catch (ErrorVinculacion e) {
+            System.err.println(e.getMessage());
+            System.exit(0);
+        }
     }
 
 
 
     public static void main_fase3(String[] args) throws Exception {
         if(args.length != 3) {
-            System.err.println("Uso: java -cp java-cup-11b-29160615-3.jar:. procesamientos.Main <fichero> <rec|inter|vis> <asc|desc>");
+            System.err.println("Uso: java -cp java-cup-11b.jar:. Main <fichero> <rec|inter|vis> <asc|desc>");
             System.exit(1);
         }
         String file = args[0];
@@ -79,7 +85,7 @@ public class Main {
                 System.exit(0);
             }
         } else {
-            System.err.println("Uso: java -cp java-cup-11b-29160615-3.jar:. procesamientos.Main <fichero> <rec|inter|vis> <asc|desc>");
+            System.err.println("Uso: java -cp java-cup-11b.jar:. Main <fichero> <rec|inter|vis> <asc|desc>");
             System.exit(1);
         }
 
@@ -90,7 +96,7 @@ public class Main {
         } else if (proc.equals("vis")) {
             //prog.procesa(new Procesamiento_vis());
         } else {
-            System.err.println("Uso: java -cp java-cup-11b-29160615-3.jar:. procesamientos.Main <fichero> <rec|inter|vis> <asc|desc>");
+            System.err.println("Uso: java -cp java-cup-11b.jar:. Main <fichero> <rec|inter|vis> <asc|desc>");
             System.exit(1);
         }
     }
