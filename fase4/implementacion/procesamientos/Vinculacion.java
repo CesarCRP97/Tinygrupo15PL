@@ -9,36 +9,93 @@ public class Vinculacion extends ProcesamientoDef {
 
     public  class ErrorVinculacion extends RuntimeException {
         public ErrorVinculacion(String msg) {
-            super(msg);
+            super(msg + "\n" + ts.toString());
         }
     }
 
     private class TablaSimbolos {
-        private ArrayList<HashMap<String, Dec>> tabla;
+        private class Ambito {
+            private HashMap<String, Nodo> tabla;
+            private Ambito padre;
+
+            public Ambito(Ambito padre) {
+                tabla = new HashMap<String, Nodo>();
+                this.padre = padre;
+            }
+
+            public boolean contiene(String iden) {
+                return tabla.containsKey(iden);
+            }
+
+            public void put(String iden, Nodo dec) {
+                tabla.put(iden, dec);
+            }
+
+            public Ambito padre() {
+                return padre;
+            }
+
+            public Nodo get(String iden) {
+                if (tabla.containsKey(iden)) {
+                    return tabla.get(iden);
+                } else {
+                    if (padre != null) {
+                        return padre.get(iden);
+                    } else {
+                        return null;
+                    }
+                }
+            }
+
+            public String toString() {
+                String res = "";
+                for (String iden : tabla.keySet()) {
+                    res += iden + " ";
+                }
+                res += "\n";
+                return res;
+            }
+        }
+
+        private ArrayList<Ambito> pila;
+        private Ambito actual;
+
         public TablaSimbolos() {
-            tabla = new ArrayList<HashMap<String, Dec>>();
+            pila = new ArrayList<Ambito>();
         }
-        private HashMap<String, Dec> cima() {
-            return tabla.get(tabla.size() - 1);
+
+        public void abrirAmbito() {
+            if (actual == null) {
+                actual = new Ambito(null);
+            } else {
+                actual = new Ambito(actual);
+            }
+            pila.add(actual);
         }
-        private void apila() {
-            HashMap<String, Dec> cima = (HashMap<String, Dec>)cima().clone();
-            tabla.add(cima);
-        }
-        private void desapila() {
-            tabla.remove(tabla.size() - 1);
-        }
-        public boolean abrirAmbito() {
-            apila();
-        }
+
         public void cerrarAmbito() {
-            desapila();
+            pila.remove(actual);
+            actual = actual.padre();
         }
+
         public boolean contiene(String iden) {
-            return cima().containsKey(iden);
+            return actual.contiene(iden);
         }
-        public Dec infoVinculo(String iden) {
-            return cima().get(iden);
+
+        public void put(String iden, Nodo dec) {
+            actual.put(iden, dec);
+        }
+
+        public Nodo infoVinculo(String iden) {
+            return actual.get(iden);
+        }
+
+        public String toString() {
+            String res = "";
+            for (int i = 0; i < pila.size(); i++) {
+                System.out.print("Ambito " + i + ": " + pila.get(i));
+            }
+            return res;
         }
     }
 
@@ -52,11 +109,11 @@ public class Vinculacion extends ProcesamientoDef {
         return ts.contiene(iden);
     }
 
-    private void inserta(TablaSimbolos ts, String iden, Dec dec) {
-        ts.cima().put(iden, dec);
+    private void inserta(TablaSimbolos ts, String iden, Nodo dec) {
+        ts.put(iden, dec);
     }
 
-    private Dec infoVinculo(TablaSimbolos ts, String iden) {
+    private Nodo infoVinculo(TablaSimbolos ts, String iden) {
         return ts.infoVinculo(iden);
     }
 
@@ -155,9 +212,7 @@ public class Vinculacion extends ProcesamientoDef {
     public void procesa(Tipo_puntero tipo) {
     }
     public void procesa(Tipo_struct tipo) {
-        abreAmbito(ts);
         tipo.campos().procesa(this);
-        cierraAmbito(ts);
     }
     public void procesa(Tipo_iden tipo) {
         if (infoVinculo(ts, tipo.iden()) == null) {
@@ -175,11 +230,6 @@ public class Vinculacion extends ProcesamientoDef {
         campo.campo().procesa(this);
     }
     public void procesa(Campo campo) {
-        if (contiene(ts, campo.iden())) {
-            throw new ErrorVinculacion("Identificador duplicado: " + campo.iden() + " línea " + campo.leeFila() + " fila " + campo.leeCol());
-        } else {
-            inserta(ts, campo.iden(), campo);
-        }
     }
     public void procesa(Si_instrs instrs) {
         instrs.linstrs().procesa(this);
@@ -319,9 +369,6 @@ public class Vinculacion extends ProcesamientoDef {
     }
     public void procesa(Acceso exp) {
         exp.opnd().procesa(this);
-        if (infoVinculo(ts, exp.iden()) == null) {
-            throw new ErrorVinculacion("Identificador no declarado: " + exp.iden() + " línea " + exp.leeFila() + " fila " + exp.leeCol());
-        }
     }
     public void procesa(Indireccion exp) {
         exp.opnd().procesa(this);
