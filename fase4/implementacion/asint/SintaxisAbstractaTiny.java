@@ -33,6 +33,8 @@ public class SintaxisAbstractaTiny {
         }   
         private int fila;
         private int col;
+        private String tipo;
+
         public Nodo ponFila(int fila) {
             this.fila = fila;
             return this;			
@@ -47,6 +49,13 @@ public class SintaxisAbstractaTiny {
         public int leeCol() {
             return col; 
         }
+        public void putTipo(String tipo) {
+            this.tipo = tipo;
+        }
+        public String getTipo() {
+            return tipo;
+        }
+
         public abstract void imprime();
         public abstract void procesa(Procesamiento p);
     }
