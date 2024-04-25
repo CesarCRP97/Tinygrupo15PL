@@ -21,31 +21,31 @@ proc subprog(int x, ^^tRarito y, struct{int x, ^tRarito y} z) {
 }
 &&
 if(x == 34) {
-if(x < 56) {
-@ x = x + 1;
-while (x < 20) {
-int x
-&&
-@ x = 2*x;
-@ x = 5
-}
-}
-else {
-proc y() {}
-&&
-@ x = 2 * y;
-call y(2*x + 80, 45 - x)
-}
+    if(x < 56) {
+        @ x = x + 1;
+        while (x < 20) {
+            int x
+            &&
+            @ x = 2*x;
+            @ x = 5
+        }
+    }
+    else {
+        proc y() {}
+        &&
+        @ x = 2 * y;
+        call y(2*x + 80, 45 - x)
+    }
 };
 {
-int x
-&&
-@ x;
-read x.x;
-write x + 67;
-delete x.x[x];
-new u.v[x];
-nl
+    int x
+    &&
+    @ x;
+    read x.x;
+    write x + 67;
+    delete x.x[x];
+    new u.v[x];
+    nl
 };
 @ "una cadena!!!" + null;
 if 5 {};
