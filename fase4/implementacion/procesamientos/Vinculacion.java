@@ -13,6 +13,19 @@ public class Vinculacion extends ProcesamientoDef {
         }
     }
 
+    private void errorDuplicado(String iden, int fila, int col) {
+        //throw new ErrorVinculacion("Identificador duplicado: " + iden + " línea " + fila + " fila " + col);
+        System.out.println("Identificador duplicado: " + iden + " línea " + fila + " fila " + col);
+        error = true;
+        
+    }
+
+    private void errorNoDeclarado(String iden, int fila, int col) {
+        //throw new ErrorVinculacion("Identificador no declarado: " + iden + " línea " + fila + " fila " + col);
+        System.out.println("Identificador no declarado: " + iden + " línea " + fila + " fila " + col);
+        error = true;
+    }
+
     private class TablaSimbolos {
         private class Ambito {
             private HashMap<String, Nodo> tabla;
@@ -52,7 +65,6 @@ public class Vinculacion extends ProcesamientoDef {
                 for (String iden : tabla.keySet()) {
                     res += iden + " ";
                 }
-                res += "\n";
                 return res;
             }
         }
@@ -100,6 +112,15 @@ public class Vinculacion extends ProcesamientoDef {
     }
 
     private TablaSimbolos ts;
+    private boolean error;
+
+    public Vinculacion() {
+        error = false;
+    }
+
+    public boolean hayErrores() {
+        return error;
+    }
 
     private TablaSimbolos creaTS() {
         return new TablaSimbolos();
@@ -150,14 +171,14 @@ public class Vinculacion extends ProcesamientoDef {
     }
     public void procesa(Dec_variable dec) {
         if (contiene(ts, dec.iden())) {
-            throw new ErrorVinculacion("Identificador duplicado: " + dec.iden() + " línea " + dec.leeFila() + " fila " + dec.leeCol());
+            errorDuplicado(dec.iden(), dec.leeFila(), dec.leeCol());
         } else {
             inserta(ts, dec.iden(), dec);
         }
     }
     public void procesa(Dec_tipo dec) {
         if (contiene(ts, dec.iden())) {
-            throw new ErrorVinculacion("Identificador duplicado: " + dec.iden() + " línea " + dec.leeFila() + " fila " + dec.leeCol());
+            errorDuplicado(dec.iden(), dec.leeFila(), dec.leeCol());
         } else {
             inserta(ts, dec.iden(), dec);
         }
@@ -168,7 +189,7 @@ public class Vinculacion extends ProcesamientoDef {
         dec.bloque().procesa(this);
         cierraAmbito(ts);
         if (contiene(ts, dec.iden())) {
-            throw new ErrorVinculacion("Identificador duplicado: " + dec.iden() + " línea " + dec.leeFila() + " fila " + dec.leeCol());
+            errorDuplicado(dec.iden(), dec.leeFila(), dec.leeCol());
         } else {
             inserta(ts, dec.iden(), dec);
         }
@@ -187,14 +208,14 @@ public class Vinculacion extends ProcesamientoDef {
     }
     public void procesa(Param_form_normal param) {
         if (contiene(ts, param.iden())) {
-            throw new ErrorVinculacion("Identificador duplicado: " + param.iden() + " línea " + param.leeFila() + " fila " + param.leeCol());
+            errorDuplicado(param.iden(), param.leeFila(), param.leeCol());
         } else {
             inserta(ts, param.iden(), param);
         }
     }
     public void procesa(Param_form_ref param) {
         if (contiene(ts, param.iden())) {
-            throw new ErrorVinculacion("Identificador duplicado: " + param.iden() + " línea " + param.leeFila() + " fila " + param.leeCol());
+            errorDuplicado(param.iden(), param.leeFila(), param.leeCol());
         } else {
             inserta(ts, param.iden(), param);
         }
@@ -212,24 +233,11 @@ public class Vinculacion extends ProcesamientoDef {
     public void procesa(Tipo_puntero tipo) {
     }
     public void procesa(Tipo_struct tipo) {
-        tipo.campos().procesa(this);
     }
     public void procesa(Tipo_iden tipo) {
         if (infoVinculo(ts, tipo.iden()) == null) {
-            throw new ErrorVinculacion("Identificador no declarado: " + tipo.iden() + " línea " + tipo.leeFila() + " fila " + tipo.leeCol());
+            errorNoDeclarado(tipo.iden(), tipo.leeFila(), tipo.leeCol());
         }
-    }
-    public void procesa(Campos campos) {
-        campos.lcampos().procesa(this);
-    }
-    public void procesa(Muchos_campos campos) {
-        campos.lcampos().procesa(this);
-        campos.campo().procesa(this);
-    }
-    public void procesa(Un_campo campo) {
-        campo.campo().procesa(this);
-    }
-    public void procesa(Campo campo) {
     }
     public void procesa(Si_instrs instrs) {
         instrs.linstrs().procesa(this);
@@ -385,7 +393,9 @@ public class Vinculacion extends ProcesamientoDef {
     }
     public void procesa(Iden exp) {
         if (infoVinculo(ts, exp.iden()) == null) {
-            throw new ErrorVinculacion("Identificador no declarado: " + exp.iden() + " línea " + exp.leeFila() + " fila " + exp.leeCol());
+            errorNoDeclarado(exp.iden(), exp.leeFila(), exp.leeCol());
+        } else {
+            exp.ponVinculo(infoVinculo(ts, exp.iden()));
         }
     }
     public void procesa(Null exp) {

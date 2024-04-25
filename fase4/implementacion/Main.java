@@ -45,12 +45,13 @@ public class Main {
             System.exit(1);
         }
 
-        try {
-        prog.procesa(new Vinculacion());
-        } catch (ErrorVinculacion e) {
-            System.err.println(e.getMessage());
-            System.exit(0);
-        }
+        System.out.println("Procesando vinculacion...");
+        Vinculacion vinc = new Vinculacion();
+        prog.procesa(vinc);
+        if(vinc.hayErrores())
+            System.err.println("Errores de vinculacion");
+        else
+            System.out.println("Vinculacion correcta");
     }
 
 
