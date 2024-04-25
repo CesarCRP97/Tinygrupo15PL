@@ -1682,7 +1682,7 @@ public class SintaxisAbstractaTiny {
 
     public static class Iden extends Exp {
         private String id;
-        private Dec vinculo;
+        private Nodo vinculo;
         public Iden(String id) {
             super();
             this.id = id;
@@ -1700,7 +1700,7 @@ public class SintaxisAbstractaTiny {
         public void procesa(Procesamiento p) {
             p.procesa(this);
         }
-        public void ponVinculo(Dec dec) {
+        public void ponVinculo(Nodo dec) {
             vinculo = dec;
         }
     }
