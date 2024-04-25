@@ -25,15 +25,15 @@ public class Main {
         if(tipo.equals("asc")) {
             Reader input = new InputStreamReader(new FileInputStream(file));
             AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
-            c_ast_ascendente.ConstructorASTTinyDJ asint_asc = new c_ast_ascendente.ConstructorASTTinyDJ(alex);
+            c_ast_ascendente.ConstructorASTTiny asint_asc = new c_ast_ascendente.ConstructorASTTiny(alex);
             try {
-                prog = (Prog)asint_asc.debug_parse().value;
+                prog = (Prog)asint_asc.parse().value;
             } catch (Exception|Error e) {
                 System.err.println(e.getMessage());
                 System.exit(0);
             }
         } else if (tipo.equals("desc")) {
-            c_ast_descendente.ConstructorASTsTinyDJ asint_desc = new c_ast_descendente.ConstructorASTsTinyDJ(new FileReader(file));
+            c_ast_descendente.ConstructorASTsTiny asint_desc = new c_ast_descendente.ConstructorASTsTiny(new FileReader(file));
             try {
                 prog = asint_desc.analiza();
             } catch (Exception|Error e) {
@@ -71,7 +71,7 @@ public class Main {
             AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
             c_ast_ascendente.ConstructorASTTinyDJ asint_asc = new c_ast_ascendente.ConstructorASTTinyDJ(alex);
             try {
-                prog = (Prog)asint_asc.debug_parse().value;
+                prog = (Prog)asint_asc.parse().value;
             } catch (Exception|Error e) {
                 System.err.println(e.getMessage());
                 System.exit(0);
