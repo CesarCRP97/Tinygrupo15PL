@@ -554,6 +554,7 @@ public class SintaxisAbstractaTiny {
 
     public static class Tipo_puntero extends Tipo {
         private Tipo tipo;
+        private Nodo vinculo;
 
         public Tipo_puntero(Tipo tipo) {
             super();
@@ -561,6 +562,7 @@ public class SintaxisAbstractaTiny {
         }
 
         public Tipo tipo() {return tipo;}
+        public Nodo vinculo() {return vinculo;}
 
         public String toString() {
             return "tipo_puntero("+tipo+")";
@@ -571,6 +573,9 @@ public class SintaxisAbstractaTiny {
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
+        }
+        public void ponVinculo(Nodo vinculo) {
+            this.vinculo = vinculo;
         }
     }
 
