@@ -237,6 +237,8 @@ public class Vinculacion extends ProcesamientoDef {
     public void procesa(Tipo_iden tipo) {
         if (infoVinculo(ts, tipo.iden()) == null) {
             errorNoDeclarado(tipo.iden(), tipo.leeFila(), tipo.leeCol());
+        } else {
+            tipo.ponVinculo(infoVinculo(ts, tipo.iden()));
         }
     }
     public void procesa(Si_instrs instrs) {
@@ -377,6 +379,7 @@ public class Vinculacion extends ProcesamientoDef {
     }
     public void procesa(Acceso exp) {
         exp.opnd().procesa(this);
+        
     }
     public void procesa(Indireccion exp) {
         exp.opnd().procesa(this);
