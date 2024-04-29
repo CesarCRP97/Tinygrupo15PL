@@ -594,10 +594,14 @@ public class SintaxisAbstractaTiny {
         public void procesa(Procesamiento p) {
             p.procesa(this);
         }
+        public boolean contieneId(String id) {
+            return campos.contieneId(id);
+        }
     }
 
     public static class Tipo_iden extends Tipo {
         private String id;
+        private Nodo vinculo;
 
         public Tipo_iden(String id) {
             super();
@@ -605,15 +609,19 @@ public class SintaxisAbstractaTiny {
         }
 
         public String iden() {return id;}
+        public Nodo vinculo() {return vinculo;}
 
         public String toString() {
             return "tipo_iden("+id+")";
         }
         public void imprime() {
             System.out.println(id + infoVinculo(this));
-        }
+        }   
         public void procesa(Procesamiento p) {
             p.procesa(this);
+        }
+        public void ponVinculo(Nodo vinculo) {
+            this.vinculo = vinculo;
         }
     }
 
@@ -638,6 +646,9 @@ public class SintaxisAbstractaTiny {
         public void procesa(Procesamiento p) {
             p.procesa(this);
         }
+        public boolean contieneId(String id) {
+            return lcampos.contieneId(id);
+        }
     }
 
     public static abstract class LCampos extends Nodo {
@@ -647,6 +658,7 @@ public class SintaxisAbstractaTiny {
 
         public Campo campo() {throw new UnsupportedOperationException();}
         public LCampos lcampos() {throw new UnsupportedOperationException();}
+        public return contieneId(String id) {throw new UnsupportedOperationException();}
     }
 
     public static class Muchos_campos extends LCampos {
@@ -673,6 +685,9 @@ public class SintaxisAbstractaTiny {
         public void procesa(Procesamiento p) {
             p.procesa(this);
         }
+        public boolean contieneId(String id) {
+            return campo.iden().equals(id) || lcampos.contieneId(id);
+        }
     }
 
     public static class Un_campo extends LCampos {
@@ -694,6 +709,9 @@ public class SintaxisAbstractaTiny {
         }
         public void procesa(Procesamiento p) {
             p.procesa(this);
+        }
+        public boolean contieneId(String id) {
+            return campo.iden().equals(id);
         }
     }
 
