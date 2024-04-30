@@ -3,8 +3,8 @@ import c_ast_ascendente.AnalizadorLexicoTiny;
 import c_ast_descendente.ConstructorASTsTinyDJ;
 import procesamientos.Procesamiento_rec;
 import procesamientos.Procesamiento_vis;
-import procesamientos.Vinculacion;
-import procesamientos.Vinculacion.ErrorVinculacion;
+import procesamientos.Vinculacion_vis;
+import procesamientos.Vinculacion_vis.ErrorVinculacion;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -46,7 +46,7 @@ public class Main {
         }
 
         System.out.println("Procesando vinculacion...");
-        Vinculacion vinc = new Vinculacion();
+        Vinculacion_vis vinc = new Vinculacion_vis();
         prog.procesa(vinc);
         if(vinc.hayErrores())
             System.err.println("Errores de vinculacion");

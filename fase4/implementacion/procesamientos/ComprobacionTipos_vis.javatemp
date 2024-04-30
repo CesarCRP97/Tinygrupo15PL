@@ -3,7 +3,11 @@ package procesamientos;
 import asint.ProcesamientoDef;
 import asint.SintaxisAbstractaTiny.*;
 
-public class ComprobacionTipos extends ProcesamientoDef {
+public class ComprobacionTipos_vis extends ProcesamientoDef {
+
+    private void avisoError(Nodo n) {
+        System.out.println("Error de tipos en la línea " + n.leeFila() + " y columna " + n.leeCol());
+    }
 
     public String ambosOK(String tipo1, String tipo2) {
         if (tipo1 == "ok" && tipo2 == "ok") {
@@ -19,8 +23,8 @@ public class ComprobacionTipos extends ProcesamientoDef {
     }
 
     public void procesa(Bloque bloque) {
-        bloque.instrs().procesa(this);
-        bloque.putTipo(bloque.instrs().getTipo());
+        bloque.insts().procesa(this);
+        bloque.putTipo(bloque.insts().getTipo());
     }
     public void procesa(Si_instrs instrs) {
         instrs.linstrs().procesa(this);

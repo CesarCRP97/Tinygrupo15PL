@@ -1,11 +1,9 @@
 package procesamientos;
 
-import asint.SintaxisAbstractaTiny;
-import asint.SintaxisAbstractaTiny.*;
 import asint.ProcesamientoDef;
-import java.util.HashMap;
+import asint.SintaxisAbstractaTiny.*;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.HashMap;
 
 public class Vinculacion_vis extends ProcesamientoDef {
 
@@ -116,6 +114,10 @@ public class Vinculacion_vis extends ProcesamientoDef {
     private TablaSimbolos ts;
     private boolean error;
 
+    public Vinculacion_vis() {
+        error = false;
+    }
+
     public boolean hayErrores() {
         return error;
     }
@@ -129,11 +131,7 @@ public class Vinculacion_vis extends ProcesamientoDef {
     }
 
     private void inserta(TablaSimbolos ts, String iden, Nodo dec) {
-        if (contiene(ts, iden)) {
-            errorDuplicado(iden, dec.leeFila(), dec.leeCol());
-        } else {
-            ts.put(iden, dec);
-        }
+        ts.put(iden, dec);
     }
 
     private Nodo infoVinculo(TablaSimbolos ts, String iden) {
@@ -148,157 +146,101 @@ public class Vinculacion_vis extends ProcesamientoDef {
         ts.cerrarAmbito();
     }
 
-    public Vinculacion_vis() {
-        error = false;
-    }
-
-    public void procesa(Prog p) {
+    public void procesa(Prog prog) {
         ts = creaTS();
         abreAmbito(ts);
-        p.bloque().procesa(this);
+        prog.bloque().procesa(this);
         cierraAmbito(ts);
     }
 
-    public void procesa(Bloque b) {
-        b.decs().procesa1(this);
-        b.decs().procesa2(this);
-        b.insts().procesa(this);
+    public void procesa(Bloque bloque) {
+        bloque.decs().procesa(this);
+        bloque.insts().procesa(this);
     }
-
-    public void procesa1(Si_decs decs) {
-        decs.ldecs().procesa1(this);
+    public void procesa(Si_decs decs) {
+        decs.ldecs().procesa(this);
     }
-
-    public void procesa1(No_decs decs) {
+    public void procesa(No_decs decs) {
     }
-    public void procesa1(Muchas_decs decs) {
-        decs.ldecs().procesa1(this);
-        decs.dec().procesa1(this);
+    public void procesa(Muchas_decs decs) {
+        decs.ldecs().procesa(this);
+        decs.dec().procesa(this);
     }
-    public void procesa1(Una_dec dec) {
-        dec.dec().procesa1(this);
+    public void procesa(Una_dec dec) {
+        dec.dec().procesa(this);
     }
-    public void procesa1(Dec_variable dec) {
-        dec.tipo().procesa1(this);
-        inserta(ts, dec.iden(), dec);
+    public void procesa(Dec_variable dec) {
+        if (contiene(ts, dec.iden())) {
+            errorDuplicado(dec.iden(), dec.leeFila(), dec.leeCol());
+        } else {
+            inserta(ts, dec.iden(), dec);
+        }
     }
-    public void procesa1(Dec_tipo dec) {
-        dec.tipo().procesa1(this);
-        inserta(ts, dec.iden(), dec);
+    public void procesa(Dec_tipo dec) {
+        if (contiene(ts, dec.iden())) {
+            errorDuplicado(dec.iden(), dec.leeFila(), dec.leeCol());
+        } else {
+            inserta(ts, dec.iden(), dec);
+        }
     }
-    public void procesa1(Dec_proc dec) {
-        inserta(ts, dec.iden(), dec);
+    public void procesa(Dec_proc dec) {
         abreAmbito(ts);
-        dec.params_form().procesa1(this);
-        dec.params_form().procesa2(this);
+        dec.params_form().procesa(this);
         dec.bloque().procesa(this);
         cierraAmbito(ts);
-    }
-    public void procesa1(Si_params_form params) {
-        params.lparams_form().procesa1(this);
-    }
-    public void procesa1(No_params_form params) {
-    }
-    public void procesa1(Muchos_params_form params) {
-        params.lparams_form().procesa1(this);
-        params.param_form().procesa1(this);
-    }
-    public void procesa1(Un_param_form params) {
-        params.param_form().procesa1(this);
-    }
-    public void procesa2(Si_params_form params) {
-        params.lparams_form().procesa2(this);
-    }
-    public void procesa2(No_params_form params) {
-    }
-    public void procesa2(Muchos_params_form params) {
-        params.lparams_form().procesa2(this);
-        params.param_form().procesa2(this);
-    }
-    public void procesa2(Un_param_form params) {
-        params.param_form().procesa1(this);
-    }
-    public void procesa1(Param_form_normal param) {
-        param.tipo().procesa1(this);
-        inserta(ts, param.iden(), param);
-    }
-    public void procesa1(Param_form_ref param) {
-        param.tipo().procesa1(this);
-        inserta(ts, param.iden(), param);
-    }
-    public void procesa2(Param_form_normal param) {
-        param.tipo().procesa2(this);
-    }
-    public void procesa2(Param_form_ref param) {
-        param.tipo().procesa2(this);
-    }
-    public void procesa1(Tipo_int tipo) {}
-    public void procesa1(Tipo_bool tipo) {}
-    public void procesa1(Tipo_real tipo) {}
-    public void procesa1(Tipo_array tipo) {
-        if (!(tipo.tipo() instanceof Tipo_iden)) {
-            tipo.tipo().procesa1(this);
+        if (contiene(ts, dec.iden())) {
+            errorDuplicado(dec.iden(), dec.leeFila(), dec.leeCol());
+        } else {
+            inserta(ts, dec.iden(), dec);
         }
     }
-    public void procesa1(Tipo_string tipo) {}
-    public void procesa1(Tipo_puntero tipo) {
-        if (!(tipo.tipo() instanceof Tipo_iden)) {
-            tipo.tipo().procesa1(this);
+    public void procesa(Si_params_form params) {
+        params.lparams_form().procesa(this);
+    }
+    public void procesa(No_params_form params) {
+    }
+    public void procesa(Muchos_params_form params) {
+        params.lparams_form().procesa(this);
+        params.param_form().procesa(this);
+    }
+    public void procesa(Un_param_form params) {
+        params.param_form().procesa(this);
+    }
+    public void procesa(Param_form_normal param) {
+        if (contiene(ts, param.iden())) {
+            errorDuplicado(param.iden(), param.leeFila(), param.leeCol());
+        } else {
+            inserta(ts, param.iden(), param);
         }
     }
-    public void procesa1(Tipo_struct tipo) {}
-    public void procesa1(Tipo_iden tipo) {
+    public void procesa(Param_form_ref param) {
+        if (contiene(ts, param.iden())) {
+            errorDuplicado(param.iden(), param.leeFila(), param.leeCol());
+        } else {
+            inserta(ts, param.iden(), param);
+        }
+    }
+    public void procesa(Tipo_int tipo) {
+    }
+    public void procesa(Tipo_bool tipo) {
+    }
+    public void procesa(Tipo_real tipo) {
+    }
+    public void procesa(Tipo_array tipo) {
+    }
+    public void procesa(Tipo_string tipo) {
+    }
+    public void procesa(Tipo_puntero tipo) {
+    }
+    public void procesa(Tipo_struct tipo) {
+    }
+    public void procesa(Tipo_iden tipo) {
         if (infoVinculo(ts, tipo.iden()) == null) {
             errorNoDeclarado(tipo.iden(), tipo.leeFila(), tipo.leeCol());
         } else {
             tipo.ponVinculo(infoVinculo(ts, tipo.iden()));
         }
     }
-
-    public void procesa2(Si_decs decs) {
-        decs.ldecs().procesa2(this);
-    }
-    public void procesa2(No_decs decs) {
-    }
-    public void procesa2(Muchas_decs decs) {
-        decs.ldecs().procesa2(this);
-        decs.dec().procesa2(this);
-    }
-    public void procesa2(Una_dec dec) {
-        dec.dec().procesa2(this);
-    }
-    public void procesa2(Dec_variable dec) {
-        dec.tipo().procesa2(this);
-    }
-    public void procesa2(Dec_tipo dec) {
-        dec.tipo().procesa2(this);
-    }
-    public void procesa2(Dec_proc dec) {}
-
-        public void procesa2(Tipo_int tipo) {}
-    public void procesa2(Tipo_bool tipo) {}
-    public void procesa2(Tipo_real tipo) {}
-    public void procesa2(Tipo_array tipo) {
-        if (tipo.tipo() instanceof Tipo_iden) {
-            if( infoVinculo(ts, tipo.tipo().iden()) == null) {
-                errorNoDeclarado(tipo.tipo().iden(), tipo.tipo().leeFila(), tipo.tipo().leeCol());
-            } else {
-                ((Tipo_iden)tipo.tipo()).ponVinculo(infoVinculo(ts, tipo.tipo().iden()));
-            }
-        }
-    }
-    public void procesa2(Tipo_string tipo) {}
-    public void procesa2(Tipo_puntero tipo) {
-        if (tipo.tipo() instanceof Tipo_iden) {
-            if( infoVinculo(ts, tipo.tipo().iden()) == null) {
-                errorNoDeclarado(tipo.tipo().iden(), tipo.tipo().leeFila(), tipo.tipo().leeCol());
-            } else {
-                ((Tipo_iden)tipo.tipo()).ponVinculo(infoVinculo(ts, tipo.tipo().iden()));
-            }
-        }
-    }
-
-
     public void procesa(Si_instrs instrs) {
         instrs.linstrs().procesa(this);
     }
@@ -355,11 +297,6 @@ public class Vinculacion_vis extends ProcesamientoDef {
         cierraAmbito(ts);
     }
     public void procesa(Invoc instr) {
-        if (infoVinculo(ts, instr.iden()) == null) {
-            errorNoDeclarado(instr.iden(), instr.leeFila(), instr.leeCol());
-        } else {
-            instr.ponVinculo(infoVinculo(ts, instr.iden()));
-        }
         instr.params_reales().procesa(this);
     }
     public void procesa(Si_params_reales params) {
@@ -442,6 +379,7 @@ public class Vinculacion_vis extends ProcesamientoDef {
     }
     public void procesa(Acceso exp) {
         exp.opnd().procesa(this);
+        
     }
     public void procesa(Indireccion exp) {
         exp.opnd().procesa(this);
@@ -469,4 +407,3 @@ public class Vinculacion_vis extends ProcesamientoDef {
     }
 
 }
-
