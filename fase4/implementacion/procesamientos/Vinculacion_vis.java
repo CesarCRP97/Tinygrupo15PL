@@ -216,7 +216,7 @@ public class Vinculacion_vis extends ProcesamientoDef {
         params.param_form().procesa2(this);
     }
     public void procesa2(Un_param_form params) {
-        params.param_form().procesa1(this);
+        params.param_form().procesa2(this);
     }
     public void procesa1(Param_form_normal param) {
         param.tipo().procesa1(this);
