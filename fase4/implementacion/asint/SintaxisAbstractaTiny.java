@@ -644,6 +644,7 @@ public class SintaxisAbstractaTiny {
     public static class Tipo_array extends Tipo {
         private Tipo tipo;
         private String num;
+        private int tam;
 
         public Tipo_array(Tipo tipo, String num) {
             super();
@@ -653,6 +654,7 @@ public class SintaxisAbstractaTiny {
 
         public Tipo tipo() {return tipo;}
         public String num() {return num;}
+        public int tam() {return tam;}
 
         public String toString() {
             return "tipo_array("+tipo+","+num+")";
@@ -672,6 +674,9 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
+        public void ponTam(int tam) {
+            this.tam = tam;
+        }
     }
 
     public static class Tipo_puntero extends Tipo {
@@ -707,37 +712,6 @@ public class SintaxisAbstractaTiny {
         }
     }
 
-    public static class Tipo_struct extends Tipo {
-        private Campos campos;
-
-        public Tipo_struct(Campos campos) {
-            super();
-            this.campos = campos;
-        }
-
-        public Campos campos() {return campos;}
-
-        public String toString() {
-            return "tipo_struct("+campos+")";
-        }
-        public void imprime() {
-            System.out.println("<struct>");
-            campos.imprime();
-        }
-        public void procesa(Procesamiento p) {
-            p.procesa(this);
-        }
-		public void procesa1(Procesamiento p) {
-			p.procesa1(this);
-		}
-		public void procesa2(Procesamiento p) {
-			p.procesa2(this);
-		}
-        public boolean contieneId(String id) {
-            return campos.contieneId(id);
-        }
-    }
-
     public static class Tipo_iden extends Tipo {
         private String id;
         private Nodo vinculo;
@@ -767,6 +741,45 @@ public class SintaxisAbstractaTiny {
 		}
         public void ponVinculo(Nodo vinculo) {
             this.vinculo = vinculo;
+        }
+    }
+
+    public static class Tipo_struct extends Tipo {
+        private Campos campos;
+        private int numCampos;
+
+        public Tipo_struct(Campos campos) {
+            super();
+            this.campos = campos;
+        }
+
+        public Campos campos() {return campos;}
+        public int numCampos() {return numCampos;}
+
+        public String toString() {
+            return "tipo_struct("+campos+")";
+        }
+        public void imprime() {
+            System.out.println("<struct>");
+            campos.imprime();
+        }
+        public void procesa(Procesamiento p) {
+            p.procesa(this);
+        }
+		public void procesa1(Procesamiento p) {
+			p.procesa1(this);
+		}
+		public void procesa2(Procesamiento p) {
+			p.procesa2(this);
+		}
+        public boolean contieneId(String id) {
+            return campos.contieneId(id);
+        }
+        public boolean camposDuplicados() {
+            return campos.camposDuplicados();
+        }
+        public void ponNumCampos() {
+            numCampos = campos.numCampos();
         }
     }
 
@@ -800,6 +813,12 @@ public class SintaxisAbstractaTiny {
         public boolean contieneId(String id) {
             return lcampos.contieneId(id);
         }
+        public boolean camposDuplicados() {
+            return lcampos.camposDuplicados();
+        }
+        public int numCampos() {
+            return lcampos.numCampos();
+        }
     }
 
     public static abstract class LCampos extends Nodo {
@@ -810,6 +829,8 @@ public class SintaxisAbstractaTiny {
         public Campo campo() {throw new UnsupportedOperationException();}
         public LCampos lcampos() {throw new UnsupportedOperationException();}
         public boolean contieneId(String id) {throw new UnsupportedOperationException();}
+        public boolean camposDuplicados() {throw new UnsupportedOperationException();}
+        public int numCampos() {throw new UnsupportedOperationException();}
     }
 
     public static class Muchos_campos extends LCampos {
@@ -845,6 +866,12 @@ public class SintaxisAbstractaTiny {
         public boolean contieneId(String id) {
             return campo.iden().equals(id) || lcampos.contieneId(id);
         }
+        public boolean camposDuplicados() {
+            return lcampos.contieneId(campo.iden()) || lcampos.camposDuplicados();
+        }
+        public int numCampos() {
+            return 1 + lcampos.numCampos();
+        }
     }
 
     public static class Un_campo extends LCampos {
@@ -875,6 +902,12 @@ public class SintaxisAbstractaTiny {
 		}
         public boolean contieneId(String id) {
             return campo.iden().equals(id);
+        }
+        public boolean camposDuplicados() {
+            return false;
+        }
+        public int numCampos() {
+            return 1;
         }
     }
 
