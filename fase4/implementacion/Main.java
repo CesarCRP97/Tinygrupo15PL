@@ -50,8 +50,11 @@ public class Main {
         prog.procesa(vinc);
         if(vinc.hayErrores())
             System.err.println("Errores de vinculacion");
-        else
+        else {
             System.out.println("Vinculacion correcta");
+            ComprobacionTipos_vis comp = new ComprobacionTipos_vis();
+            prog.procesa(comp);
+        }
     }
 
 

@@ -18,8 +18,8 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
 
     public String ref(Nodo nodo) {
-        while ((nodo instanceof Tipo_iden) && (((Tipo_iden) nodo).getVinculo() instanceof Dec_tipo)) {
-            nodo = ((Tipo_iden) nodo).getVinculo();
+        while ((nodo instanceof Tipo_iden) && (((Tipo_iden) nodo).vinculo() instanceof Dec_tipo)) {
+            nodo = ((Tipo_iden) nodo).vinculo();
         }
         if (nodo instanceof Tipo_int) {
             return "int";
@@ -31,7 +31,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             return "string";
         } else if (nodo instanceof Tipo_array) {
             return "array";
-        } else if (nodo instanceof Tipo_pointer) {
+        } else if (nodo instanceof Tipo_puntero) {
             return "puntero";
         } else if (nodo instanceof Tipo_struct) {
             return "struct";
@@ -42,29 +42,29 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         }
     }
 
-    public boolean compatAsig(Nodo tipo1, Nodo tipo2) {
-        String tipo1Str = ref(tipo1);
-        String tipo2Str = ref(tipo2);
-        if (tipo1Str == "error" || tipo2Str == "error") {
+    public boolean compatAsig(Tipo n1, Tipo n2) {
+        String tipo1 = ref(n1);
+        String tipo2 = ref(n2);
+        if (tipo1 == "error" || tipo2 == "error") {
             return false;
-        } else if (tipo1Str == "int" && tipo2Str == "int") {
+        } else if (tipo1 == "int" && tipo2 == "int") {
             return true;
-        } else if (tipo1Str == "real" && tipo2Str == "real") {
+        } else if (tipo1 == "real" && tipo2 == "real") {
             return true;
-        } else if (tipo1Str == "bool" && tipo2Str == "bool") {
+        } else if (tipo1 == "bool" && tipo2 == "bool") {
             return true;
-        } else if (tipo1Str == "string" && tipo2Str == "string") {
+        } else if (tipo1 == "string" && tipo2 == "string") {
             return true;
-        } else if (tipo1Str == "array" && tipo2Str == "array") {
-            if (compat(tipo1.tipo(), tipo2.tipo()) && tipo1.tam() == tipo2.tam()) {
+        } else if (tipo1 == "array" && tipo2 == "array") {
+            if (compatAsig(n1.tipo(), n2.tipo()) && n1.tam() == n2.tam()) {
                 return true;
             } else {
                 return false;
             }
-        } else if (tipo1Str == "struct" && tipo2Str == "struct") {
-            if (tipo1.numCampos() == tipo2.numCampos()) {
-                for (int i = 0; i < tipo1.numCampos(); i++) {
-                    if (!compat(tipo1.campo(i).tipo(), tipo2.campo(i).tipo())) {
+        } else if (tipo1 == "struct" && tipo2 == "struct") {
+            if (n1.numCampos() == n2.numCampos()) {
+                for (int i = 0; i < n1.numCampos(); i++) {
+                    if (!compatAsig(n1.campo(i).tipo(), n2.campo(i).tipo())) {
                         return false;
                     }
                 }
@@ -72,11 +72,11 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             } else {
                 return false;
             }
-        } else if (tipo1Str == "puntero") {
-            if (tipo2Str == "null") {
+        } else if (tipo1 == "puntero") {
+            if (tipo2 == "null") {
                 return true;
-            } else if (tipo2Str == "puntero") {
-                return compat(tipo1.tipo(), tipo2.tipo());
+            } else if (tipo2 == "puntero") {
+                return compatAsig(n1.tipo(), n2.tipo());
             } else {
                 return false;
             }
@@ -84,6 +84,131 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             return false;
         }
 
+    }
+
+    public boolean designador(Nodo n) {
+        if (n instanceof Iden || n instanceof Indexacion || n instanceof Acceso || n instanceof Indireccion) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void chequeaTipoExpBinArit(Exp n) {
+        String tipo1 = n.opnd0().getTipo();
+        String tipo2 = n.opnd1().getTipo();
+        if (tipo1 == "error" || tipo2 == "error") {
+            n.putTipo("error");
+        } else if (tipo1 == "int" && tipo2 == "int") {
+            n.putTipo("int");
+        } else if (tipo1 == "real" && tipo2 == "real") {
+            n.putTipo("real");
+        } else if (tipo1 == "int" && tipo2 == "real") {
+            n.putTipo("real");
+        } else if (tipo1 == "real" && tipo2 == "int") {
+            n.putTipo("real");
+        } else {
+            avisoError(n);
+            n.putTipo("error");
+        }
+    }
+
+    public void chequeaTipoExpBinLog(Exp n) {
+        String tipo1 = n.opnd0().getTipo();
+        String tipo2 = n.opnd1().getTipo();
+        if (tipo1 == "error" || tipo2 == "error") {
+            n.putTipo("error");
+        } else if (tipo1 == "bool" && tipo2 == "bool") {
+            n.putTipo("bool");
+        } else {
+            avisoError(n);
+            n.putTipo("error");
+        }
+    }
+
+    public void chequeaTipoExpBinRel(Exp n) {
+        String tipo1 = n.opnd0().getTipo();
+        String tipo2 = n.opnd1().getTipo();
+        if (tipo1 == "error" || tipo2 == "error") {
+            n.putTipo("error");
+        } else if (tipo1 == "int" && tipo2 == "int") {
+            n.putTipo("bool");
+        } else if (tipo1 == "real" && tipo2 == "real") {
+            n.putTipo("bool");
+        } else if (tipo1 == "int" && tipo2 == "real") {
+            n.putTipo("bool");
+        } else if (tipo1 == "real" && tipo2 == "int") {
+            n.putTipo("bool");
+        } else if (tipo1 == "bool" && tipo2 == "bool") {
+            n.putTipo("bool");
+        } else if (tipo1 == "string" && tipo2 == "string") {
+            n.putTipo("bool");
+        } else {
+            avisoError(n);
+            n.putTipo("error");
+        }
+    }
+
+    public void chequeaTipoExpBinRelIgual(Exp n) {
+        String tipo1 = n.opnd0().getTipo();
+        String tipo2 = n.opnd1().getTipo();
+        if (tipo1 == "error" || tipo2 == "error") {
+            n.putTipo("error");
+        } else if (tipo1 == "int" && tipo2 == "int") {
+            n.putTipo("bool");
+        } else if (tipo1 == "real" && tipo2 == "real") {
+            n.putTipo("bool");
+        } else if (tipo1 == "int" && tipo2 == "real") {
+            n.putTipo("bool");
+        } else if (tipo1 == "real" && tipo2 == "int") {
+            n.putTipo("bool");
+        } else if (tipo1 == "bool" && tipo2 == "bool") {
+            n.putTipo("bool");
+        } else if (tipo1 == "string" && tipo2 == "string") {
+            n.putTipo("bool");
+        } else if (tipo1 == "null" && tipo2 == "null") {
+            n.putTipo("bool");
+        } else if (tipo1 == "puntero" && tipo2 == "puntero") {
+            n.putTipo("bool");
+        } else if (tipo1 == "puntero" && tipo2 == "null") {
+            n.putTipo("bool");
+        } else if (tipo1 == "null" && tipo2 == "puntero") {
+            n.putTipo("bool");
+        } else {
+            avisoError(n);
+            n.putTipo("error");
+        }
+    }
+
+    public boolean compParams(Si_params_reales params, Si_params_form params_form) {
+        return compParams(params.lparams_reales(), params_form.lparams_form());
+    }
+    public boolean compParams(No_params_reales params, No_params_form params_form) {
+        return true;
+    }
+    public boolean compParams(Muchos_params_reales params, Muchos_params_form params_form) {
+        return compParams(params.lparams_reales(), params_form.lparams_form()) && compParams(params.exp(), params_form.param());
+    }
+    public boolean compParams(Un_param_real params, Un_param_form params_form) {
+        return compParams(params.exp(), params_form.param());
+    }
+    public boolean compParams(Exp exp, Param_form_normal param) {
+        if (exp.getTipo() == "error") {
+            return false;
+        } else if (exp.getTipo() == param.tipo().getTipo()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean compParams(Exp exp, Param_form_ref param) {
+        if (exp.getTipo() == "error") {
+            return false;
+        } else if (designador(exp) && exp.getTipo() == param.tipo().getTipo()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void procesa(Prog prog) {
@@ -112,7 +237,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         dec.dec().procesa(this);
         dec.putTipo(dec.dec().getTipo());
     }
-    public void procesa(Dec_var dec) {
+    public void procesa(Dec_variable dec) {
         dec.tipo().procesa(this);
         dec.putTipo(dec.tipo().getTipo());
     }
@@ -178,7 +303,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         }
         tipo.putTipo(tipo.tipo().getTipo());
     }
-    public void procesa(Tipo_pointer tipo) {
+    public void procesa(Tipo_puntero tipo) {
         tipo.tipo().procesa(this);
         tipo.putTipo(tipo.tipo().getTipo());
     }
@@ -210,7 +335,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         campo.putTipo(campo.tipo().getTipo());
     }
     public void procesa(Tipo_iden tipo) {
-        if (tipo.getVinculo() instanceof Dec_tipo) {
+        if (tipo.vinculo() instanceof Dec_tipo) {
             tipo.putTipo("ok");
         } else {
             avisoError(tipo);
@@ -282,26 +407,78 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         instr.exp().procesa(this);
         if(instr.exp().getTipo() == "error") {
             instr.putTipo("error");
+        } else if (designador(instr.exp()) && (instr.exp().getTipo() == "int" || instr.exp().getTipo() == "real" || instr.exp().getTipo() == "string")) {
+            instr.putTipo("ok");
         } else {
-            String tipo = ref(instr.exp().getTipo());
+            instr.putTipo("error");
+            avisoError(instr);
         }
     }
     public void procesa(Write instr) {
         instr.exp().procesa(this);
+        if(instr.exp().getTipo() == "error") {
+            instr.putTipo("error");
+        } else if (instr.exp().getTipo() == "int" || instr.exp().getTipo() == "real" || instr.exp().getTipo() == "string") {
+            instr.putTipo("ok");
+        } else {
+            instr.putTipo("error");
+            avisoError(instr);
+        }
     }
     public void procesa(NL instr) {
     }
     public void procesa(New instr) {
         instr.exp().procesa(this);
+        if (instr.exp().getTipo() == "error") {
+            instr.putTipo("error");
+        } else if (instr.exp().getTipo() == "puntero") {
+            instr.putTipo("ok");
+        } else {
+            instr.putTipo("error");
+            avisoError(instr);
+        }
     }
     public void procesa(Delete instr) {
         instr.exp().procesa(this);
+        if (instr.exp().getTipo() == "error") {
+            instr.putTipo("error");
+        } else if (instr.exp().getTipo() == "puntero") {
+            instr.putTipo("ok");
+        } else {
+            instr.putTipo("error");
+            avisoError(instr);
+        }
     }
     public void procesa(Instr_compuesta instr) {
         instr.bloque().procesa(this);
+        instr.putTipo(instr.bloque().getTipo());
     }
     public void procesa(Invoc instr) {
         instr.params_reales().procesa(this);
+        if (instr.vinculo() instanceof Dec_proc) {
+            Dec_proc dec = (Dec_proc) instr.vinculo();
+            if (instr.params_reales().getTipo() == "error") {
+                instr.putTipo("error");
+            } else if (instr.params_reales().getTipo() == "ok") {
+                if(instr.params_reales().numParams() == dec.params_form().numParams()) {
+                    if (compParams(instr.params_reales(), dec.params_form())) {
+                        instr.putTipo("ok");
+                    } else {
+                        instr.putTipo("error");
+                        avisoError(instr);
+                    }
+                } else {
+                    instr.putTipo("error");
+                    avisoError(instr);
+                }
+            } else {
+                instr.putTipo("error");
+                avisoError(instr);
+            }
+        } else {
+            instr.putTipo("error");
+            avisoError(instr);
+        }
     }
     public void procesa(Si_params_reales params) {
         params.lparams_reales().procesa(this);
@@ -316,78 +493,170 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         params.exp().procesa(this);
     }
     public void procesa(Asignacion exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "=", 1, 0, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        if (designador(exp.opnd0()) && compatAsig(exp.opnd0().getTipo(), exp.opnd1().getTipo())) {
+            exp.putTipo("ok");
+        } else {
+            avisoError(exp);
+            exp.putTipo("error");
+        }
     }
     public void procesa(Igual_comp exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "==", 0, 1, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinRelIgual(exp);
     }
     public void procesa(Distinto_comp exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "!=", 0, 1, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinRelIgual(exp);
     }
     public void procesa(Menor_que exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "<", 0, 1, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinRel(exp);
     }
     public void procesa(Mayor_que exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), ">", 0, 1, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinRel(exp);
     }
     public void procesa(Menor_igual exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "<=", 0, 1, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinRel(exp);
     }
     public void procesa(Mayor_igual exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), ">=", 0, 1, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinRel(exp);
     }
     public void procesa(Suma exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "+", 3, 2, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinArit(exp);
     }
     public void procesa(Resta exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "-", 3, 3, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinArit(exp);
     }
     public void procesa(And exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "<and>", 4, 3, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinLog(exp);
     }
     public void procesa(Or exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "<or>", 4, 4, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinLog(exp);
     }
     public void procesa(Mul exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "*", 4, 5, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinArit(exp);
     }
     public void procesa(Div exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "/", 4, 5, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        chequeaTipoExpBinArit(exp);
     }
     public void procesa(Mod exp) {
-        imprimeExpBin(exp.opnd0(), exp.opnd1(), "%", 4, 5, exp);
+        exp.opnd0().procesa(this);
+        exp.opnd1().procesa(this);
+        tipo1 = exp.opnd0().getTipo();
+        tipo2 = exp.opnd1().getTipo();
+        if (tipo1 == "error" || tipo2 == "error") {
+            exp.putTipo("error");
+        } else if (tipo1 == "int" && tipo2 == "int") {
+            exp.putTipo("int");
+        } else {
+            avisoError(exp);
+            exp.putTipo("error");
+        }
     }
     public void procesa(Menos_unario exp) {
-        imprimeExpUn(exp.opnd(), "-", 5, exp);
+        exp.opnd().procesa(this);
+        tipo = exp.opnd().getTipo();
+        if (tipo == "error") {
+            exp.putTipo("error");
+        } else if (tipo == "int" || tipo == "real") {
+            exp.putTipo(tipo);
+        } else {
+            avisoError(exp);
+            exp.putTipo("error");
+        }
     }
     public void procesa(Not exp) {
-        imprimeExpUn(exp.opnd(), "<not>", 5, exp);
+        exp.opnd().procesa(this);
+        tipo = exp.opnd().getTipo();
+        if (tipo == "error") {
+            exp.putTipo("error");
+        } else if (tipo == "bool") {
+            exp.putTipo("bool");
+        } else {
+            avisoError(exp);
+            exp.putTipo("error");
+        }
     }
     public void procesa(Indexacion exp) {
-        imprimeOpnd(exp.opnd0(), 6);
+        exp.opnd0().procesa(this);
         exp.opnd1().procesa(this);
+        if (exp.opnd0().getTipo() == "array" && exp.opnd1().getTipo() == "int") {
+            exp.putTipo(exp.opnd0().tipo().getTipo());
+        } else {
+            avisoError(exp);
+            exp.putTipo("error");
+        }
     }
     public void procesa(Acceso exp) {
-        imprimeOpnd(exp.opnd(), 6);
+        exp.opnd().procesa(this);
+        if (exp.opnd().getTipo() == "struct") {
+            Campo campo = ((Tipo_struct) exp.opnd().vinculo()).campo(exp.id());
+            if (campo != null) {
+                exp.putTipo(ref(campo.tipo()));
+            } else {
+                avisoError(exp);
+                exp.putTipo("error");
+            }
+        } else {
+            avisoError(exp);
+            exp.putTipo("error");
+        }
     }
     public void procesa(Indireccion exp) {
-        imprimeOpnd(exp.opnd(), 6);
+        exp.opnd().procesa(this);
+        if (exp.opnd().getTipo() == "puntero") {
+            exp.putTipo(exp.opnd().tipo().getTipo());
+        } else {
+            avisoError(exp);
+            exp.putTipo("error");
+        }
     }
     public void procesa(Lit_ent exp) {
+        exp.putTipo("int");
     }
     public void procesa(Lit_real exp) {
+        exp.putTipo("real");
     }
     public void procesa(True exp) {
+        exp.putTipo("bool");
     }
     public void procesa(False exp) {
+        exp.putTipo("bool");
     }
     public void procesa(Lit_cadena exp) {
+        exp.putTipo("string");
     }
     public void procesa(Iden exp) {
+        exp.putTipo(ref(exp.vinculo()));
     }
     public void procesa(Null exp) {
+        exp.putTipo("null");
     }
     public void procesa(String str) {
+        exp.putTipo("string");
     }
 
 }

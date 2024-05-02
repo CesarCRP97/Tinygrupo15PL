@@ -348,6 +348,7 @@ public class SintaxisAbstractaTiny {
         }
 
         public LParams_form lparams_form() {throw new UnsupportedOperationException();}
+        public int numParams() {throw new UnsupportedOperationException();}
     }
 
     public static class Si_params_form extends Params_form {
@@ -377,6 +378,9 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
+        public int numParams() {
+            return lparams_form.numParams();
+        }
     }
 
     public static class No_params_form extends Params_form {
@@ -400,6 +404,9 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
+        public int numParams() {
+            return 0;
+        }
     }
 
     public static abstract class LParams_form extends Nodo {
@@ -409,6 +416,7 @@ public class SintaxisAbstractaTiny {
 
         public Param_form param_form() {throw new UnsupportedOperationException();}
         public LParams_form lparams_form() {throw new UnsupportedOperationException();}
+        public int numParams() {throw new UnsupportedOperationException();}
     }
 
     public static class Muchos_params_form extends LParams_form {
@@ -441,6 +449,9 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
+        public int numParams() {
+            return 1 + lparams_form.numParams();
+        }
     }
 
     public static class Un_param_form extends LParams_form {
@@ -468,6 +479,9 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
+        public int numParams() {
+            return 1;
+        }
     }
 
     public static abstract class Param_form extends Nodo {
@@ -551,6 +565,10 @@ public class SintaxisAbstractaTiny {
         public String num() {throw new UnsupportedOperationException();}
         public Campos campos() {throw new UnsupportedOperationException();}
         public String iden() {throw new UnsupportedOperationException();}
+        public int tam() {throw new UnsupportedOperationException();}
+        public Nodo vinculo() {throw new UnsupportedOperationException();}
+        public int numCampos() {throw new UnsupportedOperationException();}
+        public Campo campo(String id) {throw new UnsupportedOperationException();}
     }
 
     public static class Tipo_int extends Tipo {
@@ -781,6 +799,9 @@ public class SintaxisAbstractaTiny {
         public void ponNumCampos() {
             numCampos = campos.numCampos();
         }
+        public Campo campo(String id) {
+            return campos.campo(id);
+        }
     }
 
     public static class Campos extends Nodo {
@@ -819,6 +840,10 @@ public class SintaxisAbstractaTiny {
         public int numCampos() {
             return lcampos.numCampos();
         }
+        public Campo campo(String id) {
+            return lcampos.campo(id);
+        }
+
     }
 
     public static abstract class LCampos extends Nodo {
@@ -831,6 +856,7 @@ public class SintaxisAbstractaTiny {
         public boolean contieneId(String id) {throw new UnsupportedOperationException();}
         public boolean camposDuplicados() {throw new UnsupportedOperationException();}
         public int numCampos() {throw new UnsupportedOperationException();}
+        public Campo campo(String id) {throw new UnsupportedOperationException();}
     }
 
     public static class Muchos_campos extends LCampos {
@@ -872,6 +898,13 @@ public class SintaxisAbstractaTiny {
         public int numCampos() {
             return 1 + lcampos.numCampos();
         }
+        public Campo campo(String id) {
+            if(campo.iden().equals(id)) {
+                return campo;
+            } else {
+                return lcampos.campo(id);
+            }
+        }
     }
 
     public static class Un_campo extends LCampos {
@@ -908,6 +941,9 @@ public class SintaxisAbstractaTiny {
         }
         public int numCampos() {
             return 1;
+        }
+        public Campo campo(String id) {
+            return campo.iden().equals(id) ? campo : null;
         }
     }
 
@@ -1407,6 +1443,7 @@ public class SintaxisAbstractaTiny {
     }
 
     public static abstract class Params_reales extends Nodo {
+        public int numParams() {throw new UnsupportedOperationException();}
         public Params_reales() {
             super();
         }
@@ -1441,6 +1478,9 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
+        public int numParams() {
+            return lparams_reales.numParams();
+        }
     }
 
     public static class No_params_reales extends Params_reales {
@@ -1464,6 +1504,9 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
+        public int numParams() {
+            return 0;
+        }
     }
 
     public static abstract class LParams_reales extends Nodo {
@@ -1473,6 +1516,7 @@ public class SintaxisAbstractaTiny {
 
         public Exp exp() {throw new UnsupportedOperationException();}
         public LParams_reales lparams_reales() {throw new UnsupportedOperationException();}
+        public int numParams() {throw new UnsupportedOperationException();}
     }
 
     public static class Muchos_params_reales extends LParams_reales {
@@ -1505,6 +1549,9 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
+        public int numParams() {
+            return 1 + lparams_reales.numParams();
+        }
     }
 
     public static class Un_param_real extends LParams_reales {
@@ -1532,6 +1579,9 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
+        public int numParams() {
+            return 1;
+        }
     }
 
 
