@@ -246,12 +246,29 @@ public class Vinculacion_vis extends ProcesamientoDef {
             tipo.tipo().procesa1(this);
         }
     }
-    public void procesa1(Tipo_struct tipo) {}
+    public void procesa1(Tipo_struct tipo) {
+        tipo.campos().procesa1(this);
+    }
+    public void procesa1(Campos campos) {
+        campos.lcampos().procesa1(this);
+    }
+    public void procesa1(Muchos_campos campos) {
+        campos.lcampos().procesa1(this);
+        campos.campo().procesa1(this);
+    }
+    public void procesa1(Un_campo campo) {
+        campo.campo().procesa1(this);
+    }
+    public void procesa1(Campo campo) {
+        campo.tipo().procesa1(this);
+    }
+
     public void procesa1(Tipo_iden tipo) {
         if (infoVinculo(ts, tipo.iden()) == null) {
             errorNoDeclarado(tipo.iden(), tipo.leeFila(), tipo.leeCol());
         } else {
             tipo.ponVinculo(infoVinculo(ts, tipo.iden()));
+            //System.out.println("Vinculado: " + tipo.toString());
         }
     }
 

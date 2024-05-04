@@ -568,7 +568,8 @@ public class SintaxisAbstractaTiny {
         public int tam() {throw new UnsupportedOperationException();}
         public Nodo vinculo() {throw new UnsupportedOperationException();}
         public int numCampos() {throw new UnsupportedOperationException();}
-        public Campo campo(String id) {throw new UnsupportedOperationException();}
+        public Campo campoPorIndex(int i) {throw new UnsupportedOperationException();}
+        public Campo campoPorIden(String id) {throw new UnsupportedOperationException();}
     }
 
     public static class Tipo_int extends Tipo {
@@ -699,7 +700,6 @@ public class SintaxisAbstractaTiny {
 
     public static class Tipo_puntero extends Tipo {
         private Tipo tipo;
-        private Nodo vinculo;
 
         public Tipo_puntero(Tipo tipo) {
             super();
@@ -707,7 +707,6 @@ public class SintaxisAbstractaTiny {
         }
 
         public Tipo tipo() {return tipo;}
-        public Nodo vinculo() {return vinculo;}
 
         public String toString() {
             return "tipo_puntero("+tipo+")";
@@ -725,9 +724,6 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
-        public void ponVinculo(Nodo vinculo) {
-            this.vinculo = vinculo;
-        }
     }
 
     public static class Tipo_iden extends Tipo {
@@ -799,8 +795,11 @@ public class SintaxisAbstractaTiny {
         public void ponNumCampos() {
             numCampos = campos.numCampos();
         }
-        public Campo campo(String id) {
-            return campos.campo(id);
+        public Campo campoPorIndex(int i) {
+            return campos.campoPorIndex(i);
+        }
+        public Campo campoPorIden(String id) {
+            return campos.campoPorIden(id);
         }
     }
 
@@ -840,8 +839,11 @@ public class SintaxisAbstractaTiny {
         public int numCampos() {
             return lcampos.numCampos();
         }
-        public Campo campo(String id) {
-            return lcampos.campo(id);
+        public Campo campoPorIndex(int i) {
+            return lcampos.campoPorIndex(i, 0);
+        }
+        public Campo campoPorIden(String id) {
+            return lcampos.campoPorIden(id);
         }
 
     }
@@ -856,7 +858,8 @@ public class SintaxisAbstractaTiny {
         public boolean contieneId(String id) {throw new UnsupportedOperationException();}
         public boolean camposDuplicados() {throw new UnsupportedOperationException();}
         public int numCampos() {throw new UnsupportedOperationException();}
-        public Campo campo(String id) {throw new UnsupportedOperationException();}
+        public Campo campoPorIndex(int i, int actual) {throw new UnsupportedOperationException();}
+        public Campo campoPorIden(String id) {throw new UnsupportedOperationException();}
     }
 
     public static class Muchos_campos extends LCampos {
@@ -898,14 +901,14 @@ public class SintaxisAbstractaTiny {
         public int numCampos() {
             return 1 + lcampos.numCampos();
         }
-        public Campo campo(String id) {
-            if(campo.iden().equals(id)) {
-                return campo;
-            } else {
-                return lcampos.campo(id);
-            }
+        public Campo campoPorIndex(int i, int actual) {
+            return i == actual ? campo : lcampos.campoPorIndex(i, actual+1);
+        }
+        public Campo campoPorIden(String id) {
+            return campo.iden().equals(id) ? campo : lcampos.campoPorIden(id);
         }
     }
+
 
     public static class Un_campo extends LCampos {
         private Campo campo;
@@ -942,7 +945,10 @@ public class SintaxisAbstractaTiny {
         public int numCampos() {
             return 1;
         }
-        public Campo campo(String id) {
+        public Campo campoPorIndex(int i, int actual) {
+            return i == actual ? campo : null;
+        }
+        public Campo campoPorIden(String id) {
             return campo.iden().equals(id) ? campo : null;
         }
     }

@@ -64,7 +64,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (tipo1 == "struct" && tipo2 == "struct") {
             if (n1.numCampos() == n2.numCampos()) {
                 for (int i = 0; i < n1.numCampos(); i++) {
-                    if (!compatAsig(n1.campo(i).tipo(), n2.campo(i).tipo())) {
+                    if (!compatAsig(n1.campoPorIndex(i).tipo(), n2.campoPorIndex(i).tipo())) {
                         return false;
                     }
                 }
@@ -612,8 +612,10 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
     public void procesa(Acceso exp) {
         exp.opnd().procesa(this);
+        System.out.println("Tipo del operando: " + exp.opnd().getTipo());
+        System.out.println("Identificador del campo: " + exp.iden());
         if (exp.opnd().getTipo() == "struct") {
-            Campo campo = ((Tipo_struct) exp.opnd().vinculo()).campo(exp.id());
+            Campo campo = ((Tipo_struct) ((Iden) exp.opnd()).vinculo()).campoPorIden(exp.iden());
             if (campo != null) {
                 exp.putTipo(ref(campo.tipo()));
             } else {
