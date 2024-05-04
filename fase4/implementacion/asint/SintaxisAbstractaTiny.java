@@ -739,7 +739,11 @@ public class SintaxisAbstractaTiny {
         public Nodo vinculo() {return vinculo;}
 
         public String toString() {
-            return "tipo_iden("+id+")";
+            if (vinculo != null) {
+                return "tipo_iden("+id+")";
+            } else {
+                return "tipo_iden("+id+")";
+            }
         }
         public void imprime() {
             System.out.println(id + infoVinculo(this));
@@ -2237,7 +2241,10 @@ public class SintaxisAbstractaTiny {
         }
         public String iden() {return id;}
         public String toString() {
-            return "iden("+id+"["+leeFila()+","+leeCol()+"])";
+            if (vinculo == null)
+                return "iden("+id+"["+leeFila()+","+leeCol()+"])";
+            else
+                return "iden("+id+"["+leeFila()+","+leeCol()+"])";
         }
         public int prioridad() {
             return 7;
@@ -2254,8 +2261,11 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
-        public void ponVinculo(Nodo dec) {
-            vinculo = dec;
+        public void ponVinculo(Nodo vinculo) {
+            this.vinculo = vinculo;
+        }
+        public Nodo vinculo() {
+            return vinculo;
         }
     }
 

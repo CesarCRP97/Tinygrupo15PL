@@ -301,6 +301,7 @@ public class Vinculacion_vis extends ProcesamientoDef {
                 errorNoDeclarado(tipo.tipo().iden(), tipo.tipo().leeFila(), tipo.tipo().leeCol());
             } else {
                 ((Tipo_iden)tipo.tipo()).ponVinculo(infoVinculo(ts, tipo.tipo().iden()));
+                //System.out.println("Vinculado: " + tipo.toString());
             }
         }
     }
@@ -311,6 +312,7 @@ public class Vinculacion_vis extends ProcesamientoDef {
                 errorNoDeclarado(tipo.tipo().iden(), tipo.tipo().leeFila(), tipo.tipo().leeCol());
             } else {
                 ((Tipo_iden)tipo.tipo()).ponVinculo(infoVinculo(ts, tipo.tipo().iden()));
+                //System.out.println("Vinculado: " + tipo.toString());
             }
         }
     }
@@ -376,6 +378,7 @@ public class Vinculacion_vis extends ProcesamientoDef {
             errorNoDeclarado(instr.iden(), instr.leeFila(), instr.leeCol());
         } else {
             instr.ponVinculo(infoVinculo(ts, instr.iden()));
+            //System.out.println("Vinculado: " + instr.toString());
         }
         instr.params_reales().procesa(this);
     }
@@ -478,6 +481,7 @@ public class Vinculacion_vis extends ProcesamientoDef {
             errorNoDeclarado(exp.iden(), exp.leeFila(), exp.leeCol());
         } else {
             exp.ponVinculo(infoVinculo(ts, exp.iden()));
+            //System.out.println("Vinculado: " + exp.toString());
         }
     }
     public void procesa(Null exp) {

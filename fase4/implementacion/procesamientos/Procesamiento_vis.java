@@ -26,7 +26,7 @@ public class Procesamiento_vis extends ProcesamientoDef {
     }
 
     private String infoVinculo(Nodo n) {
-        return "$f:" + n.leeFila() + ",c:" + n.leeCol() + "$";
+        return "$f:" + n.leeFila() + ",c:" + n.leeCol() + "$ ";
     }
 
     public void procesa(Prog prog) {
@@ -122,7 +122,7 @@ public class Procesamiento_vis extends ProcesamientoDef {
         tipo.campos().procesa(this);
     }
     public void procesa(Tipo_iden tipo) {
-        System.out.println(tipo.iden() + infoVinculo(tipo));
+        System.out.println(tipo.iden() + infoVinculo(tipo) + tipo.vinculo());
     }
     public void procesa(Campos campos) {
         System.out.println("{");
@@ -204,7 +204,7 @@ public class Procesamiento_vis extends ProcesamientoDef {
     }
     public void procesa(Invoc instr) {
         System.out.println("<call>");
-        System.out.println(instr.iden() + infoVinculo(instr));
+        System.out.println(instr.iden() + infoVinculo(instr) + instr.vinculo());
         instr.params_reales().procesa(this);
     }
     public void procesa(Si_params_reales params) {
@@ -303,7 +303,7 @@ public class Procesamiento_vis extends ProcesamientoDef {
         System.out.println(exp.valor() + infoVinculo(exp));
     }
     public void procesa(Iden exp) {
-        System.out.println(exp.iden() + infoVinculo(exp));
+        System.out.println(exp.iden() + infoVinculo(exp) + exp.vinculo());
     }
     public void procesa(Null exp) {
         System.out.println("<null>" + infoVinculo(exp));
