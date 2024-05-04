@@ -5,6 +5,7 @@ import procesamientos.Procesamiento_rec;
 import procesamientos.Procesamiento_vis;
 import procesamientos.Vinculacion_vis;
 import procesamientos.Vinculacion_vis.ErrorVinculacion;
+import procesamientos.ComprobacionTipos_vis;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -48,6 +49,8 @@ public class Main {
         System.out.println("Procesando vinculacion...");
         Vinculacion_vis vinc = new Vinculacion_vis();
         prog.procesa(vinc);
+        Procesamiento_vis vis = new Procesamiento_vis();
+        prog.procesa(vis);
         if(vinc.hayErrores())
             System.err.println("Errores de vinculacion");
         else {
