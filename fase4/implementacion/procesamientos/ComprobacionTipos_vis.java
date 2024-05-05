@@ -26,6 +26,8 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             return ref(((Dec_tipo)((Tipo_iden)nodo).vinculo()).tipo());
         } else if (nodo instanceof Dec_variable) {
             return ref(((Dec_variable)nodo).tipo());
+        } else if (nodo instanceof Campo) {
+            return ref(((Campo)nodo).tipo());
         } else {
             return nodo;
         }
@@ -639,7 +641,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         exp.opnd0().procesa(this);
         exp.opnd1().procesa(this);
         if (exp.opnd0().getTipo() == "array" && exp.opnd1().getTipo() == "int") {
-            exp.putTipo(tipoDeDec(ref((exp.opnd0()).vinculo())));
+            exp.putTipo(tipoDeDec(((Tipo_array)ref(exp.opnd0().vinculo())).tipo()));
         } else {
             avisoError(exp);
             exp.putTipo("error");
@@ -648,10 +650,11 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public void procesa(Acceso exp) {
         exp.opnd().procesa(this);
         if (exp.opnd().getTipo() == "struct") {
-            Tipo_struct tipo = (Tipo_struct) ref(((Iden) exp.opnd()).vinculo());
+            Tipo_struct tipo = (Tipo_struct) ref(exp.opnd().vinculo());
             Campo campo = tipo.campoPorIden(exp.iden());
             if (campo != null) {
                 exp.putTipo(tipoDeDec(ref(campo.tipo())));
+                exp.ponVinculo(campo);
             } else {
                 avisoError(exp);
                 exp.putTipo("error");
@@ -664,7 +667,8 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public void procesa(Indireccion exp) {
         exp.opnd().procesa(this);
         if (exp.opnd().getTipo() == "puntero") {
-            exp.putTipo(tipoDeDec(ref(((Iden) exp.opnd()).vinculo())));
+            exp.putTipo(tipoDeDec(((Tipo_puntero)ref(exp.opnd().vinculo())).tipo()));
+            exp.ponVinculo(exp.opnd().vinculo());
         } else {
             avisoError(exp);
             exp.putTipo("error");
@@ -686,7 +690,6 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         exp.putTipo("string");
     }
     public void procesa(Iden exp) {
-        System.out.println("IDEN: " + exp.toString());
         exp.putTipo(tipoDeDec(ref(exp.vinculo())));
     }
     public void procesa(Null exp) {
