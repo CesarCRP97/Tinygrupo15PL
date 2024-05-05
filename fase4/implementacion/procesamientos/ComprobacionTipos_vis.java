@@ -30,10 +30,31 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             return null;
         }
     }
+    public String tipoDeDec(Nodo n) {
+        if (n instanceof Tipo_int) {
+            return "int";
+        } else if (n instanceof Tipo_real) {
+            return "real";
+        } else if (n instanceof Tipo_bool) {
+            return "bool";
+        } else if (n instanceof Tipo_string) {
+            return "string";
+        } else if (n instanceof Tipo_array) {
+            return "array";
+        } else if (n instanceof Tipo_struct) {
+            return "struct";
+        } else if (n instanceof Tipo_puntero) {
+            return "puntero";
+        } else if (n instanceof Null) {
+            return "null";
+        } else {
+            return "error";
+        }
+    }
 
     public boolean compatAsig(Tipo n1, Tipo n2) {
-        String tipo1 = ref(n1);
-        String tipo2 = ref(n2);
+        String tipo1 = tipoDeDec(ref(n1));
+        String tipo2 = tipoDeDec(ref(n2));
         if (tipo1 == "error" || tipo2 == "error") {
             return false;
         } else if (tipo1 == "int" && tipo2 == "int") {
@@ -629,10 +650,10 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         System.out.println("Tipo del operando: " + exp.opnd().getTipo());
         System.out.println("Identificador del campo: " + exp.iden());
         if (exp.opnd().getTipo() == "struct") {
-            Tipo_struct tipo = (Tipo_struct) ref(exp.opnd().vinculo());
+            Tipo_struct tipo = (Tipo_struct) ref(((Iden) exp.opnd()).vinculo());
             Campo campo = tipo.campoPorIden(exp.iden());
             if (campo != null) {
-                exp.putTipo(ref(campo.tipo()));
+                exp.putTipo(tipoDeDec(ref(campo.tipo())));
             } else {
                 avisoError(exp);
                 exp.putTipo("error");
@@ -645,7 +666,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public void procesa(Indireccion exp) {
         exp.opnd().procesa(this);
         if (exp.opnd().getTipo() == "puntero") {
-            exp.putTipo(ref(exp.opnd().vinculo()));
+            exp.putTipo(tipoDeDec(ref(((Iden) exp.opnd()).vinculo())));
         } else {
             avisoError(exp);
             exp.putTipo("error");
@@ -668,7 +689,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
     public void procesa(Iden exp) {
         System.out.println("Identificador: " + exp.toString());
-        exp.putTipo(ref(exp.vinculo()));
+        exp.putTipo(tipoDeDec(ref(exp.vinculo())));
     }
     public void procesa(Null exp) {
         exp.putTipo("null");
