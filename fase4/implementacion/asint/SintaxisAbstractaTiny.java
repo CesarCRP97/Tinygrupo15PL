@@ -1604,6 +1604,7 @@ public class SintaxisAbstractaTiny {
         public Exp opnd0() {throw new UnsupportedOperationException();}
         public Exp opnd1() {throw new UnsupportedOperationException();}
         public abstract int prioridad();
+        public Nodo vinculo() {throw new UnsupportedOperationException();}
     }
 
 

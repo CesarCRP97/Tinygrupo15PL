@@ -24,10 +24,10 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             return ref(((Param_form_ref)nodo).tipo());
         } else if(nodo instanceof Tipo_iden && ((Tipo_iden)nodo).vinculo() instanceof Dec_tipo) {
             return ref(((Dec_tipo)((Tipo_iden)nodo).vinculo()).tipo());
-        } else if (nodo instanceof Tipo_int || nodo instanceof Tipo_real || nodo instanceof Tipo_bool || nodo instanceof Tipo_string || nodo instanceof Tipo_array || nodo instanceof Tipo_puntero || nodo instanceof Tipo_struct || nodo instanceof Null) {
-            return nodo;
+        } else if (nodo instanceof Dec_variable) {
+            return ref(((Dec_variable)nodo).tipo());
         } else {
-            return null;
+            return nodo;
         }
     }
     public String tipoDeDec(Nodo n) {
@@ -639,7 +639,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         exp.opnd0().procesa(this);
         exp.opnd1().procesa(this);
         if (exp.opnd0().getTipo() == "array" && exp.opnd1().getTipo() == "int") {
-            exp.putTipo(((Iden) exp.opnd0()).vinculo().getTipo());
+            exp.putTipo(tipoDeDec(ref((exp.opnd0()).vinculo())));
         } else {
             avisoError(exp);
             exp.putTipo("error");
@@ -647,8 +647,6 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
     public void procesa(Acceso exp) {
         exp.opnd().procesa(this);
-        System.out.println("Tipo del operando: " + exp.opnd().getTipo());
-        System.out.println("Identificador del campo: " + exp.iden());
         if (exp.opnd().getTipo() == "struct") {
             Tipo_struct tipo = (Tipo_struct) ref(((Iden) exp.opnd()).vinculo());
             Campo campo = tipo.campoPorIden(exp.iden());
@@ -688,7 +686,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         exp.putTipo("string");
     }
     public void procesa(Iden exp) {
-        System.out.println("Identificador: " + exp.toString());
+        System.out.println("IDEN: " + exp.toString());
         exp.putTipo(tipoDeDec(ref(exp.vinculo())));
     }
     public void procesa(Null exp) {
