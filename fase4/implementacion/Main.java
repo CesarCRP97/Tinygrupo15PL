@@ -50,14 +50,19 @@ public class Main {
         System.out.println("Procesando vinculacion...");
         Vinculacion_vis vinc = new Vinculacion_vis();
         prog.procesa(vinc);
-        Procesamiento_vis vis = new Procesamiento_vis();
-        prog.procesa(vis);
+        //Procesamiento_vis vis = new Procesamiento_vis();
+        //prog.procesa(vis);
         if(vinc.hayErrores())
             System.err.println("Errores de vinculacion");
         else {
             System.out.println("Vinculacion correcta");
             ComprobacionTipos_vis comp = new ComprobacionTipos_vis();
             prog.procesa(comp);
+            if(comp.hayErrores())
+                System.err.println("Errores de tipos");
+            else {
+                System.out.println("Tipado correcto");
+            }
         }
     }
 
