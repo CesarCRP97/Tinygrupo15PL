@@ -4,9 +4,20 @@ import asint.ProcesamientoDef;
 import asint.SintaxisAbstractaTiny.*;
 
 public class ComprobacionTipos_vis extends ProcesamientoDef {
+
+    private boolean errores;
+
+    public boolean hayErrores() {
+        return errores;
+    }
+
+    public ComprobacionTipos_vis() {
+        errores = false;
+    }
+
     private void avisoError(Nodo n) {
         System.out.println("Error de tipos en la línea " + n.leeFila() + " y columna " + n.leeCol() + " en nodo " + n.toString());
-        //System.out.println("El nodo es: " + n.toString());
+        errores = true;
     }
 
     public String ambosOK(String tipo1, String tipo2) {
@@ -15,6 +26,9 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else {
             return "error";
         }
+    }
+    private void avisoError(Nodo n, String mensaje) {
+        System.out.println("Error de tipos en la línea " + n.leeFila() + " y columna " + n.leeCol() + " en nodo " + n.toString() + ": " + mensaje);
     }
 
     public Nodo ref(Nodo nodo) {
@@ -139,7 +153,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (tipo1 == "real" && tipo2 == "int") {
             n.putTipo("real");
         } else {
-            avisoError(n);
+            avisoError(n, "Tipos no compatibles para expresion aritmetica");
             n.putTipo("error");
         }
     }
@@ -152,7 +166,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (tipo1 == "bool" && tipo2 == "bool") {
             n.putTipo("bool");
         } else {
-            avisoError(n);
+            avisoError(n, "Tipos no compatibles para expresion logica");
             n.putTipo("error");
         }
     }
@@ -175,7 +189,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (tipo1 == "string" && tipo2 == "string") {
             n.putTipo("bool");
         } else {
-            avisoError(n);
+            avisoError(n, "Tipos no compatibles para expresion relacional");
             n.putTipo("error");
         }
     }
@@ -206,7 +220,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (tipo1 == "null" && tipo2 == "puntero") {
             n.putTipo("bool");
         } else {
-            avisoError(n);
+            avisoError(n, "Tipos no compatibles para expresion relacional(== o !=)");
             n.putTipo("error");
         }
     }
@@ -301,14 +315,14 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         try {
             int tam = Integer.parseInt(tipo.num().toString());
             if (tam <= 0) {
-                avisoError(tipo);
+                avisoError(tipo, "Tamaño de array menor o igual a 0");
                 tipo.putTipo("error");
             } else {
                 tipo.putTipo(tipo.tipo().getTipo());
                 tipo.ponTam(tam);
             }
         } catch (NumberFormatException e) {
-            avisoError(tipo);
+            avisoError(tipo, "Tamaño de array no es un entero");
             tipo.putTipo("error");
         }
         tipo.putTipo(tipo.tipo().getTipo());
@@ -323,7 +337,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             tipo.ponNumCampos();
             tipo.putTipo("ok");
         } else {
-            avisoError(tipo);
+            avisoError(tipo, "Campos duplicados en structura");
             tipo.putTipo("error");
         }
     }
@@ -348,7 +362,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         if (tipo.vinculo() instanceof Dec_tipo) {
             tipo.putTipo("ok");
         } else {
-            avisoError(tipo);
+            avisoError(tipo, "Tipo no definido");
             tipo.putTipo("error");
         }
     }
@@ -384,7 +398,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (instr.exp().getTipo() == "bool") {
             instr.putTipo(instr.bloque().getTipo());
         } else {
-            avisoError(instr);
+            avisoError(instr, "Expresion no booleana en condicion de if");
             instr.putTipo("error");
         }
     }
@@ -398,7 +412,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo(ambosOK(instr.bloque1().getTipo(), instr.bloque2().getTipo()));
         } else {
             instr.putTipo("error");
-            avisoError(instr);
+            avisoError(instr, "Expresion no booleana en condicion de if-else");
         }
     }
     public void procesa(While instr) {
@@ -410,7 +424,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo(instr.bloque().getTipo());
         } else {
             instr.putTipo("error");
-            avisoError(instr);
+            avisoError(instr, "Expresion no booleana en condicion de while");
         }
     }
     public void procesa(Read instr) {
@@ -421,7 +435,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo("ok");
         } else {
             instr.putTipo("error");
-            avisoError(instr);
+            avisoError(instr, "Expresion no designador o no entero, real o string");
         }
     }
     public void procesa(Write instr) {
@@ -432,7 +446,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo("ok");
         } else {
             instr.putTipo("error");
-            avisoError(instr);
+            avisoError(instr, "Expresion no entero, real o string");
         }
     }
     public void procesa(NL instr) {
@@ -445,7 +459,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo("ok");
         } else {
             instr.putTipo("error");
-            avisoError(instr);
+            avisoError(instr, "Expresion no puntero");
         }
     }
     public void procesa(Delete instr) {
@@ -456,7 +470,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo("ok");
         } else {
             instr.putTipo("error");
-            avisoError(instr);
+            avisoError(instr, "Expresion no puntero");
         }
     }
     public void procesa(Instr_compuesta instr) {
@@ -469,25 +483,20 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             Dec_proc dec = (Dec_proc) instr.vinculo();
             if (instr.params_reales().getTipo() == "error") {
                 instr.putTipo("error");
-            } else if (instr.params_reales().getTipo() == "ok") {
-                if(instr.params_reales().numParams() == dec.params_form().numParams()) {
-                    if (compParams(instr.params_reales(), dec.params_form())) {
-                        instr.putTipo("ok");
-                    } else {
-                        instr.putTipo("error");
-                        avisoError(instr);
-                    }
+            } else if(instr.params_reales().numParams() == dec.params_form().numParams()) {
+                if (compParams(instr.params_reales(), dec.params_form())) {
+                    instr.putTipo("ok");
                 } else {
                     instr.putTipo("error");
-                    avisoError(instr);
+                    avisoError(instr, "Parametros no compatibles");
                 }
             } else {
                 instr.putTipo("error");
-                avisoError(instr);
+                avisoError(instr, "Numero de parametros incorrecto");
             }
         } else {
             instr.putTipo("error");
-            avisoError(instr);
+            avisoError(instr, "Identificador no es un procedimiento");
         }
     }
     public void procesa(Si_params_reales params) {
@@ -508,7 +517,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         if (designador(exp.opnd0()) && compatAsig(exp.opnd0().getTipo(), exp.opnd1().getTipo())) {
             exp.putTipo("ok");
         } else {
-            avisoError(exp);
+            avisoError(exp, "Expresion no designador");
             exp.putTipo("error");
         }
     }
@@ -582,7 +591,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (tipo1 == "int" && tipo2 == "int") {
             exp.putTipo("int");
         } else {
-            avisoError(exp);
+            avisoError(exp, "Tipos no compatibles para operacion modulo");
             exp.putTipo("error");
         }
     }
@@ -594,7 +603,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (tipo == "int" || tipo == "real") {
             exp.putTipo(tipo);
         } else {
-            avisoError(exp);
+            avisoError(exp, "Tipo no compatible para menos unario");
             exp.putTipo("error");
         }
     }
@@ -606,7 +615,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (tipo == "bool") {
             exp.putTipo("bool");
         } else {
-            avisoError(exp);
+            avisoError(exp, "Tipo no compatible para not");
             exp.putTipo("error");
         }
     }
@@ -616,7 +625,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         if (exp.opnd0().getTipo() == "array" && exp.opnd1().getTipo() == "int") {
             exp.putTipo(tipoDeDec(((Tipo_array)ref(exp.opnd0().vinculo())).tipo()));
         } else {
-            avisoError(exp);
+            avisoError(exp, "Tipos no compatibles para indexacion");
             exp.putTipo("error");
         }
     }
@@ -629,11 +638,11 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
                 exp.putTipo(tipoDeDec(ref(campo.tipo())));
                 exp.ponVinculo(campo);
             } else {
-                avisoError(exp);
+                avisoError(exp, "Campo no encontrado");
                 exp.putTipo("error");
             }
         } else {
-            avisoError(exp);
+            avisoError(exp, "Primer operando no es una estructura");
             exp.putTipo("error");
         }
     }
@@ -643,7 +652,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             exp.putTipo(tipoDeDec(((Tipo_puntero)ref(exp.opnd().vinculo())).tipo()));
             exp.ponVinculo(exp.opnd().vinculo());
         } else {
-            avisoError(exp);
+            avisoError(exp, "Primer operando no es un puntero");
             exp.putTipo("error");
         }
     }
