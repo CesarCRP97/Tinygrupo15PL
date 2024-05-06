@@ -72,6 +72,15 @@ public interface Procesamiento {
     void procesa(Tipo_iden tipo);
 	void procesa1(Tipo_iden tipo);
 	void procesa2(Tipo_iden tipo);
+    void procesa(Tipo_OK tipo);
+    void procesa1(Tipo_OK tipo);
+    void procesa2(Tipo_OK tipo);
+    void procesa(Tipo_ERROR tipo);
+    void procesa1(Tipo_ERROR tipo);
+    void procesa2(Tipo_ERROR tipo);
+    void procesa(Tipo_null tipo);
+    void procesa1(Tipo_null tipo);
+    void procesa2(Tipo_null tipo);
     void procesa(Campos campos);
 	void procesa1(Campos campos);
 	void procesa2(Campos campos);

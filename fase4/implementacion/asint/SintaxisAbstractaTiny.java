@@ -821,6 +821,67 @@ public class SintaxisAbstractaTiny {
         }
     }
 
+    public static class Tipo_OK extends Tipo {
+
+        public Tipo_OK() {
+            super();
+        }
+
+        public void procesa(Procesamiento p) {
+            p.procesa(this);
+        }
+        public void procesa1(Procesamiento p) {
+            p.procesa(this);
+        }
+        public void procesa2(Procesamiento p) {
+            p.procesa(this);
+        }
+        public void imprime() {
+            System.out.println("OK");
+        }
+    }
+
+    public static class Tipo_ERROR extends Tipo {
+
+        public Tipo_ERROR() {
+            super();
+        }
+
+        public void procesa(Procesamiento p) {
+            p.procesa(this);
+        }
+        public void procesa1(Procesamiento p) {
+            p.procesa(this);
+        }
+        public void procesa2(Procesamiento p) {
+            p.procesa(this);
+        }
+        public void imprime() {
+            System.out.println("ERROR");
+        }
+    }
+
+    public static class Tipo_null extends Tipo {
+
+        public Tipo_null() {
+            super();
+        }
+
+        public void procesa(Procesamiento p) {
+            p.procesa(this);
+        }
+        public void procesa1(Procesamiento p) {
+            p.procesa(this);
+        }
+        public void procesa2(Procesamiento p) {
+            p.procesa(this);
+        }
+        public void imprime() {
+            System.out.println("null");
+        }
+    }
+
+
     public static class Campos extends Nodo {
         private LCampos lcampos;
 

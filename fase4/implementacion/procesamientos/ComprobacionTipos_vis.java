@@ -6,6 +6,14 @@ import procesamientos.ComprobacionTipos_aux;
 
 public class ComprobacionTipos_vis extends ProcesamientoDef {
 
+    public Tipo_OK tipoOK;
+    public Tipo_ERROR tipoERROR;
+    public Tipo_null tipoNULL;
+    public Tipo_bool tipoBOOL;
+    public Tipo_int tipoINT;
+    public Tipo_real tipoREAL;
+    public Tipo_string tipoSTRING;
+
     private boolean errores;
 
     public boolean hayErrores() {
@@ -14,6 +22,13 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
 
     public ComprobacionTipos_vis() {
         errores = false;
+        tipoERROR = new Tipo_ERROR();
+        tipoOK = new Tipo_OK();
+        tipoNULL = new Tipo_null();
+        tipoBOOL = new Tipo_bool();
+        tipoINT = new Tipo_int();
+        tipoREAL = new Tipo_real();
+        tipoSTRING = new Tipo_string();
     }
     public void procesa(Prog prog) {
         prog.bloque().procesa(this);

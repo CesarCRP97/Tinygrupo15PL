@@ -72,6 +72,15 @@ public class ProcesamientoDef implements Procesamiento {
     public void procesa(Tipo_iden tipo) {};
 	public void procesa1(Tipo_iden tipo) {};
 	public void procesa2(Tipo_iden tipo) {};
+    public void procesa(Tipo_OK tipo) {};
+    public void procesa1(Tipo_OK tipo) {};
+    public void procesa2(Tipo_OK tipo) {};
+    public void procesa(Tipo_ERROR tipo) {};
+    public void procesa1(Tipo_ERROR tipo) {};
+    public void procesa2(Tipo_ERROR tipo) {};
+    public void procesa(Tipo_null tipo) {};
+    public void procesa1(Tipo_null tipo) {};
+    public void procesa2(Tipo_null tipo) {};
     public void procesa(Campos campos) {};
 	public void procesa1(Campos campos) {};
 	public void procesa2(Campos campos) {};
