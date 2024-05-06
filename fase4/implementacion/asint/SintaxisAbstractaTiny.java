@@ -33,7 +33,7 @@ public class SintaxisAbstractaTiny {
         }   
         private int fila;
         private int col;
-        private String tipo;
+        private Tipo tipo;
 
         public Nodo ponFila(int fila) {
             this.fila = fila;
@@ -49,10 +49,10 @@ public class SintaxisAbstractaTiny {
         public int leeCol() {
             return col; 
         }
-        public void putTipo(String tipo) {
+        public void putTipo(Tipo tipo) {
             this.tipo = tipo;
         }
-        public String getTipo() {
+        public Tipo getTipo() {
             return tipo;
         }
 

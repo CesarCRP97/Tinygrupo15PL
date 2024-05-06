@@ -2,7 +2,6 @@ package procesamientos;
 
 import asint.ProcesamientoDef;
 import asint.SintaxisAbstractaTiny.*;
-import procesamientos.ComprobacionTipos_aux;
 
 public class ComprobacionTipos_vis extends ProcesamientoDef {
 
@@ -18,6 +17,16 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
 
     public boolean hayErrores() {
         return errores;
+    }
+
+    public void avisoError(Nodo n) {
+        System.out.println("Error de tipos en la línea " + n.leeFila() + " y columna " + n.leeCol() + " en nodo " + n.toString());
+        errores = true;
+    }
+
+    public void avisoError(Nodo n, String mensaje) {
+        System.out.println("Error de tipos en la línea " + n.leeFila() + " y columna " + n.leeCol() + " en nodo " + n.toString() + ": " + mensaje);
+        errores = true;
     }
 
     public ComprobacionTipos_vis() {
@@ -45,7 +54,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         decs.ldecs().procesa(this);
     }
     public void procesa(No_decs decs) {
-        decs.putTipo("ok");
+        decs.putTipo(getTipoOK());
     }
     public void procesa(Muchas_decs decs) {
         decs.ldecs().procesa(this);
@@ -73,7 +82,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         params.lparams_form().procesa(this);
     }
     public void procesa(No_params_form params) {
-        params.putTipo("ok");
+        params.putTipo(getTipoOK());
     }
     public void procesa(Muchos_params_form params) {
         params.lparams_form().procesa(this);
@@ -86,24 +95,24 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
     public void procesa(Param_form_normal param) {
         param.tipo().procesa(this);
-        param.putTipo(tipoDeDec(ref(param.tipo())));
+        param.putTipo(ref(param.tipo()));
     }
     public void procesa(Param_form_ref param) {
         param.tipo().procesa(this);
-        param.putTipo(tipoDeDec(ref(param.tipo())));
+        param.putTipo(ref(param.tipo()));
     }
 
     public void procesa(Tipo_int tipo) {
-        tipo.putTipo("ok");
+        tipo.putTipo(getTipoOK());
     }
     public void procesa(Tipo_real tipo) {
-        tipo.putTipo("ok");
+        tipo.putTipo(getTipoOK());
     }
     public void procesa(Tipo_bool tipo) {
-        tipo.putTipo("ok");
+        tipo.putTipo(getTipoOK());
     }
     public void procesa(Tipo_string tipo) {
-        tipo.putTipo("ok");
+        tipo.putTipo(getTipoOK());
     }
     public void procesa(Tipo_array tipo) {
         tipo.tipo().procesa(this);
@@ -111,14 +120,14 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             int dim = Integer.parseInt(tipo.num().toString());
             if (dim <= 0) {
                 avisoError(tipo, "Tamaño de array menor o igual a 0");
-                tipo.putTipo("error");
+                tipo.putTipo(getTipoERROR());
             } else {
                 tipo.putTipo(tipo.tipo().getTipo());
                 tipo.ponDim(dim);
             }
         } catch (NumberFormatException e) {
             avisoError(tipo, "Tamaño de array no es un entero");
-            tipo.putTipo("error");
+            tipo.putTipo(getTipoERROR());
         }
         tipo.putTipo(tipo.tipo().getTipo());
     }
@@ -130,10 +139,10 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         tipo.campos().procesa(this);
         if(!(tipo.camposDuplicados())) {
             tipo.ponNumCampos();
-            tipo.putTipo("ok");
+            tipo.putTipo(getTipoOK());
         } else {
             avisoError(tipo, "Campos duplicados en structura");
-            tipo.putTipo("error");
+            tipo.putTipo(getTipoERROR());
         }
     }
     public void procesa(Campos campos) {
@@ -155,10 +164,10 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
     public void procesa(Tipo_iden tipo) {
         if (tipo.vinculo() instanceof Dec_tipo) {
-            tipo.putTipo("ok");
+            tipo.putTipo(getTipoOK());
         } else {
             avisoError(tipo, "Tipo no definido");
-            tipo.putTipo("error");
+            tipo.putTipo(getTipoERROR());
         }
     }
     public void procesa(Si_instrs instrs) {
@@ -166,7 +175,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         instrs.putTipo(instrs.linstrs().getTipo());
     }
     public void procesa(No_instrs instrs) {
-        instrs.putTipo("ok");
+        instrs.putTipo(getTipoOK());
     }
     public void procesa(Muchas_instrs instrs) {
         instrs.linstrs().procesa(this);
@@ -179,92 +188,92 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
     public void procesa(Eval instr) {
         instr.exp().procesa(this);
-        if(instr.exp().getTipo() == "error") {
-            instr.putTipo("error");
+        if(instr.exp().getTipo() instanceof Tipo_ERROR) {
+            instr.putTipo(getTipoERROR());
         } else {
-            instr.putTipo("ok");
+            instr.putTipo(getTipoOK());
         }
     }
     public void procesa(If instr) {
         instr.exp().procesa(this);
         instr.bloque().procesa(this);
-        if(instr.exp().getTipo() == "error") {
-            instr.putTipo("error");
-        } else if (instr.exp().getTipo() == "bool") {
+        if(instr.exp().getTipo() instanceof Tipo_ERROR) {
+            instr.putTipo(getTipoERROR());
+        } else if (instr.exp().getTipo() instanceof Tipo_bool) {
             instr.putTipo(instr.bloque().getTipo());
         } else {
             avisoError(instr, "Expresion no booleana en condicion de if");
-            instr.putTipo("error");
+            instr.putTipo(getTipoERROR());
         }
     }
     public void procesa(IfElse instr) {
         instr.exp().procesa(this);
         instr.bloque1().procesa(this);
         instr.bloque2().procesa(this);
-        if(instr.exp().getTipo() == "error") {
-            instr.putTipo("error");
-        } else if (instr.exp().getTipo() == "bool") {
+        if(instr.exp().getTipo() instanceof Tipo_ERROR) {
+            instr.putTipo(getTipoERROR());
+        } else if (instr.exp().getTipo() instanceof Tipo_bool) {
             instr.putTipo(ambosOK(instr.bloque1().getTipo(), instr.bloque2().getTipo()));
         } else {
-            instr.putTipo("error");
+            instr.putTipo(getTipoERROR());
             avisoError(instr, "Expresion no booleana en condicion de if-else");
         }
     }
     public void procesa(While instr) {
         instr.exp().procesa(this);
         instr.bloque().procesa(this);
-        if(instr.exp().getTipo() == "error") {
-            instr.putTipo("error");
-        } else if (instr.exp().getTipo() == "bool") {
+        if(instr.exp().getTipo() instanceof Tipo_ERROR) {
+            instr.putTipo(getTipoERROR());
+        } else if (instr.exp().getTipo() instanceof Tipo_bool) {
             instr.putTipo(instr.bloque().getTipo());
         } else {
-            instr.putTipo("error");
+            instr.putTipo(getTipoERROR());
             avisoError(instr, "Expresion no booleana en condicion de while");
         }
     }
     public void procesa(Read instr) {
         instr.exp().procesa(this);
-        if(instr.exp().getTipo() == "error") {
-            instr.putTipo("error");
-        } else if (designador(instr.exp()) && (instr.exp().getTipo() == "int" || instr.exp().getTipo() == "real" || instr.exp().getTipo() == "string")) {
-            instr.putTipo("ok");
+        if(instr.exp().getTipo() instanceof Tipo_ERROR) {
+            instr.putTipo(getTipoERROR());
+        } else if (designador(instr.exp()) && (instr.exp().getTipo() instanceof Tipo_int || instr.exp().getTipo() instanceof Tipo_real || instr.exp().getTipo() instanceof Tipo_string)) {
+            instr.putTipo(getTipoOK());
         } else {
-            instr.putTipo("error");
+            instr.putTipo(getTipoERROR());
             avisoError(instr, "Expresion no designador o no entero, real o string");
         }
     }
     public void procesa(Write instr) {
         instr.exp().procesa(this);
-        if(instr.exp().getTipo() == "error") {
-            instr.putTipo("error");
-        } else if (instr.exp().getTipo() == "int" || instr.exp().getTipo() == "real" || instr.exp().getTipo() == "string") {
-            instr.putTipo("ok");
+        if(instr.exp().getTipo() instanceof Tipo_ERROR) {
+            instr.putTipo(getTipoERROR());
+        } else if (instr.exp().getTipo() instanceof Tipo_int || instr.exp().getTipo() instanceof Tipo_real || instr.exp().getTipo() instanceof Tipo_string) {
+            instr.putTipo(getTipoOK());
         } else {
-            instr.putTipo("error");
-            avisoError(instr, "Expresion no entero, real o string");
+            instr.putTipo(getTipoERROR());
+            avisoError(instr, "Expresion no entero, real o string, es de tipo: " + instr.exp().getTipo());
         }
     }
     public void procesa(NL instr) {
     }
     public void procesa(New instr) {
         instr.exp().procesa(this);
-        if (instr.exp().getTipo() == "error") {
-            instr.putTipo("error");
-        } else if (instr.exp().getTipo() == "puntero") {
-            instr.putTipo("ok");
+        if (instr.exp().getTipo() instanceof Tipo_ERROR) {
+            instr.putTipo(getTipoERROR());
+        } else if (instr.exp().getTipo() instanceof Tipo_puntero) {
+            instr.putTipo(getTipoOK());
         } else {
-            instr.putTipo("error");
+            instr.putTipo(getTipoERROR());
             avisoError(instr, "Expresion no puntero");
         }
     }
     public void procesa(Delete instr) {
         instr.exp().procesa(this);
-        if (instr.exp().getTipo() == "error") {
-            instr.putTipo("error");
-        } else if (instr.exp().getTipo() == "puntero") {
-            instr.putTipo("ok");
+        if (instr.exp().getTipo() instanceof Tipo_ERROR) {
+            instr.putTipo(getTipoERROR());
+        } else if (instr.exp().getTipo() instanceof Tipo_puntero) {
+            instr.putTipo(getTipoOK());
         } else {
-            instr.putTipo("error");
+            instr.putTipo(getTipoERROR());
             avisoError(instr, "Expresion no puntero");
         }
     }
@@ -276,21 +285,21 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         instr.params_reales().procesa(this);
         if (instr.vinculo() instanceof Dec_proc) {
             Dec_proc dec = (Dec_proc) instr.vinculo();
-            if (instr.params_reales().getTipo() == "error") {
-                instr.putTipo("error");
+            if (instr.params_reales().getTipo() instanceof Tipo_ERROR) {
+                instr.putTipo(getTipoERROR());
             } else if(instr.params_reales().numParams() == dec.params_form().numParams()) {
                 if (compParams(instr.params_reales(), dec.params_form())) {
-                    instr.putTipo("ok");
+                    instr.putTipo(getTipoOK());
                 } else {
-                    instr.putTipo("error");
+                    instr.putTipo(getTipoERROR());
                     avisoError(instr, "Parametros no compatibles");
                 }
             } else {
-                instr.putTipo("error");
+                instr.putTipo(getTipoERROR());
                 avisoError(instr, "Numero de parametros incorrecto");
             }
         } else {
-            instr.putTipo("error");
+            instr.putTipo(getTipoERROR());
             avisoError(instr, "Identificador no es un procedimiento");
         }
     }
@@ -313,12 +322,12 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             if(compatAsig(exp.opnd0().getTipo(), exp.opnd1().getTipo())) {
                 exp.putTipo(exp.opnd0().getTipo());
             } else {
-                avisoError(exp, "Tipos no compatibles para asignacion");
-                exp.putTipo("error");
+                avisoError(exp, "Tipos no compatibles para asignacion:" + exp.opnd0().getTipo() + " y " + exp.opnd1().getTipo());
+                exp.putTipo(getTipoERROR());
             }
         } else {
             avisoError(exp, "Expresion no designador");
-            exp.putTipo("error");
+            exp.putTipo(getTipoERROR());
         }
     }
     public void procesa(Igual_comp exp) {
@@ -384,98 +393,291 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public void procesa(Mod exp) {
         exp.opnd0().procesa(this);
         exp.opnd1().procesa(this);
-        String tipo1 = exp.opnd0().getTipo();
-        String tipo2 = exp.opnd1().getTipo();
-        if (tipo1 == "error" || tipo2 == "error") {
-            exp.putTipo("error");
-        } else if (tipo1 == "int" && tipo2 == "int") {
-            exp.putTipo("int");
+        Tipo tipo1 = exp.opnd0().getTipo();
+        Tipo tipo2 = exp.opnd1().getTipo();
+        if (tipo1 instanceof Tipo_ERROR || tipo2 instanceof Tipo_ERROR) {
+            exp.putTipo(getTipoERROR());
+        } else if (tipo1 instanceof Tipo_int && tipo2 instanceof Tipo_int) {
+            exp.putTipo(getTipoInt());
         } else {
             avisoError(exp, "Tipos no compatibles para operacion modulo");
-            exp.putTipo("error");
+            exp.putTipo(getTipoERROR());
         }
     }
     public void procesa(Menos_unario exp) {
         exp.opnd().procesa(this);
-        String tipo = exp.opnd().getTipo();
-        if (tipo == "error") {
-            exp.putTipo("error");
-        } else if (tipo == "int" || tipo == "real") {
+        Tipo tipo = exp.opnd().getTipo();
+        if (tipo instanceof Tipo_ERROR) {
+            exp.putTipo(getTipoERROR());
+        } else if (tipo instanceof Tipo_int || tipo instanceof Tipo_real) {
             exp.putTipo(tipo);
         } else {
             avisoError(exp, "Tipo no compatible para menos unario");
-            exp.putTipo("error");
+            exp.putTipo(getTipoERROR());
         }
     }
     public void procesa(Not exp) {
         exp.opnd().procesa(this);
-        String tipo = exp.opnd().getTipo();
-        if (tipo == "error") {
-            exp.putTipo("error");
-        } else if (tipo == "bool") {
-            exp.putTipo("bool");
+        Tipo tipo = exp.opnd().getTipo();
+        if (tipo instanceof Tipo_ERROR) {
+            exp.putTipo(getTipoERROR());
+        } else if (tipo instanceof Tipo_bool) {
+            exp.putTipo(getTipoBool());
         } else {
             avisoError(exp, "Tipo no compatible para not");
-            exp.putTipo("error");
+            exp.putTipo(getTipoERROR());
         }
     }
     public void procesa(Indexacion exp) {
         exp.opnd0().procesa(this);
         exp.opnd1().procesa(this);
-        if (exp.opnd0().getTipo() == "array" && exp.opnd1().getTipo() == "int") {
-            exp.putTipo(tipoDeDec(((Tipo_array)ref(exp.opnd0().vinculo())).tipo()));
+        if (exp.opnd0().getTipo() instanceof Tipo_array && exp.opnd1().getTipo() instanceof Tipo_int) {
+            Tipo_array tipo_array = (Tipo_array) ref(exp.opnd0().vinculo());
+            exp.putTipo(tipo_array.tipo());
         } else {
             avisoError(exp, "Tipos no compatibles para indexacion");
-            exp.putTipo("error");
+            exp.putTipo(getTipoERROR());
         }
     }
     public void procesa(Acceso exp) {
         exp.opnd().procesa(this);
-        if (exp.opnd().getTipo() == "struct") {
+        if (exp.opnd().getTipo() instanceof Tipo_struct) {
             Tipo_struct tipo = (Tipo_struct) ref(exp.opnd().vinculo());
             Campo campo = tipo.campoPorIden(exp.iden());
             if (campo != null) {
-                exp.putTipo(tipoDeDec(ref(campo.tipo())));
+                exp.putTipo(ref(campo.tipo()));
                 exp.ponVinculo(campo);
             } else {
                 avisoError(exp, "Campo no encontrado");
-                exp.putTipo("error");
+                exp.putTipo(getTipoERROR());
             }
         } else {
             avisoError(exp, "Primer operando no es una estructura");
-            exp.putTipo("error");
+            exp.putTipo(getTipoERROR());
         }
     }
     public void procesa(Indireccion exp) {
         exp.opnd().procesa(this);
-        if (exp.opnd().getTipo() == "puntero") {
+        if (exp.opnd().getTipo() instanceof Tipo_puntero) {
             Tipo_puntero tipo = (Tipo_puntero) ref(exp.opnd().vinculo());
-            exp.putTipo(tipoDeDec(ref(tipo.tipo())));
+            exp.putTipo(ref(tipo.tipo()));
             exp.ponVinculo(ref(tipo.tipo()));
         } else {
             avisoError(exp, "Primer operando no es un puntero");
-            exp.putTipo("error");
+            exp.putTipo(getTipoERROR());
         }
     }
     public void procesa(Lit_ent exp) {
-        exp.putTipo("int");
+        exp.putTipo(getTipoInt());
     }
     public void procesa(Lit_real exp) {
-        exp.putTipo("real");
+        exp.putTipo(getTipoReal());
     }
     public void procesa(True exp) {
-        exp.putTipo("bool");
+        exp.putTipo(getTipoBool());
     }
     public void procesa(False exp) {
-        exp.putTipo("bool");
+        exp.putTipo(getTipoBool());
     }
     public void procesa(Lit_cadena exp) {
-        exp.putTipo("string");
+        exp.putTipo(getTipoString());
     }
     public void procesa(Iden exp) {
-        exp.putTipo(tipoDeDec(ref(exp.vinculo())));
+        exp.putTipo(ref(exp.vinculo()));
     }
     public void procesa(Null exp) {
-        exp.putTipo("null");
+        exp.putTipo(getTipoNull());
+    }
+
+    public Tipo_OK getTipoOK() {
+        return tipoOK;
+    }
+    public Tipo_ERROR getTipoERROR() {
+        return tipoERROR;
+    }
+    public Tipo_null getTipoNull() {
+        return tipoNULL;
+    }
+    public Tipo_bool getTipoBool() {
+        return tipoBOOL;
+    }
+    public Tipo_int getTipoInt() {
+        return tipoINT;
+    }
+    public Tipo_real getTipoReal() {
+        return tipoREAL;
+    }
+    public Tipo_string getTipoString() {
+        return tipoSTRING;
+    }
+    
+
+    public Tipo ambosOK(Tipo tipo1, Tipo tipo2) {
+        if (tipo1 instanceof Tipo_OK && tipo2 instanceof Tipo_OK) {
+            return getTipoOK();
+        } else {
+            return getTipoERROR();
+        }
+    }
+
+    public Tipo ref(Nodo nodo) {
+        if(nodo instanceof Param_form_normal) {
+            return ref(((Param_form_normal)nodo).tipo());
+        } else if(nodo instanceof Param_form_ref) {
+            return ref(((Param_form_ref)nodo).tipo());
+        } else if(nodo instanceof Tipo_iden && ((Tipo_iden)nodo).vinculo() instanceof Dec_tipo) {
+            return ref(((Dec_tipo)((Tipo_iden)nodo).vinculo()).tipo());
+        } else if (nodo instanceof Dec_variable) {
+            return ref(((Dec_variable)nodo).tipo());
+        } else if (nodo instanceof Campo) {
+            return ref(((Campo)nodo).tipo());
+        } else {
+            return ((Tipo)nodo);
+        }
+    }
+
+    public boolean compatAsig(Tipo tipo1, Tipo tipo2) {
+        if (tipo1 instanceof Tipo_ERROR || tipo2 instanceof Tipo_ERROR) {
+            return false;
+        } else if (tipo1 instanceof Tipo_int && tipo2 instanceof Tipo_int) {
+            return true;
+        } else if (tipo1 instanceof Tipo_real && tipo2 instanceof Tipo_real) {
+            return true;
+        } else if (tipo1 instanceof Tipo_bool && tipo2 instanceof Tipo_bool) {
+            return true;
+        } else if (tipo1 instanceof Tipo_string && tipo2 instanceof Tipo_string) {
+            return true;
+        } else if (tipo1 instanceof Tipo_array && tipo2 instanceof Tipo_array) {
+            if (compatAsig(tipo1.tipo(), tipo2.tipo()) && ((Tipo_array) tipo1).dim() == ((Tipo_array)tipo2).dim()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (tipo1 instanceof Tipo_struct && tipo2 instanceof Tipo_struct) {
+            if (tipo1.numCampos() == tipo2.numCampos()) {
+                for (int i = 0; i < tipo1.numCampos(); i++) {
+                    if (!compatAsig(tipo1.campoPorIndex(i).tipo(), tipo2.campoPorIndex(i).tipo())) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else if (tipo1 instanceof Tipo_puntero) {
+            if (tipo2 instanceof Tipo_null) {
+                return true;
+            } else if (tipo2 instanceof Tipo_puntero) {
+                return compatAsig(tipo1.tipo(), tipo2.tipo());
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public boolean designador(Nodo n) {
+        if (n instanceof Iden || n instanceof Indexacion || n instanceof Acceso || n instanceof Indireccion) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void chequeaTipoExpBinArit(Exp n) {
+        Tipo tipo1 = n.opnd0().getTipo();
+        Tipo tipo2 = n.opnd1().getTipo();
+        if (tipo1 instanceof Tipo_ERROR || tipo2 instanceof Tipo_ERROR) {
+            n.putTipo(tipo1);
+        } else if (tipo1 instanceof Tipo_int && tipo2 instanceof Tipo_int) {
+            n.putTipo(tipo1);
+        } else if (tipo1 instanceof Tipo_real && tipo2 instanceof Tipo_real) {
+            n.putTipo(tipo1);
+        } else if (tipo1 instanceof Tipo_int && tipo2 instanceof Tipo_real) {
+            n.putTipo(tipo2);
+        } else if (tipo1 instanceof Tipo_real && tipo2 instanceof Tipo_int) {
+            n.putTipo(tipo1);
+        } else {
+            avisoError(n, "Tipos no compatibles para expresion aritmetica");
+            n.putTipo(getTipoERROR());
+        }
+    }
+
+    public void chequeaTipoExpBinLog(Exp n) {
+        Tipo tipo1 = n.opnd0().getTipo();
+        Tipo tipo2 = n.opnd1().getTipo();
+        if (tipo1 instanceof Tipo_ERROR || tipo2 instanceof Tipo_ERROR) {
+            n.putTipo(getTipoERROR());
+        } else if (tipo1 instanceof Tipo_bool && tipo2 instanceof Tipo_bool) {
+            n.putTipo(getTipoBool());
+        } else {
+            avisoError(n, "Tipos no compatibles para expresion logica");
+            n.putTipo(getTipoERROR());
+        }
+    }
+
+    public void chequeaTipoExpBinRel(Exp n) {
+        Tipo tipo1 = n.opnd0().getTipo();
+        Tipo tipo2 = n.opnd1().getTipo();
+        if (tipo1 instanceof Tipo_ERROR || tipo2 instanceof Tipo_ERROR) {
+            n.putTipo(tipo1);
+        } else if (tipo1 instanceof Tipo_int && tipo2 instanceof Tipo_int) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_real && tipo2 instanceof Tipo_real) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_int && tipo2 instanceof Tipo_real) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_real && tipo2 instanceof Tipo_int) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_bool && tipo2 instanceof Tipo_bool) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_string && tipo2 instanceof Tipo_string) {
+            n.putTipo(getTipoBool());
+        } else {
+            avisoError(n, "Tipos no compatibles para expresion relacional");
+            n.putTipo(getTipoERROR());
+        }
+    }
+
+    public void chequeaTipoExpBinRelIgual(Exp n) {
+        Tipo tipo1 = n.opnd0().getTipo();
+        Tipo tipo2 = n.opnd1().getTipo();
+        if (tipo1 instanceof Tipo_ERROR || tipo2 instanceof Tipo_ERROR) {
+            n.putTipo(getTipoERROR());
+        } else if (tipo1 instanceof Tipo_int && tipo2 instanceof Tipo_int) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_real && tipo2 instanceof Tipo_real) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_int && tipo2 instanceof Tipo_real) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_real && tipo2 instanceof Tipo_int) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_bool && tipo2 instanceof Tipo_bool) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_string && tipo2 instanceof Tipo_string) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_null && tipo2 instanceof Tipo_null) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_puntero && tipo2 instanceof Tipo_puntero) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_puntero && tipo2 instanceof Tipo_null) {
+            n.putTipo(getTipoBool());
+        } else if (tipo1 instanceof Tipo_null && tipo2 instanceof Tipo_puntero) {
+            n.putTipo(getTipoBool());
+        } else {
+            avisoError(n, "Tipos no compatibles para expresion relacional(== o !=)");
+            n.putTipo(getTipoERROR());
+        }
+    }
+
+    public boolean compParams(Params_reales params_reales, Params_form params_form) {
+        for(int i = 0; i < params_form.numParams(); i++) {
+            if (!compatAsig(params_form.paramFormPorIndex(i).getTipo(), params_reales.paramRealPorIndex(i).getTipo())) {
+                System.out.println("Tipos no compatibles: " + params_reales.paramRealPorIndex(i).getTipo() + " y " + params_form.paramFormPorIndex(i).getTipo());
+                return false;
+            }
+        }
+        return true;
     }
 }
