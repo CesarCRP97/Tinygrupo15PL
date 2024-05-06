@@ -3,6 +3,8 @@ package procesamientos;
 import asint.ProcesamientoDef;
 import asint.SintaxisAbstractaTiny.*;
 
+import java.util.ArrayList;
+
 public class ComprobacionTipos_vis extends ProcesamientoDef {
 
     public Tipo_OK tipoOK;
@@ -319,7 +321,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         exp.opnd0().procesa(this);
         exp.opnd1().procesa(this);
         if (designador(exp.opnd0())){
-            if(compatAsig(exp.opnd0().getTipo(), exp.opnd1().getTipo())) {
+            if(compatibles(exp.opnd0().getTipo(), exp.opnd1().getTipo())) {
                 exp.putTipo(exp.opnd0().getTipo());
             } else {
                 avisoError(exp, "Tipos no compatibles para asignacion:" + exp.opnd0().getTipo() + " y " + exp.opnd1().getTipo());
@@ -536,7 +538,34 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         }
     }
 
-    public boolean compatAsig(Tipo tipo1, Tipo tipo2) {
+    public class Ecuacion {
+        public Tipo n1;
+        public Tipo n2;
+
+        public Ecuacion(Tipo n1, Tipo n2) {
+            this.n1 = n1;
+            this.n2 = n2;
+        }
+
+        public boolean equals(Object o) {
+            if (o instanceof Ecuacion) {
+                Ecuacion e = (Ecuacion) o;
+                return (this.n1.getClass() == e.n1.getClass() && this.n2.getClass() == e.n2.getClass());
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public boolean compatibles(Tipo n1, Tipo n2) {
+        ArrayList<Ecuacion> ecuaciones = new ArrayList<Ecuacion>();
+        ecuaciones.add(new Ecuacion(n1, n2));
+        return unificables(n1, n2, ecuaciones);
+    }
+
+    public boolean unificables(Tipo n1, Tipo n2, ArrayList<Ecuacion> ecuaciones) {
+        Tipo tipo1 = ref(n1);
+        Tipo tipo2 = ref(n2);
         if (tipo1 instanceof Tipo_ERROR || tipo2 instanceof Tipo_ERROR) {
             return false;
         } else if (tipo1 instanceof Tipo_int && tipo2 instanceof Tipo_int) {
@@ -548,7 +577,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (tipo1 instanceof Tipo_string && tipo2 instanceof Tipo_string) {
             return true;
         } else if (tipo1 instanceof Tipo_array && tipo2 instanceof Tipo_array) {
-            if (compatAsig(tipo1.tipo(), tipo2.tipo()) && ((Tipo_array) tipo1).dim() == ((Tipo_array)tipo2).dim()) {
+            if (son_unificables(tipo1.tipo(), tipo2.tipo(), ecuaciones) && ((Tipo_array) tipo1).dim() == ((Tipo_array)tipo2).dim()) {
                 return true;
             } else {
                 return false;
@@ -556,7 +585,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (tipo1 instanceof Tipo_struct && tipo2 instanceof Tipo_struct) {
             if (tipo1.numCampos() == tipo2.numCampos()) {
                 for (int i = 0; i < tipo1.numCampos(); i++) {
-                    if (!compatAsig(tipo1.campoPorIndex(i).tipo(), tipo2.campoPorIndex(i).tipo())) {
+                    if (!son_unificables(tipo1.campoPorIndex(i).tipo(), tipo2.campoPorIndex(i).tipo(), ecuaciones)) {
                         return false;
                     }
                 }
@@ -568,12 +597,21 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             if (tipo2 instanceof Tipo_null) {
                 return true;
             } else if (tipo2 instanceof Tipo_puntero) {
-                return compatAsig(tipo1.tipo(), tipo2.tipo());
+                return son_unificables(tipo1.tipo(), tipo2.tipo(), ecuaciones);
             } else {
                 return false;
             }
         } else {
             return false;
+        }
+    }
+
+    public boolean son_unificables(Tipo tipo1, Tipo tipo2, ArrayList<Ecuacion> ecuaciones) {
+        if (ecuaciones.contains(new Ecuacion(tipo1, tipo2))) {
+            return true;
+        } else {
+            ecuaciones.add(new Ecuacion(tipo1, tipo2));
+            return unificables(tipo1, tipo2, ecuaciones);
         }
     }
 
@@ -673,7 +711,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
 
     public boolean compParams(Params_reales params_reales, Params_form params_form) {
         for(int i = 0; i < params_form.numParams(); i++) {
-            if (!compatAsig(params_form.paramFormPorIndex(i).getTipo(), params_reales.paramRealPorIndex(i).getTipo())) {
+            if (!compatibles(params_form.paramFormPorIndex(i).getTipo(), params_reales.paramRealPorIndex(i).getTipo())) {
                 System.out.println("Tipos no compatibles: " + params_reales.paramRealPorIndex(i).getTipo() + " y " + params_form.paramFormPorIndex(i).getTipo());
                 return false;
             }

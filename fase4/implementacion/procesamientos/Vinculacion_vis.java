@@ -314,6 +314,8 @@ public class Vinculacion_vis extends ProcesamientoDef {
                 ((Tipo_iden)tipo.tipo()).ponVinculo(infoVinculo(ts, tipo.tipo().iden()));
                 //System.out.println("Vinculado: " + tipo.toString());
             }
+        } else {
+            tipo.tipo().procesa2(this);
         }
     }
 
