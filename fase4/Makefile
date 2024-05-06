@@ -2,8 +2,8 @@ memoriapdf:
 	lowriter --convert-to pdf ../memoria.odt
 
 zip: memoriapdf
-	zip -r PLG15fase3.zip implementacion/ pruebas/ memoria.pdf
+	zip -r PLG15fase4.zip implementacion/ pruebas/ memoria.pdf
 
 clean:
-	rm -f PLG15fase3.zip memoria.pdf *~
+	rm -f PLG15fase4.zip memoria.pdf *~
 	make -C implementacion clean
