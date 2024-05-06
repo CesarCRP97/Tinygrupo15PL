@@ -524,8 +524,13 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public void procesa(Asignacion exp) {
         exp.opnd0().procesa(this);
         exp.opnd1().procesa(this);
-        if (designador(exp.opnd0()) && compatAsig(exp.opnd0().getTipo(), exp.opnd1().getTipo())) {
-            exp.putTipo("ok");
+        if (designador(exp.opnd0())){
+            if(compatAsig(exp.opnd0().getTipo(), exp.opnd1().getTipo())) {
+                exp.putTipo(exp.opnd0().getTipo());
+            } else {
+                avisoError(exp, "Tipos no compatibles para asignacion");
+                exp.putTipo("error");
+            }
         } else {
             avisoError(exp, "Expresion no designador");
             exp.putTipo("error");
@@ -659,8 +664,9 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public void procesa(Indireccion exp) {
         exp.opnd().procesa(this);
         if (exp.opnd().getTipo() == "puntero") {
-            exp.putTipo(tipoDeDec(((Tipo_puntero)ref(exp.opnd().vinculo())).tipo()));
-            exp.ponVinculo(exp.opnd().vinculo());
+            Tipo_puntero tipo = (Tipo_puntero) ref(exp.opnd().vinculo());
+            exp.putTipo(tipoDeDec(ref(tipo.tipo())));
+            exp.ponVinculo(ref(tipo.tipo()));
         } else {
             avisoError(exp, "Primer operando no es un puntero");
             exp.putTipo("error");
