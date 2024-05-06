@@ -677,7 +677,7 @@ public class SintaxisAbstractaTiny {
     public static class Tipo_array extends Tipo {
         private Tipo tipo;
         private String num;
-        private int tam;
+        private int dim;
 
         public Tipo_array(Tipo tipo, String num) {
             super();
@@ -687,7 +687,7 @@ public class SintaxisAbstractaTiny {
 
         public Tipo tipo() {return tipo;}
         public String num() {return num;}
-        public int tam() {return tam;}
+        public int dim() {return dim;}
 
         public String toString() {
             return "tipo_array("+tipo+","+num+")";
@@ -707,8 +707,8 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
-        public void ponTam(int tam) {
-            this.tam = tam;
+        public void ponDim(int dim) {
+            this.dim = dim;
         }
     }
 
