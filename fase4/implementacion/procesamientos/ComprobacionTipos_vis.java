@@ -93,13 +93,13 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public void procesa(Tipo_array tipo) {
         tipo.tipo().procesa(this);
         try {
-            int tam = Integer.parseInt(tipo.num().toString());
-            if (tam <= 0) {
+            int dim = Integer.parseInt(tipo.num().toString());
+            if (dim <= 0) {
                 avisoError(tipo, "Tamaño de array menor o igual a 0");
                 tipo.putTipo("error");
             } else {
                 tipo.putTipo(tipo.tipo().getTipo());
-                tipo.ponTam(tam);
+                tipo.ponDim(dim);
             }
         } catch (NumberFormatException e) {
             avisoError(tipo, "Tamaño de array no es un entero");
