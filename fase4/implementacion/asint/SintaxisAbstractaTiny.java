@@ -349,6 +349,7 @@ public class SintaxisAbstractaTiny {
 
         public LParams_form lparams_form() {throw new UnsupportedOperationException();}
         public int numParams() {throw new UnsupportedOperationException();}
+        public Param_form paramFormPorIndex(int i) {throw new UnsupportedOperationException();}
     }
 
     public static class Si_params_form extends Params_form {
@@ -381,6 +382,9 @@ public class SintaxisAbstractaTiny {
         public int numParams() {
             return lparams_form.numParams();
         }
+        public Param_form paramFormPorIndex(int i) {
+            return lparams_form.paramFormPorIndex(i, 0);
+        }
     }
 
     public static class No_params_form extends Params_form {
@@ -407,6 +411,9 @@ public class SintaxisAbstractaTiny {
         public int numParams() {
             return 0;
         }
+        public Param_form paramFormPorIndex(int i) {
+            return null;
+        }
     }
 
     public static abstract class LParams_form extends Nodo {
@@ -417,6 +424,7 @@ public class SintaxisAbstractaTiny {
         public Param_form param_form() {throw new UnsupportedOperationException();}
         public LParams_form lparams_form() {throw new UnsupportedOperationException();}
         public int numParams() {throw new UnsupportedOperationException();}
+        public Param_form paramFormPorIndex(int i, int actual) {throw new UnsupportedOperationException();}
     }
 
     public static class Muchos_params_form extends LParams_form {
@@ -452,6 +460,9 @@ public class SintaxisAbstractaTiny {
         public int numParams() {
             return 1 + lparams_form.numParams();
         }
+        public Param_form paramFormPorIndex(int i, int actual) {
+            return i == actual ? param_form : lparams_form.paramFormPorIndex(i, actual+1);
+        }
     }
 
     public static class Un_param_form extends LParams_form {
@@ -481,6 +492,9 @@ public class SintaxisAbstractaTiny {
 		}
         public int numParams() {
             return 1;
+        }
+        public Param_form paramFormPorIndex(int i, int actual) {
+            return i == actual ? param_form : null;
         }
     }
 
@@ -1453,12 +1467,13 @@ public class SintaxisAbstractaTiny {
     }
 
     public static abstract class Params_reales extends Nodo {
-        public int numParams() {throw new UnsupportedOperationException();}
         public Params_reales() {
             super();
         }
 
         public LParams_reales lparams_reales() {throw new UnsupportedOperationException();}
+        public int numParams() {throw new UnsupportedOperationException();}
+        public Exp paramRealPorIndex(int i) {throw new UnsupportedOperationException();}
     }
 
     public static class Si_params_reales extends Params_reales {
@@ -1491,6 +1506,9 @@ public class SintaxisAbstractaTiny {
         public int numParams() {
             return lparams_reales.numParams();
         }
+        public Exp paramRealPorIndex(int i) {
+            return lparams_reales.paramRealPorIndex(i, 0);
+        }
     }
 
     public static class No_params_reales extends Params_reales {
@@ -1517,6 +1535,9 @@ public class SintaxisAbstractaTiny {
         public int numParams() {
             return 0;
         }
+        public Exp paramRealPorIndex(int i) {
+            return null;
+        }
     }
 
     public static abstract class LParams_reales extends Nodo {
@@ -1527,6 +1548,7 @@ public class SintaxisAbstractaTiny {
         public Exp exp() {throw new UnsupportedOperationException();}
         public LParams_reales lparams_reales() {throw new UnsupportedOperationException();}
         public int numParams() {throw new UnsupportedOperationException();}
+        public Exp paramRealPorIndex(int i, int actual) {throw new UnsupportedOperationException();}
     }
 
     public static class Muchos_params_reales extends LParams_reales {
@@ -1562,6 +1584,10 @@ public class SintaxisAbstractaTiny {
         public int numParams() {
             return 1 + lparams_reales.numParams();
         }
+        public Exp paramRealPorIndex(int i, int actual) {
+            return i == actual ? exp : lparams_reales.paramRealPorIndex(i, actual+1);
+        }
+
     }
 
     public static class Un_param_real extends LParams_reales {
@@ -1591,6 +1617,9 @@ public class SintaxisAbstractaTiny {
 		}
         public int numParams() {
             return 1;
+        }
+        public Exp paramRealPorIndex(int i, int actual) {
+            return i == actual ? exp : null;
         }
     }
 

@@ -211,41 +211,14 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         }
     }
 
-
-    public boolean compParams(Params_reales params, Params_form params_form) {
-        if (params instanceof Si_params_reales && params_form instanceof Si_params_form) {
-            return compParams(params.lparams_reales(), params_form.lparams_form());
-        } else if (params instanceof No_params_reales && params_form instanceof No_params_form) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public boolean compParams(LParams_reales lparams_reales, LParams_form lparams_form) {
-        if (lparams_reales instanceof Muchos_params_reales && lparams_form instanceof Muchos_params_form) {
-            return compParams(lparams_reales.lparams_reales(), lparams_form.lparams_form()) && compParam(lparams_reales.exp(), lparams_form.param_form());
-        } else if (lparams_reales instanceof Un_param_real && lparams_form instanceof Un_param_form) {
-            return compParam(lparams_reales.exp(), lparams_form.param_form());
-        } else {
-            return false;
-        }
-    }
-    public boolean compParam(Exp exp, Param_form param) {
-        if (param instanceof Param_form_normal) {
-            if(exp instanceof Iden) {
-                return compatAsig(((Tipo)((Iden)exp).vinculo()), param.tipo());
-            } else {
-                return compatAsig(exp.getTipo(), param.getTipo());
-            }
-        } else if (param instanceof Param_form_ref) {
-            if(designador(exp)) {
-                return compatAsig(exp.getTipo(), param.getTipo());
-            } else {
+    public boolean compParams(Params_reales params_reales, Params_form params_form) {
+        for(int i = 0; i < params_form.numParams(); i++) {
+            if (!compatAsig(params_form.paramFormPorIndex(i).getTipo(), params_reales.paramRealPorIndex(i).getTipo())) {
+                System.out.println("Tipos no compatibles: " + params_reales.paramRealPorIndex(i).getTipo() + " y " + params_form.paramFormPorIndex(i).getTipo());
                 return false;
-            } 
-        } else {
-            return false;
+            }
         }
+        return true;
     }
 
     public void procesa(Prog prog) {
@@ -304,11 +277,11 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
     public void procesa(Param_form_normal param) {
         param.tipo().procesa(this);
-        param.putTipo(param.tipo().getTipo());
+        param.putTipo(tipoDeDec(ref(param.tipo())));
     }
     public void procesa(Param_form_ref param) {
         param.tipo().procesa(this);
-        param.putTipo(param.tipo().getTipo());
+        param.putTipo(tipoDeDec(ref(param.tipo())));
     }
 
     public void procesa(Tipo_int tipo) {
