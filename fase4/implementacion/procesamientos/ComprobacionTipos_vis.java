@@ -126,6 +126,16 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             return true;
         } else if (tipo1 == "string" && tipo2 == "string") {
             return true;
+        } else if (tipo1 == "puntero") {
+            if (tipo2 == "null" || tipo2 == "puntero") {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (tipo1 == "array" && tipo2 == "array") {
+            return true;
+        } else if (tipo1 == "struct" && tipo2 == "struct") {
+            return true;
         } else {
             return false;
         }
