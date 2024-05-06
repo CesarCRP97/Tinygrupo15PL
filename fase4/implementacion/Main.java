@@ -36,6 +36,7 @@ public class Main {
         } else if (tipo.equals("desc")) {
             c_ast_descendente.ConstructorASTsTiny asint_desc = new c_ast_descendente.ConstructorASTsTiny(new FileReader(file));
             try {
+                asint_desc.disable_tracing();
                 prog = asint_desc.analiza();
             } catch (Exception|Error e) {
                 System.err.println(e.getMessage());
