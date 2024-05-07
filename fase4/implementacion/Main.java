@@ -6,6 +6,7 @@ import procesamientos.Procesamiento_vis;
 import procesamientos.Vinculacion_vis;
 import procesamientos.Vinculacion_vis.ErrorVinculacion;
 import procesamientos.ComprobacionTipos_vis;
+import procesamientos.AsignacionEspacio_vis;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -52,18 +53,28 @@ public class Main {
         prog.procesa(vinc);
         //Procesamiento_vis vis = new Procesamiento_vis();
         //prog.procesa(vis);
-        if(vinc.hayErrores())
+        if(vinc.hayErrores()) {
             System.err.println("Errores de vinculacion");
-        else {
+            return;
+        } else {
             System.out.println("Vinculacion correcta");
-            ComprobacionTipos_vis comp = new ComprobacionTipos_vis();
-            prog.procesa(comp);
-            if(comp.hayErrores())
-                System.err.println("Errores de tipos");
-            else {
-                System.out.println("Tipado correcto");
-            }
+
         }
+
+        System.out.println("Procesando comprobacion de tipos...");
+        ComprobacionTipos_vis comp = new ComprobacionTipos_vis();
+        prog.procesa(comp);
+        if(comp.hayErrores()) {
+            System.err.println("Errores de tipos");
+            return;
+        } else {
+            System.out.println("Tipado correcto");
+        }
+        
+        System.out.println("Procesando asignacion de espacio...");
+        AsignacionEspacio_vis asig = new AsignacionEspacio_vis();
+        prog.procesa(asig);
+
     }
 
 

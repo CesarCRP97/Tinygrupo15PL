@@ -34,6 +34,9 @@ public class SintaxisAbstractaTiny {
         private int fila;
         private int col;
         private Tipo tipo;
+        private int tam;
+        private int dir;
+        private int nivel;
 
         public Nodo ponFila(int fila) {
             this.fila = fila;
@@ -60,6 +63,25 @@ public class SintaxisAbstractaTiny {
         public abstract void procesa(Procesamiento p);
         public abstract void procesa1(Procesamiento p);
         public abstract void procesa2(Procesamiento p);
+
+        public void setDir(int dir) {
+            this.dir = dir;
+        }
+        public int getDir() {
+            return dir;
+        }
+        public void setTam(int tam) {
+            this.tam = tam;
+        }
+        public int getTam() {
+            return tam;
+        }
+        public void setNivel(int nivel) {
+            this.nivel = nivel;
+        }
+        public int getNivel() {
+            return nivel;
+        }
     }
 
     public static class Prog extends Nodo {
