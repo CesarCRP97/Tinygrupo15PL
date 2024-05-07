@@ -434,8 +434,8 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         exp.opnd0().procesa(this);
         exp.opnd1().procesa(this);
         if (exp.opnd0().getTipo() instanceof Tipo_array && exp.opnd1().getTipo() instanceof Tipo_int) {
-            Tipo_array tipo_array = (Tipo_array) ref(exp.opnd0().vinculo());
-            exp.putTipo(tipo_array.tipo());
+            Tipo_array tipo_array = (Tipo_array) exp.opnd0().getTipo();
+            exp.putTipo(ref(tipo_array.tipo()));
         } else {
             avisoError(exp, "Tipos no compatibles para indexacion");
             exp.putTipo(getTipoERROR());
@@ -444,11 +444,10 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public void procesa(Acceso exp) {
         exp.opnd().procesa(this);
         if (exp.opnd().getTipo() instanceof Tipo_struct) {
-            Tipo_struct tipo = (Tipo_struct) ref(exp.opnd().vinculo());
+            Tipo_struct tipo = (Tipo_struct) exp.opnd().getTipo();
             Campo campo = tipo.campoPorIden(exp.iden());
             if (campo != null) {
                 exp.putTipo(ref(campo.tipo()));
-                exp.ponVinculo(campo);
             } else {
                 avisoError(exp, "Campo no encontrado");
                 exp.putTipo(getTipoERROR());
@@ -461,8 +460,8 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public void procesa(Indireccion exp) {
         exp.opnd().procesa(this);
         if (exp.opnd().getTipo() instanceof Tipo_puntero) {
-            Tipo_puntero tipo = (Tipo_puntero) ref(exp.opnd().vinculo());
-            exp.putTipo(ref(tipo.tipo()));
+            Tipo_puntero puntero = (Tipo_puntero) exp.opnd().getTipo();
+            exp.putTipo(ref(puntero.tipo()));
         } else {
             avisoError(exp, "Primer operando no es un puntero");
             exp.putTipo(getTipoERROR());
