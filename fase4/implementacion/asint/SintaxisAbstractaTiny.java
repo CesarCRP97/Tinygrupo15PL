@@ -2197,7 +2197,6 @@ public class SintaxisAbstractaTiny {
 
     public static class Indireccion extends Exp {
         private Exp opnd;
-        private Nodo vinculo;
         public Indireccion(Exp opnd) {
             super();
             this.opnd = opnd;
@@ -2222,12 +2221,6 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
-        public void ponVinculo(Nodo vinculo) {
-            this.vinculo = vinculo;
-        }
-        public Nodo vinculo() {
-            return vinculo;
-        }
     }
 
     public static class Lit_ent extends Exp {

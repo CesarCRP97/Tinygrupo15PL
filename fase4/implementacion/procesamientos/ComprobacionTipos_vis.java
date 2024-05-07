@@ -463,7 +463,6 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         if (exp.opnd().getTipo() instanceof Tipo_puntero) {
             Tipo_puntero tipo = (Tipo_puntero) ref(exp.opnd().vinculo());
             exp.putTipo(ref(tipo.tipo()));
-            exp.ponVinculo(ref(tipo.tipo()));
         } else {
             avisoError(exp, "Primer operando no es un puntero");
             exp.putTipo(getTipoERROR());
