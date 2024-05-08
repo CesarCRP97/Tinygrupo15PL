@@ -14,10 +14,99 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         this.m = new MaquinaP(tamdatos, tampila, tamheap, ndisplays);
     }
 
+    public void procesa(Prog prog) {
+        prog.bloque().procesa(this);
+    }
+
+    public void procesa(Bloque bloque) {
+        bloque.insts().procesa(this);
+    }
+
+    public void procesa(Si_instrs instrs) {
+        instrs.linstrs().procesa(this);
+    }
+
+    public void procesa(Muchas_instrs instrs) {
+        instrs.linstrs().procesa(this);
+        instrs.instr().procesa(this);
+    }
+
+    public void procesa(Una_instr instr) {
+        instr.instr().procesa(this);
+    }
+
+    public void procesa(Eval instr) {
+        instr.exp().procesa(this);
+        gen_acc_val(instr.exp());
+    }
+
+    public void procesa(If instr) {
+        instr.exp().procesa(this);
+        gen_acc_val(instr.exp());
+        m.emit(m.ir_f(instr.getSig()));
+        instr.bloque().procesa(this);
+    }
+
+    public void procesa(IfElse instr) {
+        instr.exp().procesa(this);
+        gen_acc_val(instr.exp());
+        m.emit(m.ir_f(instr.bloque0().getSig()));//A checkear
+        instr.bloque0().procesa(this);
+        m.emit(m.ir_a(instr.getSig()));
+        instr.bloque1().procesa(this);
+    }
+
+    public void procesa(While instr) {
+        instr.exp().procesa(this);
+        gen_acc_val(instr.exp());
+        m.emit(m.ir_f(instr.getSig()));
+        instr.bloque().procesa(this);
+        m.emit(m.ir_a(instr.getPrim()));
+    }
+
+    public void procesa(Read instr) {
+        instr.exp().procesa(this);
+        gen_acc_val(instr.exp());
+        //TODO
+    }
+
+    public void procesa(Write instr) {
+        instr.exp().procesa(this);
+        gen_acc_val(instr.exp());
+        //TODO
+    }
+
+    public void procesa(NL instr) {
+        //TODO
+    }
+
+    public void procesa(New instr) {
+        instr.exp().procesa(this);
+        gen_acc_val(instr.exp());
+        Tipo_puntero tp = (Tipo_puntero) instr.getTipo();
+        m.emit(m.alloc(tp.getTipo().getTam()));
+        m.emit(m.desapila_ind());
+    }
+
+    public void procesa(Delete instr) {
+        instr.exp().procesa(this);
+        gen_acc_val(instr.exp());
+        Tipo_puntero tp = (Tipo_puntero) instr.getTipo();
+        m.emit(m.dealloc(tp.getTipo().getTam()));
+    }
+
+    public void procesa(Invoc instr) {
+        instr.exp().procesa(this);
+        gen_acc_val(instr.exp());
+        m.emit(m.ir_a(instr.getEtiqueta()));
+    }
+
     public void procesa(Asignacion exp) {
         exp.opnd0().procesa(this);
+        gen_acc_val(exp.opnd0());
         exp.opnd1().procesa(this);
-        //TODO
+        gen_acc_val(exp.opnd1());
+        gen_asignacion(exp.opnd1());
     }
 
     public void procesa(Indexacion exp) {
@@ -179,6 +268,14 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     public void gen_acc_val(Nodo n1) {
         if(SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(n1))) {
             m.emit(m.apila_ind());
+        }
+    }
+
+    public void gen_asignacion(Nodo n1) {
+        if(SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(n1))) {
+            m.emit(m.copia(n1.getTipo().getTam()));
+        } else {
+            m.emit(m.desapila_ind());
         }
     }
 }
