@@ -19,6 +19,7 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
 
     private int dir;
     private int nivel;
+    private int desp;
 
     public AsignacionEspacio_vis() {
         this.dir = 0;
@@ -199,6 +200,7 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
     public void procesa1(Tipo_struct tipo) {
         tipo.campos().procesa1(this);
         tipo.setTam(tipo.campos().getTam());
+        desp = 0;
     }
 
     public void procesa1(Campos campos) {
@@ -220,6 +222,8 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
     public void procesa1(Campo campo) {
         campo.tipo().procesa1(this);
         campo.setTam(campo.tipo().getTam());
+        campo.setDesp(desp);
+        desp += campo.tipo().getTam();
     }
 
     public void procesa2(Tipo_struct tipo) {

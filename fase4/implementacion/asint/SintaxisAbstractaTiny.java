@@ -1057,6 +1057,7 @@ public class SintaxisAbstractaTiny {
     public static class Campo extends Nodo {
         private Tipo tipo;
         private String id;
+        private int desp;
 
         public Campo(Tipo tipo, String id) {
             super();
@@ -1083,6 +1084,12 @@ public class SintaxisAbstractaTiny {
 		public void procesa2(Procesamiento p) {
 			p.procesa2(this);
 		}
+        public void setDesp(int desp) {
+            this.desp = desp;
+        }
+        public int getDesp() {
+            return desp;
+        }
     }
 
     public static abstract class Instrs extends Nodo {
