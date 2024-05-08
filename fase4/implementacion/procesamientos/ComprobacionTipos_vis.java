@@ -2,6 +2,7 @@ package procesamientos;
 
 import asint.ProcesamientoDef;
 import asint.SintaxisAbstractaTiny.*;
+import asint.SintaxisAbstractaTiny;
 
 import java.util.ArrayList;
 
@@ -97,11 +98,11 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
     public void procesa(Param_form_normal param) {
         param.tipo().procesa(this);
-        param.putTipo(ref(param.tipo()));
+        param.putTipo(SintaxisAbstractaTiny.ref(param.tipo()));
     }
     public void procesa(Param_form_ref param) {
         param.tipo().procesa(this);
-        param.putTipo(ref(param.tipo()));
+        param.putTipo(SintaxisAbstractaTiny.ref(param.tipo()));
     }
 
     public void procesa(Tipo_int tipo) {
@@ -119,7 +120,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public void procesa(Tipo_array tipo) {
         tipo.tipo().procesa(this);
         try {
-            int dim = Integer.parseInt(tipo.num().toString());
+            int dim = Integer.parseInt(tipo.num());
             if (dim <= 0) {
                 avisoError(tipo, "Tamaño de array menor o igual a 0");
                 tipo.putTipo(getTipoERROR());
@@ -237,7 +238,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         instr.exp().procesa(this);
         if(instr.exp().getTipo() instanceof Tipo_ERROR) {
             instr.putTipo(getTipoERROR());
-        } else if (designador(instr.exp()) && (instr.exp().getTipo() instanceof Tipo_int || instr.exp().getTipo() instanceof Tipo_real || instr.exp().getTipo() instanceof Tipo_string)) {
+        } else if (SintaxisAbstractaTiny.designador(instr.exp()) && (instr.exp().getTipo() instanceof Tipo_int || instr.exp().getTipo() instanceof Tipo_real || instr.exp().getTipo() instanceof Tipo_string)) {
             instr.putTipo(getTipoOK());
         } else {
             instr.putTipo(getTipoERROR());
@@ -320,7 +321,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public void procesa(Asignacion exp) {
         exp.opnd0().procesa(this);
         exp.opnd1().procesa(this);
-        if (designador(exp.opnd0())){
+        if (SintaxisAbstractaTiny.designador(exp.opnd0())){
             if(compatibles(exp.opnd0().getTipo(), exp.opnd1().getTipo())) {
                 exp.putTipo(exp.opnd0().getTipo());
             } else {
@@ -435,7 +436,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         exp.opnd1().procesa(this);
         if (exp.opnd0().getTipo() instanceof Tipo_array && exp.opnd1().getTipo() instanceof Tipo_int) {
             Tipo_array tipo_array = (Tipo_array) exp.opnd0().getTipo();
-            exp.putTipo(ref(tipo_array.tipo()));
+            exp.putTipo(SintaxisAbstractaTiny.ref(tipo_array.tipo()));
         } else {
             avisoError(exp, "Tipos no compatibles para indexacion");
             exp.putTipo(getTipoERROR());
@@ -447,7 +448,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             Tipo_struct tipo = (Tipo_struct) exp.opnd().getTipo();
             Campo campo = tipo.campoPorIden(exp.iden());
             if (campo != null) {
-                exp.putTipo(ref(campo.tipo()));
+                exp.putTipo(SintaxisAbstractaTiny.ref(campo.tipo()));
             } else {
                 avisoError(exp, "Campo no encontrado");
                 exp.putTipo(getTipoERROR());
@@ -461,7 +462,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         exp.opnd().procesa(this);
         if (exp.opnd().getTipo() instanceof Tipo_puntero) {
             Tipo_puntero puntero = (Tipo_puntero) exp.opnd().getTipo();
-            exp.putTipo(ref(puntero.tipo()));
+            exp.putTipo(SintaxisAbstractaTiny.ref(puntero.tipo()));
         } else {
             avisoError(exp, "Primer operando no es un puntero");
             exp.putTipo(getTipoERROR());
@@ -483,7 +484,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         exp.putTipo(getTipoString());
     }
     public void procesa(Iden exp) {
-        exp.putTipo(ref(exp.vinculo()));
+        exp.putTipo(SintaxisAbstractaTiny.ref(exp.vinculo()));
     }
     public void procesa(Null exp) {
         exp.putTipo(getTipoNull());
@@ -519,23 +520,6 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             return getTipoERROR();
         }
     }
-
-    public Tipo ref(Nodo nodo) {
-        if(nodo instanceof Param_form_normal) {
-            return ref(((Param_form_normal)nodo).tipo());
-        } else if(nodo instanceof Param_form_ref) {
-            return ref(((Param_form_ref)nodo).tipo());
-        } else if(nodo instanceof Tipo_iden && ((Tipo_iden)nodo).vinculo() instanceof Dec_tipo) {
-            return ref(((Dec_tipo)((Tipo_iden)nodo).vinculo()).tipo());
-        } else if (nodo instanceof Dec_variable) {
-            return ref(((Dec_variable)nodo).tipo());
-        } else if (nodo instanceof Campo) {
-            return ref(((Campo)nodo).tipo());
-        } else {
-            return ((Tipo)nodo);
-        }
-    }
-
     public class Ecuacion {
         public Tipo n1;
         public Tipo n2;
@@ -562,8 +546,8 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
 
     public boolean unificables(Tipo n1, Tipo n2, ArrayList<Ecuacion> ecuaciones) {
-        Tipo tipo1 = ref(n1);
-        Tipo tipo2 = ref(n2);
+        Tipo tipo1 = SintaxisAbstractaTiny.ref(n1);
+        Tipo tipo2 = SintaxisAbstractaTiny.ref(n2);
         if (tipo1 instanceof Tipo_ERROR || tipo2 instanceof Tipo_ERROR) {
             return false;
         } else if (tipo1 instanceof Tipo_int && tipo2 instanceof Tipo_int) {
@@ -610,14 +594,6 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else {
             ecuaciones.add(new Ecuacion(tipo1, tipo2));
             return unificables(tipo1, tipo2, ecuaciones);
-        }
-    }
-
-    public boolean designador(Nodo n) {
-        if (n instanceof Iden || n instanceof Indexacion || n instanceof Acceso || n instanceof Indireccion) {
-            return true;
-        } else {
-            return false;
         }
     }
 

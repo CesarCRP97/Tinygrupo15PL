@@ -2,32 +2,7 @@ package asint;
 
 public class SintaxisAbstractaTiny {
 
-    private static void imprimeOpnd(Exp opnd, int np) {
-        if(opnd.prioridad() < np) {
-            System.out.println("(");
-            opnd.imprime();
-            System.out.println(")");
-        } else {
-            opnd.imprime();
-        }
-    }
-
-    private static void imprimeExpBin(Exp opnd0, Exp opnd1, String op, int np0, int np1, Exp vinc) {
-        imprimeOpnd(opnd0,np0);
-        System.out.println(op + infoVinculo(vinc));
-        imprimeOpnd(opnd1,np1);
-    }
-
-    private static void imprimeExpUn(Exp opnd, String op, int np, Exp vinc) {
-        System.out.println(op + infoVinculo(vinc));
-        imprimeOpnd(opnd,np);
-    }
-
-    private static String infoVinculo(Nodo nodo) {
-        return "$f:"+nodo.leeFila()+",c:"+nodo.leeCol() + "$";
-    }
-
-    public static abstract class Nodo {
+        public static abstract class Nodo {
         public Nodo() {
             fila=col=-1;
         }   
@@ -2632,5 +2607,54 @@ public class SintaxisAbstractaTiny {
     }
     public Exp null_() {
         return new Null();
+    }
+
+    private static void imprimeOpnd(Exp opnd, int np) {
+        if(opnd.prioridad() < np) {
+            System.out.println("(");
+            opnd.imprime();
+            System.out.println(")");
+        } else {
+            opnd.imprime();
+        }
+    }
+
+    private static void imprimeExpBin(Exp opnd0, Exp opnd1, String op, int np0, int np1, Exp vinc) {
+        imprimeOpnd(opnd0,np0);
+        System.out.println(op + infoVinculo(vinc));
+        imprimeOpnd(opnd1,np1);
+    }
+
+    private static void imprimeExpUn(Exp opnd, String op, int np, Exp vinc) {
+        System.out.println(op + infoVinculo(vinc));
+        imprimeOpnd(opnd,np);
+    }
+
+    private static String infoVinculo(Nodo nodo) {
+        return "$f:"+nodo.leeFila()+",c:"+nodo.leeCol() + "$";
+    }
+
+    public static Tipo ref(Nodo nodo) {
+        if(nodo instanceof Param_form_normal) {
+            return ref(((Param_form_normal)nodo).tipo());
+        } else if(nodo instanceof Param_form_ref) {
+            return ref(((Param_form_ref)nodo).tipo());
+        } else if(nodo instanceof Tipo_iden && ((Tipo_iden)nodo).vinculo() instanceof Dec_tipo) {
+            return ref(((Dec_tipo)((Tipo_iden)nodo).vinculo()).tipo());
+        } else if (nodo instanceof Dec_variable) {
+            return ref(((Dec_variable)nodo).tipo());
+        } else if (nodo instanceof Campo) {
+            return ref(((Campo)nodo).tipo());
+        } else {
+            return ((Tipo)nodo);
+        }
+    }
+
+    public static boolean designador(Nodo n) {
+        if (n instanceof Iden || n instanceof Indexacion || n instanceof Acceso || n instanceof Indireccion) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
