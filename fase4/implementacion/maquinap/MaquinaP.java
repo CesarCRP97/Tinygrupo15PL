@@ -24,6 +24,7 @@ public class MaquinaP {
         public boolean valorBool() {throw new EAccesoIlegitimo();} 
         public double valorReal() {throw new EAccesoIlegitimo();}
         public String valorString() {throw new EAccesoIlegitimo();}
+        public int valorPuntero() {throw new EAccesoIlegitimo();}
     } 
     private class ValorInt extends Valor {
         private int valor;
@@ -31,7 +32,7 @@ public class MaquinaP {
             this.valor = valor; 
         }
         public int valorInt() {return valor;}
-        public double valorReal() {return new Double(valor);}
+        public double valorReal() {return valor;}
         public String toString() {
             return String.valueOf(valor);
         }
@@ -201,12 +202,12 @@ public class MaquinaP {
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
             } else if (opnd1 instanceof ValorString && opnd2 instanceof ValorString) {
-                if (opnd1.valorString() < opnd2.valorString()) 
+                if (opnd1.valorString().compareTo(opnd2.valorString()) < 0)
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
             } else if (opnd1 instanceof ValorBool && opnd2 instanceof ValorBool) {
-                if (opnd1.valorBool() < opnd2.valorBool()) 
+                if (opnd1.valorReal() < opnd2.valorReal())
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
@@ -232,12 +233,12 @@ public class MaquinaP {
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
             } else if (opnd1 instanceof ValorString && opnd2 instanceof ValorString) {
-                if (opnd1.valorString() <= opnd2.valorString()) 
+                if (opnd1.valorString().compareTo(opnd2.valorString()) <= 0)
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
             } else if (opnd1 instanceof ValorBool && opnd2 instanceof ValorBool) {
-                if (opnd1.valorBool() <= opnd2.valorBool()) 
+                if (opnd1.valorReal() <= opnd2.valorReal())
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
@@ -263,12 +264,12 @@ public class MaquinaP {
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
             } else if (opnd1 instanceof ValorString && opnd2 instanceof ValorString) {
-                if (opnd1.valorString() > opnd2.valorString()) 
+                if (opnd1.valorString().compareTo(opnd2.valorString()) > 0)
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
             } else if (opnd1 instanceof ValorBool && opnd2 instanceof ValorBool) {
-                if (opnd1.valorBool() > opnd2.valorBool()) 
+                if (opnd1.valorReal() > opnd2.valorReal())
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
@@ -294,12 +295,12 @@ public class MaquinaP {
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
             } else if (opnd1 instanceof ValorString && opnd2 instanceof ValorString) {
-                if (opnd1.valorString() >= opnd2.valorString()) 
+                if (opnd1.valorString().compareTo(opnd2.valorString()) >= 0)
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
             } else if (opnd1 instanceof ValorBool && opnd2 instanceof ValorBool) {
-                if (opnd1.valorBool() >= opnd2.valorBool()) 
+                if (opnd1.valorReal() >= opnd2.valorReal())
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
@@ -695,7 +696,7 @@ public class MaquinaP {
     public Instruccion apila_int(int val) {return new IApilaInt(val);}
     public Instruccion apila_bool(boolean val) {return new IApilaBool(val);}
     public Instruccion apila_real(double val) {return new IApilaReal(val);}
-    public Instruccion apila_string(double val) {return new IApilaString(val);}
+    public Instruccion apila_string(String val) {return new IApilaString(val);}
     public Instruccion apila_null() {return new IApilaNull();}
     public Instruccion apilad(int nivel) {return new IApilad(nivel);}
     public Instruccion apila_ind() {return IAPILAIND;}
