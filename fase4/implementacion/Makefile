@@ -56,6 +56,8 @@ cleanrun:
 	rm -f output*.txt
 
 clean: cleanasint cleanasc cleandesc cleanev cleanrun
+	rm -f maquinap/*.class
+	rm -f maquinap/*~
 	rm -f *.class
 	rm -f *~
 	rm -f sample*.outh
