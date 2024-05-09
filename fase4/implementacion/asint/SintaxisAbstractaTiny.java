@@ -12,6 +12,8 @@ public class SintaxisAbstractaTiny {
         private int tam;
         private int dir;
         private int nivel;
+        private int sigInstr;
+        private int primInstr;
 
         public Nodo ponFila(int fila) {
             this.fila = fila;
@@ -56,6 +58,19 @@ public class SintaxisAbstractaTiny {
         }
         public int getNivel() {
             return nivel;
+        }
+
+        public void setSigInstr(int sigInstr) {
+            this.sigInstr = sigInstr;
+        }
+        public int getSigInstr() {
+            return sigInstr;
+        }
+        public void setPrimInstr(int primInstr) {
+            this.primInstr = primInstr;
+        }
+        public int getPrimInstr() {
+            return primInstr;
         }
     }
 

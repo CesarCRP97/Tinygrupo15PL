@@ -71,10 +71,18 @@ public class Main {
             System.out.println("Tipado correcto");
         }
         
-        System.out.println("Procesando asignacion de espacio...");
+        System.out.println("Asignando espacio...");
         AsignacionEspacio_vis asig = new AsignacionEspacio_vis();
         prog.procesa(asig);
 
+        System.out.println("Etiquetando codigo...");
+        Etiquetado_vis etiq = new Etiquetado_vis();
+        prog.procesa(etiq);
+
+        System.out.println("Generando codigo...");
+        MaquinaP maq = new MaquinaP();
+        GeneracionCodigo_vis gen = new GeneracionCodigo_vis(maq);
+        prog.procesa(gen);
     }
 
 
