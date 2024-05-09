@@ -49,31 +49,31 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(Eval instr) {
         instr.exp().procesa(this);
-        gen_acc_val(instr.exp());
+        genAccesoValor(instr.exp());
     }
 
     public void procesa(If instr) {
         instr.exp().procesa(this);
-        gen_acc_val(instr.exp());
+        genAccesoValor(instr.exp());
         m.emit(m.ir_f(instr.getSig()));
         instr.bloque().procesa(this);
     }
 
     public void procesa(IfElse instr) {
         instr.exp().procesa(this);
-        gen_acc_val(instr.exp());
-        m.emit(m.ir_f(instr.bloque0().getSig()));//A checkear
+        genAccesoValor(instr.exp());
+        m.emit(m.ir_f(instr.bloque0().getSigInstr()));//A checkear
         instr.bloque0().procesa(this);
-        m.emit(m.ir_a(instr.getSig()));
+        m.emit(m.ir_a(instr.getSigInstr()));
         instr.bloque1().procesa(this);
     }
 
     public void procesa(While instr) {
         instr.exp().procesa(this);
-        gen_acc_val(instr.exp());
-        m.emit(m.ir_f(instr.getSig()));
+        genAccesoValor(instr.exp());
+        m.emit(m.ir_f(instr.getSigInstr()));
         instr.bloque().procesa(this);
-        m.emit(m.ir_a(instr.getPrim()));
+        m.emit(m.ir_a(instr.getPrimInstr()));
     }
 
     public void procesa(Read instr) {
@@ -101,7 +101,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(New instr) {
         instr.exp().procesa(this);
-        gen_acc_val(instr.exp());
+        genAccesoValor(instr.exp());
         Tipo_puntero tp = (Tipo_puntero) instr.getTipo();
         m.emit(m.alloc(tp.getTipo().getTam()));
         m.emit(m.desapila_ind());
@@ -109,30 +109,37 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(Delete instr) {
         instr.exp().procesa(this);
-        gen_acc_val(instr.exp());
+        genAccesoValor(instr.exp());
         Tipo_puntero tp = (Tipo_puntero) instr.getTipo();
         m.emit(m.dealloc(tp.getTipo().getTam()));
     }
 
     public void procesa(Invoc instr) {
+        m.emit(m.activa(instr.vinculo().getNivel(), instr.vinculo().getTam(), instr.getSigInstr()));
+        genPasoParams(instr.vinculo(), instr.params_reales());
+        m.emit(m.ir_a(instr.vinculo().getPrimInstr()));
+
+    }
+
+    public void procesa(Invoc instr) {
         instr.exp().procesa(this);
-        gen_acc_val(instr.exp());
+        genAccesoValor(instr.exp());
         m.emit(m.ir_a(instr.getEtiqueta()));
     }
 
     public void procesa(Asignacion exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
         exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
-        gen_asignacion(exp.opnd1());
+        genAccesoValor(exp.opnd1());
+        genAsig(exp.opnd1());
     }
 
     public void procesa(Indexacion exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
         exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
         m.emit(m.apila_int(exp.opnd0().getTipo().tipo().getTam()));
         m.emit(m.mul());
         m.emit(m.suma());
@@ -140,122 +147,122 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(Acceso exp) {
         exp.opnd().procesa(this);
-        gen_acc_val(exp.opnd());
+        genAccesoValor(exp.opnd());
         m.emit(m.apila_int(exp.opnd().getTipo().campoPorIden(exp.iden()).getDesp()));
         m.emit(m.suma());
     }
 
     public void procesa(Indireccion exp) {
         exp.opnd().procesa(this);
-        gen_acc_val(exp.opnd());
+        genAccesoValor(exp.opnd());
         m.emit(m.apila_ind());
     }
     
     public void procesa(Suma exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.suma());
     }
 
     public void procesa(Resta exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.resta());
     }
 
     public void procesa(Mul exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.mul());
     }
 
     public void procesa(Div exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.div());
     }
 
     public void procesa(And exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.and());
     }
 
     public void procesa(Or exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.or());
     }
 
     public void procesa(Menor_que exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.menor());
     }
 
     public void procesa(Menor_igual exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.menor_igual());
     }
 
     public void procesa(Mayor_que exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.mayor());
     }
 
     public void procesa(Mayor_igual exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.mayor_igual());
     }
 
     public void procesa(Igual_comp exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.igualdad());
     }
 
     public void procesa(Distinto_comp exp) {
         exp.opnd0().procesa(this);
-        gen_acc_val(exp.opnd0());
+        genAccesoValor(exp.opnd0());
 		exp.opnd1().procesa(this);
-        gen_acc_val(exp.opnd1());
+        genAccesoValor(exp.opnd1());
 		m.emit(m.desigualdad());
     }
 
     public void procesa(Menos_unario exp) {
         exp.opnd().procesa(this);
-        gen_acc_val(exp.opnd());
+        genAccesoValor(exp.opnd());
 		m.emit(m.menos_unario());
     }
 
     public void procesa(Not exp) {
         exp.opnd().procesa(this);
-        gen_acc_val(exp.opnd());
+        genAccesoValor(exp.opnd());
 		m.emit(m.not());
     }
 
@@ -279,6 +286,10 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         m.emit(m.apila_string(exp.valor()));
     }
 
+    public void procesa(Iden exp) {
+        genAccesoIden(exp.vinculo());
+    }
+
     public void procesa(Null exp) {
         m.emit(m.apila_null());
     }
@@ -296,13 +307,15 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         recolectaProcs(dec.dec());
     }
 
-    public void gen_acc_val(Nodo n1) {
+    //METODOS AUXILIARES
+
+    public void genAccesoValor(Nodo n1) {
         if(SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(n1))) {
             m.emit(m.apila_ind());
         }
     }
 
-    public void gen_asignacion(Nodo n1) {
+    public void genAsig(Nodo n1) {
         if(SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(n1))) {
             m.emit(m.copia(n1.getTipo().getTam()));
         } else {
