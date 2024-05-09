@@ -7,6 +7,9 @@ import procesamientos.Vinculacion_vis;
 import procesamientos.Vinculacion_vis.ErrorVinculacion;
 import procesamientos.ComprobacionTipos_vis;
 import procesamientos.AsignacionEspacio_vis;
+import procesamientos.Etiquetado_vis;
+import procesamientos.GeneracionCod_vis;
+import maquinap.MaquinaP;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -74,14 +77,16 @@ public class Main {
         System.out.println("Asignando espacio...");
         AsignacionEspacio_vis asig = new AsignacionEspacio_vis();
         prog.procesa(asig);
+        int maxtam = asig.getMaxTamNivel();
+        int maxnivel = asig.getMaxNivel();
 
         System.out.println("Etiquetando codigo...");
         Etiquetado_vis etiq = new Etiquetado_vis();
         prog.procesa(etiq);
 
         System.out.println("Generando codigo...");
-        MaquinaP maq = new MaquinaP();
-        GeneracionCodigo_vis gen = new GeneracionCodigo_vis(maq);
+        MaquinaP maq = new MaquinaP(maxtam, 500, 500, maxnivel);
+        GeneracionCod_vis gen = new GeneracionCod_vis(maq);
         prog.procesa(gen);
     }
 

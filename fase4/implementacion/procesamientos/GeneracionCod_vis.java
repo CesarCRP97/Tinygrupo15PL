@@ -13,8 +13,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     private MaquinaP m;
     private Stack<Dec> procs;
 
-    public GeneracionCod_vis(int tamdatos, int tampila, int tamheap, int ndisplays) {
-        this.m = new MaquinaP(tamdatos, tampila, tamheap, ndisplays);
+    public GeneracionCod_vis(MaquinaP m) {
         this.procs = new Stack<Dec>();
     }
 

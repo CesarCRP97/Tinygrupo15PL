@@ -20,14 +20,29 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
     private int dir;
     private int nivel;
     private int desp;
+    private int maxTamNivel;
+    private int maxNivel;
+
+    public int getMaxTamNivel() {
+        return this.maxTamNivel;
+    }
+
+    public int getMaxNivel() {
+        return this.maxNivel;
+    }
 
     public AsignacionEspacio_vis() {
         this.dir = 0;
         this.nivel = 0;
+        this.maxTamNivel = 0;//El tamaño máximo que puede tener un nivel
+        this.maxNivel = 0;//El nivel máximo que se ha alcanzado
     }
 
     public void inc_dir(int inc) {
         this.dir = this.dir + inc;
+        if (this.dir > this.maxTamNivel) {
+            this.maxTamNivel = this.dir;
+        }
     }
 
     public void procesa(Prog p) {
@@ -95,6 +110,10 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
         int dirAnterior = this.dir;
 
         this.nivel++;
+        if (this.nivel > this.maxNivel) {
+            this.maxNivel = this.nivel;
+        }
+        
         dec.setNivel(this.nivel);
         this.dir = 0;
 
