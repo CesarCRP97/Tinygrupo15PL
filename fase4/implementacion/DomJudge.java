@@ -4,6 +4,7 @@ import asint.SintaxisAbstractaTiny.*;
 import procesamientos.*;
 import java.io.Reader;
 import java.io.InputStreamReader;
+import maquinap.MaquinaP;
 
 public class DomJudge {
         public static void main(String[] args) throws Exception {
@@ -15,9 +16,6 @@ public class DomJudge {
         
         //Inicializamos el arbol de sintaxis abstracta que vayamos a usar
         if(tipo == 'a') {
-
-            System.out.println("CONSTRUCCION AST ASCENDENTE");
-
             Reader input = new InputStreamReader(System.in);
             AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
             c_ast_ascendente.ConstructorASTTinyDJ asint_asc = new c_ast_ascendente.ConstructorASTTinyDJ(alex);
@@ -31,9 +29,6 @@ public class DomJudge {
                 System.exit(0);
             }
         } else if (tipo == 'd') {
-
-            System.out.println("CONSTRUCCION AST DESCENDENTE");
-
             c_ast_descendente.ConstructorASTsTinyDJ asint_desc = new c_ast_descendente.ConstructorASTsTinyDJ(System.in);
             try {
                 prog = asint_desc.analiza();
@@ -44,12 +39,41 @@ public class DomJudge {
                 System.out.println("ERROR_LEXICO");
                 System.exit(0);
             }
-        }         
-        System.out.println("IMPRESION RECURSIVA");
-        System.out.println(new Procesamiento_rec().imprime(prog));
-        System.out.println("IMPRESION INTERPRETE");
-        prog.imprime();
-        System.out.println("IMPRESION VISITANTE");
-        prog.procesa(new Procesamiento_vis());
+        }
+
+        Vinculacion_vis vinc = new Vinculacion_vis();
+        prog.procesa(vinc);
+        if(vinc.hayErrores()) {
+            System.err.println("Errores de vinculacion");
+            return;
+        } else {
+            System.out.println("Vinculacion correcta");
+
+        }
+
+        ComprobacionTipos_vis comp = new ComprobacionTipos_vis();
+        prog.procesa(comp);
+        if(comp.hayErrores()) {
+            System.err.println("Errores de tipos");
+            return;
+        } else {
+            System.out.println("Tipado correcto");
+        }
+        
+        AsignacionEspacio_vis asig = new AsignacionEspacio_vis();
+        prog.procesa(asig);
+        int maxtam = asig.getMaxTamNivel();
+        int maxnivel = asig.getMaxNivel();
+
+        System.out.println("Etiquetando codigo...");
+        Etiquetado_vis etiq = new Etiquetado_vis();
+        prog.procesa(etiq);
+
+        System.out.println("Generando codigo...");
+        MaquinaP maq = new MaquinaP(new InputStreamReader(System.in), maxtam, 2*maxtam, 2*maxtam, maxnivel);
+        GeneracionCod_vis gen = new GeneracionCod_vis(maq);
+        prog.procesa(gen);         
+
+        
     }
 }
