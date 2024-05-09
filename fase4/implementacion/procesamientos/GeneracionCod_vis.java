@@ -22,8 +22,8 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         prog.bloque().procesa(this);
         while (!procs.empty()) {
             Dec_proc proc = (Dec_proc) procs.pop();
-            m.emit(desapilad(proc.getNivel()));
-            proc.bloque.procesa(this);
+            m.emit(m.desapilad(proc.getNivel()));
+            proc.bloque().procesa(this);
             m.emit(m.desactiva(proc.getNivel(), proc.getTam()));
             m.emit(m.ir_ind());
         }
@@ -55,17 +55,17 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     public void procesa(If instr) {
         instr.exp().procesa(this);
         genAccesoValor(instr.exp());
-        m.emit(m.ir_f(instr.getSig()));
+        m.emit(m.ir_f(instr.getSigInstr()));
         instr.bloque().procesa(this);
     }
 
     public void procesa(IfElse instr) {
         instr.exp().procesa(this);
         genAccesoValor(instr.exp());
-        m.emit(m.ir_f(instr.bloque0().getSigInstr()));//A checkear
-        instr.bloque0().procesa(this);
-        m.emit(m.ir_a(instr.getSigInstr()));
+        m.emit(m.ir_f(instr.bloque1().getSigInstr()));//A checkear
         instr.bloque1().procesa(this);
+        m.emit(m.ir_a(instr.getSigInstr()));
+        instr.bloque2().procesa(this);
     }
 
     public void procesa(While instr) {
@@ -116,15 +116,9 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(Invoc instr) {
         m.emit(m.activa(instr.vinculo().getNivel(), instr.vinculo().getTam(), instr.getSigInstr()));
-        genPasoParams(instr.vinculo(), instr.params_reales());
+        genPasoParams(((Dec_proc)instr.vinculo()).params_form(), instr.params_reales());
         m.emit(m.ir_a(instr.vinculo().getPrimInstr()));
 
-    }
-
-    public void procesa(Invoc instr) {
-        instr.exp().procesa(this);
-        genAccesoValor(instr.exp());
-        m.emit(m.ir_a(instr.getEtiqueta()));
     }
 
     public void procesa(Asignacion exp) {
@@ -324,17 +318,17 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     }
 
     public void genAccesoIden(Nodo n) {
-        if (n instanceof Dec_var_ {
-            if( dec.getNivel() == 0 ) {
-                m.emit(m.apila_int(dec.vinculo().getDir()));
+        if (n instanceof Dec_variable) {
+            if( n.getNivel() == 0 ) {
+                m.emit(m.apila_int(n.getDir()));
             } else {
-                genAccesoVariable(dec);
+                genAccesoVariable(n);
             }
         } else if (n instanceof Param_form_normal) {
             genAccesoVariable(n);
         } else if (n instanceof Param_form_ref) {
             m.emit(m.apila_int(n.getDir()));
-        } else if (n instanceof Dec_fun) {
+        } else if (n instanceof Dec_proc) {
             genAccesoVariable(n);
             m.emit(m.apila_ind());
         }
@@ -357,7 +351,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         m.emit(m.apila_int(pf.getDir()));
         m.emit(m.suma());
         exp.procesa(this);
-        if(pf instanceof Param_form_valor && SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(exp))) {
+        if(pf instanceof Param_form_normal && SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(exp))) {
             m.emit(m.copia(pf.getTipo().getTam()));
         } else {
             m.emit(m.desapila_ind());

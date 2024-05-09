@@ -727,6 +727,7 @@ public class MaquinaP {
     public Instruccion read_int() {return IREADINT;}
     public Instruccion read_real() {return IREADREAL;}
     public Instruccion read_string() {return IREADSTRING;}
+    public Instruccion write() {return IWRITE;}
     public Instruccion suma() {return ISUMA;}
     public Instruccion resta() {return IRESTA;}
     public Instruccion mul() {return IMUL;}
@@ -779,6 +780,7 @@ public class MaquinaP {
         IREADINT = new IReadInt();
         IREADREAL = new IReadReal();
         IREADSTRING = new IReadString();
+        IWRITE = new IWrite();
         ISUMA = new ISuma();
         IRESTA = new IResta();
         IMUL = new IMul();
