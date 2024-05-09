@@ -66,18 +66,25 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(Read instr) {
         instr.exp().procesa(this);
-        gen_acc_val(instr.exp());
-        //TODO
+        if(instr.exp().getTipo() instanceof Tipo_int) {
+            m.emit(m.read_int());
+        } else if(instr.exp().getTipo() instanceof Tipo_real) {
+            m.emit(m.read_real());
+        } else if(instr.exp().getTipo() instanceof Tipo_string) {
+            m.emit(m.read_string());
+        }
+        m.emit(m.desapila_ind());
     }
 
     public void procesa(Write instr) {
         instr.exp().procesa(this);
-        gen_acc_val(instr.exp());
-        //TODO
+        m.emit(m.apila_ind());
+        m.emit(m.write());
     }
 
     public void procesa(NL instr) {
-        //TODO
+        m.emit(m.apila_string("\n"));
+        m.emit(m.write());
     }
 
     public void procesa(New instr) {

@@ -92,7 +92,53 @@ public class MaquinaP {
     public interface Instruccion {
         void ejecuta();  
     }
+
+    private IReadInt IREADINT;
+    private class IReadInt implements Instruccion {
+        public void ejecuta() {
+            int valor = Integer.parseInt(System.console().readLine());
+            pilaEvaluacion.push(new ValorInt(valor));
+            pc++;
+        }
+        public String toString() {return "read-int";};
+    }
     
+    private IReadReal IREADREAL;
+    private class IReadReal implements Instruccion {
+        public void ejecuta() {
+            double valor = Double.parseDouble(System.console().readLine());
+            pilaEvaluacion.push(new ValorReal(valor));
+            pc++;
+        }
+        public String toString() {return "read-real";};
+    }
+
+    private IReadString IREADSTRING;
+    private class IReadString implements Instruccion {
+        public void ejecuta() {
+            String valor = System.console().readLine();
+            pilaEvaluacion.push(new ValorString(valor));
+            pc++;
+        }
+        public String toString() {return "read-string";};
+    }
+
+    private IWrite IWRITE;
+    private class IWrite implements Instruccion {
+        public void ejecuta() {
+            Valor v = pilaEvaluacion.pop();
+            if(v instanceof ValorInt) {
+                System.out.print(v.valorInt());
+            } else if(v instanceof ValorReal) {
+                System.out.print(v.valorReal());
+            } else if(v instanceof ValorString) {
+                System.out.print(v.valorString());
+            }
+            pc++;
+        }
+        public String toString() {return "write";};
+    }
+
     private ISuma ISUMA;
     private class ISuma implements Instruccion {
         public void ejecuta() {
@@ -678,6 +724,9 @@ public class MaquinaP {
         }
     }
 
+    public Instruccion read_int() {return IREADINT;}
+    public Instruccion read_real() {return IREADREAL;}
+    public Instruccion read_string() {return IREADSTRING;}
     public Instruccion suma() {return ISUMA;}
     public Instruccion resta() {return IRESTA;}
     public Instruccion mul() {return IMUL;}
@@ -727,6 +776,9 @@ public class MaquinaP {
         pilaEvaluacion = new Stack<>();
         datos = new Valor[tamdatos+tampila+tamheap];
         this.pc = 0;
+        IREADINT = new IReadInt();
+        IREADREAL = new IReadReal();
+        IREADSTRING = new IReadString();
         ISUMA = new ISuma();
         IRESTA = new IResta();
         IMUL = new IMul();
