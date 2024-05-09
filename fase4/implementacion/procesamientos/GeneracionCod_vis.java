@@ -6,19 +6,31 @@ import asint.SintaxisAbstractaTiny.*;
 
 import maquinap.MaquinaP;
 
+import java.util.Stack;
+
 public class GeneracionCod_vis extends ProcesamientoDef {
     
     private MaquinaP m;
+    private Stack<Dec> procs;
 
     public GeneracionCod_vis(int tamdatos, int tampila, int tamheap, int ndisplays) {
         this.m = new MaquinaP(tamdatos, tampila, tamheap, ndisplays);
+        this.procs = new Stack<Dec>();
     }
 
     public void procesa(Prog prog) {
         prog.bloque().procesa(this);
+        while (!procs.empty()) {
+            Dec_proc proc = (Dec_proc) procs.pop();
+            m.emit(desapilad(proc.getNivel()));
+            proc.bloque.procesa(this);
+            m.emit(m.desactiva(proc.getNivel(), proc.getTam()));
+            m.emit(m.ir_ind());
+        }
     }
 
     public void procesa(Bloque bloque) {
+        bloque.decs().procesa(this);
         bloque.insts().procesa(this);
     }
 
@@ -271,6 +283,18 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         m.emit(m.apila_null());
     }
 
+    public void procesa(Si_decs decs) {
+        decs.ldecs().procesa(this);
+    }
+
+    public void procesa(Muchas_decs decs) {
+        decs.ldecs().procesa(this);
+        recolectaProcs(decs.dec());
+    }
+
+    public void procesa(Una_dec dec) {
+        recolectaProcs(dec.dec());
+    }
 
     public void gen_acc_val(Nodo n1) {
         if(SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(n1))) {
@@ -285,4 +309,53 @@ public class GeneracionCod_vis extends ProcesamientoDef {
             m.emit(m.desapila_ind());
         }
     }
+
+    public void genAccesoIden(Nodo n) {
+        if (n instanceof Dec_var_ {
+            if( dec.getNivel() == 0 ) {
+                m.emit(m.apila_int(dec.vinculo().getDir()));
+            } else {
+                genAccesoVariable(dec);
+            }
+        } else if (n instanceof Param_form_normal) {
+            genAccesoVariable(n);
+        } else if (n instanceof Param_form_ref) {
+            m.emit(m.apila_int(n.getDir()));
+        } else if (n instanceof Dec_fun) {
+            genAccesoVariable(n);
+            m.emit(m.apila_ind());
+        }
+    }
+
+    public void genAccesoVariable(Nodo n) {
+        m.emit(m.apilad(n.getNivel()));
+        m.emit(m.apila_int(n.getDir()));
+        m.emit(m.suma());
+    }
+
+    public void genPasoParams(Params_form pf, Params_reales pr) {
+        for(int i = 0; i < pf.numParams(); i++) {
+            genPasoParams(pf.paramFormPorIndex(i), pr.paramRealPorIndex(i));
+        }
+    }
+
+    public void genPasoParams(Param_form pf, Exp exp) {
+        m.emit(m.dup());
+        m.emit(m.apila_int(pf.getDir()));
+        m.emit(m.suma());
+        exp.procesa(this);
+        if(pf instanceof Param_form_valor && SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(exp))) {
+            m.emit(m.copia(pf.getTipo().getTam()));
+        } else {
+            m.emit(m.desapila_ind());
+        }
+    }
+
+    public void recolectaProcs(Dec dec) {
+        if(dec instanceof Dec_proc) {
+            procs.push(dec);
+        }
+    }
+
+
 }
