@@ -59,7 +59,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     public void procesa(IfElse instr) {
         instr.exp().procesa(this);
         genAccesoValor(instr.exp());
-        m.emit(m.ir_f(instr.bloque1().getSigInstr()));//A checkear
+        m.emit(m.ir_f(instr.bloque2().getPrimInstr()));
         instr.bloque1().procesa(this);
         m.emit(m.ir_a(instr.getSigInstr()));
         instr.bloque2().procesa(this);
@@ -115,7 +115,6 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         m.emit(m.activa(instr.vinculo().getNivel(), instr.vinculo().getTam(), instr.getSigInstr()));
         genPasoParams(((Dec_proc)instr.vinculo()).params_form(), instr.params_reales());
         m.emit(m.ir_a(instr.vinculo().getPrimInstr()));
-
     }
 
     public void procesa(Asignacion exp) {

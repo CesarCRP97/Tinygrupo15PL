@@ -110,10 +110,11 @@ public class Etiquetado_vis extends ProcesamientoDef {
     }
 
     public void procesa(Invoc instr) {
+        instr.setPrimInstr(etiqueta);
         etiqueta++;
         etiqPasoParams(((Dec_proc)instr.vinculo()).params_form(), instr.params_reales());
         etiqueta++;
-
+        instr.setSigInstr(etiqueta);
     }
 
     public void procesa(Asignacion exp) {
