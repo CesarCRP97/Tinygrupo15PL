@@ -18,6 +18,7 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
     }
 
     private int dir;
+    private int maxDir;
     private int nivel;
     private int desp;
     private int maxTamNivel;
@@ -34,7 +35,8 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
     public AsignacionEspacio_vis() {
         this.dir = 0;
         this.nivel = 0;
-        this.maxTamNivel = 0;//El tamaño máximo que puede tener un nivel
+        this.maxDir = 0;//El tamaño máximo que se ha alcanzado en cada nivel
+        this.maxTamNivel = 0;//El tamaño máximo que llega a tener un nivel
         this.maxNivel = 0;//El nivel máximo que se ha alcanzado
     }
 
@@ -42,6 +44,9 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
         this.dir = this.dir + inc;
         if (this.dir > this.maxTamNivel) {
             this.maxTamNivel = this.dir;
+        }
+        if (this.dir > this.maxDir) {
+            this.maxDir = this.dir;
         }
     }
 
@@ -116,12 +121,13 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
         
         dec.setNivel(this.nivel);
         this.dir = 0;
+        this.maxDir = 0;
 
         dec.params_form().procesa1(this);
         dec.params_form().procesa2(this);
         dec.bloque().procesa(this);
 
-        dec.setTam(this.dir);
+        dec.setTam(this.maxDir);
         this.nivel--;
         this.dir = dirAnterior;
     }
