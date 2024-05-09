@@ -808,8 +808,17 @@ public class MaquinaP {
     }
     public void ejecuta() {
         while(pc != codigoP.size()) {
-            codigoP.get(pc).ejecuta();
+            System.out.println(codigoP.get(pc).toString());
+            //pc++;
+            try {
+                codigoP.get(pc).ejecuta();
+            } catch (Exception e) {
+                muestraEstado();
+                System.out.println(e);
+                break;
+            }
         }
+
     }
     public void muestraCodigo() {
         System.out.println("CodigoP");
@@ -831,8 +840,9 @@ public class MaquinaP {
         }
         System.out.println("Datos");
         for(int i=0; i < datos.length; i++) {
-            System.out.println(" "+i+":"+datos[i]);
+            System.out.print(" "+i+":"+datos[i] + " ");
         }
+        System.out.println();
         System.out.println("PC:"+pc);
     }
 

@@ -79,13 +79,15 @@ public class Main {
         prog.procesa(asig);
         int maxtam = asig.getMaxTamNivel();
         int maxnivel = asig.getMaxNivel();
+        System.out.println("Maximo tamaño de nivel: " + maxtam);
+        System.out.println("Maximo nivel: " + maxnivel);
 
         System.out.println("Etiquetando codigo...");
         Etiquetado_vis etiq = new Etiquetado_vis();
         prog.procesa(etiq);
 
         System.out.println("Generando codigo...");
-        MaquinaP maq = new MaquinaP(new InputStreamReader(System.in), maxtam, 2*maxtam, 2*maxtam, maxnivel);
+        MaquinaP maq = new MaquinaP(new InputStreamReader(System.in), maxtam, maxtam, maxtam, maxnivel);
         GeneracionCod_vis gen = new GeneracionCod_vis(maq);
         prog.procesa(gen);
 
