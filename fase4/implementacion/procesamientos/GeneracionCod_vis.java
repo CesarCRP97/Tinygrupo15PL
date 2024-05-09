@@ -14,6 +14,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     private Stack<Dec> procs;
 
     public GeneracionCod_vis(MaquinaP m) {
+        this.m = m;
         this.procs = new Stack<Dec>();
     }
 
@@ -98,7 +99,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     public void procesa(New instr) {
         instr.exp().procesa(this);
         genAccesoValor(instr.exp());
-        Tipo_puntero tp = (Tipo_puntero) instr.getTipo();
+        Tipo_puntero tp = (Tipo_puntero) instr.exp().getTipo();
         m.emit(m.alloc(tp.getTipo().getTam()));
         m.emit(m.desapila_ind());
     }
@@ -106,7 +107,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     public void procesa(Delete instr) {
         instr.exp().procesa(this);
         genAccesoValor(instr.exp());
-        Tipo_puntero tp = (Tipo_puntero) instr.getTipo();
+        Tipo_puntero tp = (Tipo_puntero) instr.exp().getTipo();
         m.emit(m.dealloc(tp.getTipo().getTam()));
     }
 
@@ -300,13 +301,13 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     //METODOS AUXILIARES
 
     public void genAccesoValor(Nodo n1) {
-        if(SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(n1))) {
+        if(SintaxisAbstractaTiny.designador(n1)) {
             m.emit(m.apila_ind());
         }
     }
 
     public void genAsig(Nodo n1) {
-        if(SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(n1))) {
+        if(SintaxisAbstractaTiny.designador(n1)) {
             m.emit(m.copia(n1.getTipo().getTam()));
         } else {
             m.emit(m.desapila_ind());

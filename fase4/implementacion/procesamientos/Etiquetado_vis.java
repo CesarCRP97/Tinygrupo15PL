@@ -98,7 +98,7 @@ public class Etiquetado_vis extends ProcesamientoDef {
     public void procesa(New instr) {
         instr.exp().procesa(this);
         etiqAccesoValor(instr.exp());
-        Tipo_puntero tp = (Tipo_puntero) instr.getTipo();
+        Tipo_puntero tp = (Tipo_puntero) instr.exp().getTipo();
         etiqueta += 2;
     }
 
@@ -296,7 +296,7 @@ public class Etiquetado_vis extends ProcesamientoDef {
     //METODOS AUXILIARES
 
     public void etiqAccesoValor(Nodo n1) {
-        if(SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(n1))) {
+        if(SintaxisAbstractaTiny.designador(n1)) {
             etiqueta++;
         }
     }
