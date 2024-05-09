@@ -21,10 +21,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         prog.bloque().procesa(this);
         while (!procs.empty()) {
             Dec_proc proc = (Dec_proc) procs.pop();
-            m.emit(m.desapilad(proc.getNivel()));
-            proc.bloque().procesa(this);
-            m.emit(m.desactiva(proc.getNivel(), proc.getTam()));
-            m.emit(m.ir_ind());
+            genProc(proc);
         }
     }
 
@@ -350,11 +347,18 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         m.emit(m.apila_int(pf.getDir()));
         m.emit(m.suma());
         exp.procesa(this);
-        if(pf instanceof Param_form_normal && SintaxisAbstractaTiny.designador(SintaxisAbstractaTiny.ref(exp))) {
+        if(pf instanceof Param_form_normal && SintaxisAbstractaTiny.designador(exp)) {
             m.emit(m.copia(pf.getTipo().getTam()));
         } else {
             m.emit(m.desapila_ind());
         }
+    }
+
+    public void genProc(Dec_proc proc) {
+            m.emit(m.desapilad(proc.getNivel()));
+            proc.bloque().procesa(this);
+            m.emit(m.desactiva(proc.getNivel(), proc.getTam()));
+            m.emit(m.ir_ind());
     }
 
     public void recolectaProcs(Dec dec) {

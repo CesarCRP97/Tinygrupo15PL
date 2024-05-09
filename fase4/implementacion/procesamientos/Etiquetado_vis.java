@@ -22,9 +22,7 @@ public class Etiquetado_vis extends ProcesamientoDef {
         prog.bloque().procesa(this);
         while (!procs.empty()) {
             Dec_proc proc = (Dec_proc) procs.pop();
-            etiqueta++;
-            proc.bloque().procesa(this);
-            etiqueta += 2;
+            etiqProc(proc);
         }
     }
 
@@ -338,6 +336,14 @@ public class Etiquetado_vis extends ProcesamientoDef {
         etiqueta += 3;
         exp.procesa(this);
         etiqueta++; 
+    }
+
+    public void etiqProc(Dec_proc proc) {
+        proc.setPrimInstr(etiqueta);
+        etiqueta++;
+        proc.bloque().procesa(this);
+        etiqueta += 2;
+        proc.setSigInstr(etiqueta);
     }
 
     public void recolectaProcs(Dec dec) {
