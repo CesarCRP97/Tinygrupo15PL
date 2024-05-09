@@ -85,9 +85,11 @@ public class Main {
         prog.procesa(etiq);
 
         System.out.println("Generando codigo...");
-        MaquinaP maq = new MaquinaP(maxtam, 500, 500, maxnivel);
+        MaquinaP maq = new MaquinaP(new InputStreamReader(System.in), maxtam, 2*maxtam, 2*maxtam, maxnivel);
         GeneracionCod_vis gen = new GeneracionCod_vis(maq);
         prog.procesa(gen);
+
+        maq.ejecuta();
     }
 
 

@@ -3,9 +3,9 @@ package maquinap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
-
-
+import java.util.Scanner;
+import java.io.Reader;
+import java.io.InputStreamReader;
 
 public class MaquinaP {
     public static class EAccesoIlegitimo extends RuntimeException {} 
@@ -18,6 +18,7 @@ public class MaquinaP {
 
     private GestorMemoriaDinamica gestorMemoriaDinamica;
     private GestorPilaActivaciones gestorPilaActivaciones;
+    private Scanner input;
 
     private class Valor {
         public int valorInt() {throw new EAccesoIlegitimo();}  
@@ -96,7 +97,7 @@ public class MaquinaP {
     private IReadInt IREADINT;
     private class IReadInt implements Instruccion {
         public void ejecuta() {
-            int valor = Integer.parseInt(System.console().readLine());
+            int valor = Integer.parseInt(input.nextLine());
             pilaEvaluacion.push(new ValorInt(valor));
             pc++;
         }
@@ -106,7 +107,7 @@ public class MaquinaP {
     private IReadReal IREADREAL;
     private class IReadReal implements Instruccion {
         public void ejecuta() {
-            double valor = Double.parseDouble(System.console().readLine());
+            double valor = Double.parseDouble(input.nextLine());
             pilaEvaluacion.push(new ValorReal(valor));
             pc++;
         }
@@ -116,7 +117,7 @@ public class MaquinaP {
     private IReadString IREADSTRING;
     private class IReadString implements Instruccion {
         public void ejecuta() {
-            String valor = System.console().readLine();
+            String valor = input.nextLine();
             pilaEvaluacion.push(new ValorString(valor));
             pc++;
         }
@@ -769,7 +770,8 @@ public class MaquinaP {
     private int tamdatos;
     private int tamheap;
     private int ndisplays;
-    public MaquinaP(int tamdatos, int tampila, int tamheap, int ndisplays) {
+    public MaquinaP(Reader input, int tamdatos, int tampila, int tamheap, int ndisplays) {
+        this.input = new Scanner(input);
         this.tamdatos = tamdatos;
         this.tamheap = tamheap;
         this.ndisplays = ndisplays;
@@ -835,7 +837,7 @@ public class MaquinaP {
     }
 
     public static void main(String[] args) {
-        MaquinaP m = new MaquinaP(5,10,10,2);
+        MaquinaP m = new MaquinaP(new InputStreamReader(System.in), 5,10,10,2);
 
         /*
            int x;
