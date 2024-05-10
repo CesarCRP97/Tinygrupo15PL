@@ -272,7 +272,16 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     }
 
     public void procesa(Iden exp) {
-        genAccesoIden(exp.vinculo());
+        if(exp.vinculo().getNivel() == 0) {
+            m.emit(m.apila_int(exp.vinculo().getDir()));
+        } else {
+            m.emit(m.apilad(exp.vinculo().getNivel()));
+            m.emit(m.apila_int(exp.vinculo().getDir()));
+            m.emit(m.suma());
+            if(exp.vinculo() instanceof Param_form_ref) {
+                m.emit(m.apila_ind());
+            }
+        }
     }
 
     public void procesa(Null exp) {
@@ -308,29 +317,6 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         }
     }
 
-    public void genAccesoIden(Nodo n) {
-        if (n instanceof Dec_variable) {
-            if( n.getNivel() == 0 ) {
-                m.emit(m.apila_int(n.getDir()));
-            } else {
-                genAccesoVariable(n);
-            }
-        } else if (n instanceof Param_form_normal) {
-            genAccesoVariable(n);
-        } else if (n instanceof Param_form_ref) {
-            m.emit(m.apila_int(n.getDir()));
-        } else if (n instanceof Dec_proc) {
-            genAccesoVariable(n);
-            m.emit(m.apila_ind());
-        }
-    }
-
-    public void genAccesoVariable(Nodo n) {
-        m.emit(m.apilad(n.getNivel()));
-        m.emit(m.apila_int(n.getDir()));
-        m.emit(m.suma());
-    }
-
     public void genPasoParams(Params_form pf, Params_reales pr) {
         for(int i = 0; i < pf.numParams(); i++) {
             genPasoParams(pf.paramFormPorIndex(i), pr.paramRealPorIndex(i));
@@ -342,7 +328,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         m.emit(m.apila_int(pf.getDir()));
         m.emit(m.suma());
         exp.procesa(this);
-        if(pf instanceof Param_form_normal && !SintaxisAbstractaTiny.designador(exp)) {
+        if(pf instanceof Param_form_normal && !(SintaxisAbstractaTiny.designador(exp))) {
             m.emit(m.copia(pf.getTipo().getTam()));
         } else {
             m.emit(m.desapila_ind());

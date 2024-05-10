@@ -271,7 +271,16 @@ public class Etiquetado_vis extends ProcesamientoDef {
     }
 
     public void procesa(Iden exp) {
-        etiqAccesoIden(exp.vinculo());
+        exp.setPrimInstr(etiqueta);
+        if(exp.vinculo().getNivel() == 0) {
+            etiqueta++;
+        } else {
+            etiqueta += 3;
+            if(exp.vinculo() instanceof Param_form_ref) {
+                etiqueta++;
+            }
+        }
+        exp.setSigInstr(etiqueta);
     }
 
     public void procesa(Null exp) {
@@ -301,27 +310,6 @@ public class Etiquetado_vis extends ProcesamientoDef {
 
     public void etiqAsig(Nodo n1) {
         etiqueta++;
-    }
-
-    public void etiqAccesoIden(Nodo n) {
-        if (n instanceof Dec_variable) {
-            if( n.getNivel() == 0 ) {
-                etiqueta++;
-            } else {
-                etiqAccesoVariable(n);
-            }
-        } else if (n instanceof Param_form_normal) {
-            etiqAccesoVariable(n);
-        } else if (n instanceof Param_form_ref) {
-            etiqueta++;
-        } else if (n instanceof Dec_proc) {
-            etiqAccesoVariable(n);
-            etiqueta++;
-        }
-    }
-
-    public void etiqAccesoVariable(Nodo n) {
-        etiqueta += 3;
     }
 
     public void etiqPasoParams(Params_form pf, Params_reales pr) {
