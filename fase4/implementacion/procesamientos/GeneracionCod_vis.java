@@ -87,7 +87,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(Write instr) {
         instr.exp().procesa(this);
-        m.emit(m.apila_ind());
+        genAccesoValor(instr.exp());
         m.emit(m.write());
     }
 
@@ -119,15 +119,12 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(Asignacion exp) {
         exp.opnd0().procesa(this);
-        genAccesoValor(exp.opnd0());
         exp.opnd1().procesa(this);
-        genAccesoValor(exp.opnd1());
         genAsig(exp.opnd1());
     }
 
     public void procesa(Indexacion exp) {
         exp.opnd0().procesa(this);
-        genAccesoValor(exp.opnd0());
         exp.opnd1().procesa(this);
         genAccesoValor(exp.opnd1());
         m.emit(m.apila_int(exp.opnd0().getTipo().tipo().getTam()));
@@ -137,14 +134,12 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(Acceso exp) {
         exp.opnd().procesa(this);
-        genAccesoValor(exp.opnd());
         m.emit(m.apila_int(exp.opnd().getTipo().campoPorIden(exp.iden()).getDesp()));
         m.emit(m.suma());
     }
 
     public void procesa(Indireccion exp) {
         exp.opnd().procesa(this);
-        genAccesoValor(exp.opnd());
         m.emit(m.apila_ind());
     }
     

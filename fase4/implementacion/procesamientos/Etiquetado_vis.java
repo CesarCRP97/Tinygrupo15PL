@@ -65,6 +65,7 @@ public class Etiquetado_vis extends ProcesamientoDef {
         instr.setPrimInstr(etiqueta);
         instr.exp().procesa(this);
         etiqAccesoValor(instr.exp());
+        etiqueta++;
         instr.bloque1().procesa(this);
         etiqueta++;
         instr.bloque2().procesa(this);
@@ -88,7 +89,8 @@ public class Etiquetado_vis extends ProcesamientoDef {
 
     public void procesa(Write instr) {
         instr.exp().procesa(this);
-        etiqueta += 2;
+        etiqAccesoValor(instr.exp());
+        etiqueta++;
     }
 
     public void procesa(NL instr) {
@@ -119,15 +121,12 @@ public class Etiquetado_vis extends ProcesamientoDef {
 
     public void procesa(Asignacion exp) {
         exp.opnd0().procesa(this);
-        etiqAccesoValor(exp.opnd0());
         exp.opnd1().procesa(this);
-        etiqAccesoValor(exp.opnd1());
         etiqAsig(exp.opnd1());
     }
 
     public void procesa(Indexacion exp) {
         exp.opnd0().procesa(this);
-        etiqAccesoValor(exp.opnd0());
         exp.opnd1().procesa(this);
         etiqAccesoValor(exp.opnd1());
         etiqueta += 3;
@@ -135,13 +134,11 @@ public class Etiquetado_vis extends ProcesamientoDef {
 
     public void procesa(Acceso exp) {
         exp.opnd().procesa(this);
-        etiqAccesoValor(exp.opnd());
         etiqueta += 2;
     }
 
     public void procesa(Indireccion exp) {
         exp.opnd().procesa(this);
-        etiqAccesoValor(exp.opnd());
         etiqueta++;
     }
     

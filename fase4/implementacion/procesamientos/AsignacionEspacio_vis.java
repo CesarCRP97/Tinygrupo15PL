@@ -113,6 +113,7 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
 
     public void procesa1(Dec_proc dec) {
         int dirAnterior = this.dir;
+        int dirMaxAnterior = this.maxDir;
 
         this.nivel++;
         if (this.nivel > this.maxNivel) {
@@ -130,6 +131,7 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
         dec.setTam(this.maxDir);
         this.nivel--;
         this.dir = dirAnterior;
+        this.maxDir = dirMaxAnterior;
     }
 
     public void procesa1(Si_params_form params) {
