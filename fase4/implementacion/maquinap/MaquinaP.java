@@ -149,6 +149,8 @@ public class MaquinaP {
                 pilaEvaluacion.push(new ValorInt(opnd1.valorInt()+opnd2.valorInt()));
             } else if (opnd1 instanceof ValorReal || opnd2 instanceof ValorReal) {
                 pilaEvaluacion.push(new ValorReal(opnd1.valorReal()+opnd2.valorReal()));
+            } else {
+                throw new EAccesoIlegitimo();
             }
             pc++;
         } 
@@ -807,16 +809,11 @@ public class MaquinaP {
         gestorMemoriaDinamica = new GestorMemoriaDinamica(tamdatos+tampila,(tamdatos+tampila+tamheap)-1);
     }
     public void ejecuta() {
+        muestraCodigo();
         while(pc != codigoP.size()) {
-            System.out.println(codigoP.get(pc).toString());
-            //pc++;
-            try {
-                codigoP.get(pc).ejecuta();
-            } catch (Exception e) {
-                muestraEstado();
-                System.out.println(e);
-                break;
-            }
+            System.out.println(pc + ": " + codigoP.get(pc).toString());
+            codigoP.get(pc).ejecuta();
+            muestraPila();
         }
 
     }
@@ -844,6 +841,13 @@ public class MaquinaP {
         }
         System.out.println();
         System.out.println("PC:"+pc);
+    }
+
+    public void muestraPila() {
+        System.out.println("Pila de evaluacion");
+        for(int i=0; i < pilaEvaluacion.size(); i++) {
+            System.out.println(" "+i+":"+pilaEvaluacion.get(i));
+        }
     }
 
     public static void main(String[] args) {
