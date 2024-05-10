@@ -95,15 +95,15 @@
         @ arbol = null;
         @ i=0;
         while i < nombres.cont { 
-            call inserta_nombre(arbol);
+            call iserta_nombre(arbol);
             @ i = i + 1
         }
     };  ## del procedimiento construye_arbol 
       
-        ## Escribe los nombres almacenados en el árbol de búsqueda, recorriendo
-        ## dicho árbol en inorden.
-        ## Por tanto, los nombres se listan ordenados alfabéticamente,
-        ## y sin duplicados
+    ## Escribe los nombres almacenados en el árbol de búsqueda, recorriendo
+    ## dicho árbol en inorden.
+    ## Por tanto, los nombres se listan ordenados alfabéticamente,
+    ## y sin duplicados
     proc escribe_nombres(tArbol arbol) { 
         if arbol != null {
     	    call escribe_nombres(arbol^.izq);
@@ -111,9 +111,9 @@
     	    call escribe_nombres(arbol^.der)
         }
     } ## del procedimiento escribe_nombres
-    &&         
-         ## Programa principal
+    &&        
     
+    ## Programa principal
     call lee_nombres(nombres);
     call construye_arbol();
     write "Listado de nombres ordenado"; nl;
