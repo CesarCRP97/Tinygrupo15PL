@@ -95,7 +95,7 @@
         @ arbol = null;
         @ i=0;
         while i < nombres.cont { 
-            call iserta_nombre(arbol);
+            call inserta_nombre(arbol);
             @ i = i + 1
         }
     };  ## del procedimiento construye_arbol 
