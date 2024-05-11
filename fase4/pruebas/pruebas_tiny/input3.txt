@@ -76,7 +76,7 @@
              
        
                     if act == null { ## se ha alcanzado un punto de inserción
-                              ## hay que insertar un nuevo nodo 
+                        ## hay que insertar un nuevo nodo 
                         if padre^.nombre < nombres.nombres[i] { ## insertar como hijo izquierdo
                             new padre^.der;
                             @ padre^.der^.nombre = nombres.nombres[i];
