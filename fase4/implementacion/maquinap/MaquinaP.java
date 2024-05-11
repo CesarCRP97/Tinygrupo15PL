@@ -140,6 +140,25 @@ public class MaquinaP {
         public String toString() {return "write";};
     }
 
+    private IConvierteAInt ICONVIERTEAINT;
+    private class IConvierteAInt implements Instruccion {
+        public void ejecuta() {
+            ValorReal v = (ValorReal) pilaEvaluacion.pop();
+            pilaEvaluacion.push(new ValorInt((int)v.valorReal()));
+            pc++;
+        }
+        public String toString() {return "convierte-a-int";};
+    }
+
+    private IDesecha IDESECHA;
+    private class IDesecha implements Instruccion {
+        public void ejecuta() {
+            pilaEvaluacion.pop();
+            pc++;
+        }
+        public String toString() {return "desecha";};
+    }
+
     private ISuma ISUMA;
     private class ISuma implements Instruccion {
         public void ejecuta() {
@@ -731,6 +750,8 @@ public class MaquinaP {
     public Instruccion read_real() {return IREADREAL;}
     public Instruccion read_string() {return IREADSTRING;}
     public Instruccion write() {return IWRITE;}
+    public Instruccion convierte_a_int() {return ICONVIERTEAINT;}
+    public Instruccion desecha() {return IDESECHA;}
     public Instruccion suma() {return ISUMA;}
     public Instruccion resta() {return IRESTA;}
     public Instruccion mul() {return IMUL;}
@@ -785,6 +806,8 @@ public class MaquinaP {
         IREADREAL = new IReadReal();
         IREADSTRING = new IReadString();
         IWRITE = new IWrite();
+        ICONVIERTEAINT = new IConvierteAInt();
+        IDESECHA = new IDesecha();
         ISUMA = new ISuma();
         IRESTA = new IResta();
         IMUL = new IMul();
