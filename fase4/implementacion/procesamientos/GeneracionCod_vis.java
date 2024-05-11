@@ -334,7 +334,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
         m.emit(m.apila_int(pf.getDir()));
         m.emit(m.suma());
         exp.procesa(this);
-        if(pf instanceof Param_form_normal && !(SintaxisAbstractaTiny.designador(exp))) {
+        if(pf instanceof Param_form_normal && (SintaxisAbstractaTiny.designador(exp))) {
             m.emit(m.copia(pf.getTipo().getTam()));
         } else {
             m.emit(m.desapila_ind());
