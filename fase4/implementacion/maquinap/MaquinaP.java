@@ -610,8 +610,11 @@ public class MaquinaP {
         public void ejecuta() {
             int dir = pilaEvaluacion.pop().valorInt();
             if (dir >= datos.length) throw new EAccesoFueraDeRango();
-            if (datos[dir] == null)  throw new EAccesoAMemoriaNoInicializada(pc,dir);
-            pilaEvaluacion.push(datos[dir]);
+            if (datos[dir] == null) {
+                pilaEvaluacion.push(new ValorNull());
+            } else {
+                pilaEvaluacion.push(datos[dir]);
+            }
             pc++;
         } 
         public String toString() {return "apila-ind";};
