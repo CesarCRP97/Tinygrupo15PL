@@ -45,6 +45,7 @@
          ## y en del contador 'i' declarado en el subprograma contenedor 'construye_arbol'
         proc inserta_nombre(tArbol & arbol) { 
             if arbol == null { 
+                write "Arbol nulo, creando"; nl;
     	        new arbol;
                 @ arbol^.nombre = nombres.nombres[i];
                 @ arbol^.izq = arbol^.der = null
@@ -54,6 +55,7 @@
                                 ## la inserción. 
                 bool fin       ## para controlar el final del recorrido de la rama
                 &&
+                write "Arbol no nulo, insertando"; nl;
                 @ fin = false;
                 @ padre = null;
                 @ act = arbol;		 
@@ -77,11 +79,11 @@
        
                     if act == null { ## se ha alcanzado un punto de inserción
                         ## hay que insertar un nuevo nodo 
-                        if padre^.nombre < nombres.nombres[i] { ## insertar como hijo izquierdo
+                        if padre^.nombre < nombres.nombres[i] {
                             new padre^.der;
                             @ padre^.der^.nombre = nombres.nombres[i];
                             @ padre^.der^.izq = padre^.der^.der = null
-                        } else {                                 ## insertar como hijo derecho 
+                        } else {
                             new padre^.izq;
                             @ padre^.izq^.nombre = nombres.nombres[i];
                             @ padre^.izq^.izq= padre^.izq^.der = null
@@ -94,8 +96,11 @@
             ## cuerpo del procedimiento construye_arbol  
         @ arbol = null;
         @ i=0;
+        write "nombres.cont: "; write nombres.cont; nl;
         while i < nombres.cont { 
+            write "Intentando insertar nombre "; write nombres.nombres[i]; nl;
             call inserta_nombre(arbol);
+            write "Nombre insertado"; nl;
             @ i = i + 1
         }
     };  ## del procedimiento construye_arbol 
