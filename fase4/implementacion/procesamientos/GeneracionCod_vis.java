@@ -46,7 +46,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(Eval instr) {
         instr.exp().procesa(this);
-        genAccesoValor(instr.exp());
+        m.emit(m.desecha());
     }
 
     public void procesa(If instr) {
@@ -98,7 +98,6 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(New instr) {
         instr.exp().procesa(this);
-        genAccesoValor(instr.exp());
         Tipo_puntero tp = (Tipo_puntero) instr.exp().getTipo();
         m.emit(m.alloc(tp.getTipo().getTam()));
         m.emit(m.desapila_ind());
@@ -120,7 +119,14 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     public void procesa(Asignacion exp) {
         exp.opnd0().procesa(this);
         exp.opnd1().procesa(this);
-        genAsig(exp.opnd1());
+        if(exp.opnd0().getTipo() instanceof Tipo_int && exp.opnd1().getTipo() instanceof Tipo_real) {
+            genAccesoValor(exp.opnd1());
+            m.emit(m.convierte_a_int());
+            m.emit(m.desapila_ind());
+        } else {
+            genAsig(exp.opnd1());
+        }
+        exp.opnd0().procesa(this);
     }
 
     public void procesa(Indexacion exp) {

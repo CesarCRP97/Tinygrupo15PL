@@ -49,7 +49,7 @@ public class Etiquetado_vis extends ProcesamientoDef {
 
     public void procesa(Eval instr) {
         instr.exp().procesa(this);
-        etiqAccesoValor(instr.exp());
+        etiqueta++;
     }
 
     public void procesa(If instr) {
@@ -99,7 +99,6 @@ public class Etiquetado_vis extends ProcesamientoDef {
 
     public void procesa(New instr) {
         instr.exp().procesa(this);
-        etiqAccesoValor(instr.exp());
         Tipo_puntero tp = (Tipo_puntero) instr.exp().getTipo();
         etiqueta += 2;
     }
@@ -122,7 +121,13 @@ public class Etiquetado_vis extends ProcesamientoDef {
     public void procesa(Asignacion exp) {
         exp.opnd0().procesa(this);
         exp.opnd1().procesa(this);
-        etiqAsig(exp.opnd1());
+        if(exp.opnd0().getTipo() instanceof Tipo_int && exp.opnd1().getTipo() instanceof Tipo_real) {
+            etiqAccesoValor(exp.opnd1());
+            etiqueta += 2;
+        } else {
+            etiqAsig(exp.opnd1());
+        }
+        exp.opnd0().procesa(this);
     }
 
     public void procesa(Indexacion exp) {
