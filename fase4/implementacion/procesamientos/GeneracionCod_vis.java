@@ -20,6 +20,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 
     public void procesa(Prog prog) {
         prog.bloque().procesa(this);
+        m.emit(m.fin());
         while (!procs.empty()) {
             Dec_proc proc = (Dec_proc) procs.pop();
             genProc(proc);

@@ -94,6 +94,14 @@ public class MaquinaP {
         void ejecuta();  
     }
 
+    private IFin IFIN;
+    private class IFin implements Instruccion {
+        public void ejecuta() {
+            pc = codigoP.size();
+        }
+        public String toString() {return "fin";};
+    }
+
     private IReadInt IREADINT;
     private class IReadInt implements Instruccion {
         public void ejecuta() {
@@ -746,6 +754,7 @@ public class MaquinaP {
         }
     }
 
+    public Instruccion fin() {return IFIN;}
     public Instruccion read_int() {return IREADINT;}
     public Instruccion read_real() {return IREADREAL;}
     public Instruccion read_string() {return IREADSTRING;}
@@ -802,6 +811,7 @@ public class MaquinaP {
         pilaEvaluacion = new Stack<>();
         datos = new Valor[tamdatos+tampila+tamheap];
         this.pc = 0;
+        IFIN = new IFin();
         IREADINT = new IReadInt();
         IREADREAL = new IReadReal();
         IREADSTRING = new IReadString();

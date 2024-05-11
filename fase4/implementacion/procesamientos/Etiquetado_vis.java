@@ -20,6 +20,7 @@ public class Etiquetado_vis extends ProcesamientoDef {
 
     public void procesa(Prog prog) {
         prog.bloque().procesa(this);
+        etiqueta++;
         while (!procs.empty()) {
             Dec_proc proc = (Dec_proc) procs.pop();
             etiqProc(proc);
