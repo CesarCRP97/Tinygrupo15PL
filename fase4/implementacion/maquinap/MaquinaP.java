@@ -89,7 +89,7 @@ public class MaquinaP {
     private IReadInt IREADINT;
     private class IReadInt implements Instruccion {
         public void ejecuta() {
-            int valor = Integer.parseInt(input.nextLine());
+            int valor = input.nextInt();
             pilaEvaluacion.push(new ValorInt(valor));
             pc++;
         }
@@ -99,7 +99,7 @@ public class MaquinaP {
     private IReadReal IREADREAL;
     private class IReadReal implements Instruccion {
         public void ejecuta() {
-            double valor = Double.parseDouble(input.nextLine());
+            double valor = input.nextDouble();
             pilaEvaluacion.push(new ValorReal(valor));
             pc++;
         }
@@ -125,7 +125,8 @@ public class MaquinaP {
             } else if(v instanceof ValorReal) {
                 System.out.print(v.valorReal());
             } else if(v instanceof ValorString) {
-                System.out.print(v.valorString());
+                String str = v.valorString().replaceAll("^\"|\"$", "");
+                System.out.print(str);
             }
             pc++;
         }
@@ -812,7 +813,6 @@ public class MaquinaP {
         IDUP = new IDup();
         ISTOP = new IStop();
         gestorPilaActivaciones = new GestorPilaActivaciones(tamdatos,(tamdatos+tampila)-1,ndisplays); 
-        System.out.println("new GestorMemoriaDinamica("+(tamdatos+tampila)+","+(tamdatos+tampila+tamheap)+")");
         gestorMemoriaDinamica = new GestorMemoriaDinamica(tamdatos+tampila,(tamdatos+tampila+tamheap)-1);
     }
     public void ejecuta() {
@@ -822,8 +822,8 @@ public class MaquinaP {
             try {
                 codigoP.get(pc).ejecuta();
             } catch (Exception e) {
-                muestraEstado();
-                System.out.println("Error en la instruccion " + pc + ": " + codigoP.get(pc).toString());
+                //muestraEstado();
+                //System.out.println("Error en la instruccion " + pc + ": " + codigoP.get(pc).toString());
                 throw e;
             }
             //muestraPila();
