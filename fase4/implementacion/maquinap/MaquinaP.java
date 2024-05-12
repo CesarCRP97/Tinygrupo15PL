@@ -386,7 +386,7 @@ public class MaquinaP {
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
             } else if (opnd1 instanceof ValorString && opnd2 instanceof ValorString) {
-                if (opnd1.valorString() == opnd2.valorString()) 
+                if (opnd1.valorString().compareTo(opnd2.valorString()) == 0)
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
@@ -420,7 +420,7 @@ public class MaquinaP {
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
             } else if (opnd1 instanceof ValorString && opnd2 instanceof ValorString) {
-                if (opnd1.valorString() != opnd2.valorString()) 
+                if (opnd1.valorString().compareTo(opnd2.valorString()) != 0)
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
@@ -828,6 +828,7 @@ public class MaquinaP {
             }
             //muestraPila();
         }
+        //muestraEstado();
 
     }
     public void muestraCodigo() {
@@ -875,7 +876,6 @@ public class MaquinaP {
            &&
            call store(5)
            */
-
 
         m.emit(m.activa(1,1,8));
         m.emit(m.dup());
