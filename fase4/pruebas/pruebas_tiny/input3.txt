@@ -14,7 +14,7 @@
     tArbol arbol;            ## Aquí se construirá un árbol de búsqueda que contendrá
                              ## los nombres leídos, sin duplicados  
     
-       ## Lee los nombres a ordenar (max. 50 nombres)
+    ## Lee los nombres a ordenar (max. 50 nombres)
     proc lee_nombres(tListaNombres & nombres) { 
         int i
         &&
@@ -34,18 +34,17 @@
      };  ## fin del procedimiento lee_nombres
     
       
-      ## Construye un árbol de búsqueda sin duplicados con los nombres leídos
-      ## Hace un uso global de las variables 'nombres' y 'arbol' declaradas en
-      ## el programa principal
+    ## Construye un árbol de búsqueda sin duplicados con los nombres leídos
+    ## Hace un uso global de las variables 'nombres' y 'arbol' declaradas en
+    ## el programa principal
     proc construye_arbol() {
         int i; ## para iterar sobre la lista de nombres
     
-         ## Inserta el nombre actual en el árbol de búsqueda que recibe como parámetro.
-         ## Hace un uso global de la variable 'nombres' declarado en el programa principal,
-         ## y en del contador 'i' declarado en el subprograma contenedor 'construye_arbol'
+        ## Inserta el nombre actual en el árbol de búsqueda que recibe como parámetro.
+        ## Hace un uso global de la variable 'nombres' declarado en el programa principal,
+        ## y en del contador 'i' declarado en el subprograma contenedor 'construye_arbol'
         proc inserta_nombre(tArbol & arbol) { 
             if arbol == null { 
-                write "Arbol nulo, creando"; nl;
     	        new arbol;
                 @ arbol^.nombre = nombres.nombres[i];
                 @ arbol^.izq = arbol^.der = null
@@ -55,7 +54,6 @@
                                 ## la inserción. 
                 bool fin       ## para controlar el final del recorrido de la rama
                 &&
-                write "Arbol no nulo, insertando"; nl;
                 @ fin = false;
                 @ padre = null;
                 @ act = arbol;		 
@@ -93,10 +91,10 @@
            }
         } ## del procedimiento anidado inserta_nombre 
         &&  
-            ## cuerpo del procedimiento construye_arbol  
+
+        ## cuerpo del procedimiento construye_arbol
         @ arbol = null;
         @ i=0;
-        write "nombres.cont: "; write nombres.cont; nl;
         while i < nombres.cont { 
             call inserta_nombre(arbol);
             @ i = i + 1
