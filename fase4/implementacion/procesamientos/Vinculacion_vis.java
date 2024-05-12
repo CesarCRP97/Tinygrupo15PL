@@ -17,14 +17,16 @@ public class Vinculacion_vis extends ProcesamientoDef {
 
     private void errorDuplicado(String iden, int fila, int col) {
         //throw new ErrorVinculacion("Identificador duplicado: " + iden + " línea " + fila + " fila " + col);
-        System.out.println("Identificador duplicado: " + iden + " línea " + fila + " fila " + col);
+        //System.out.println("Identificador duplicado: " + iden + " línea " + fila + " fila " + col);
+        System.out.println("Errores_vinculacion fila:" + fila + " columna:" + col);
         error = true;
         
     }
 
     private void errorNoDeclarado(String iden, int fila, int col) {
         //throw new ErrorVinculacion("Identificador no declarado: " + iden + " línea " + fila + " fila " + col);
-        System.out.println("Identificador no declarado: " + iden + " línea " + fila + " fila " + col);
+        //System.out.println("Identificador no declarado: " + iden + " línea " + fila + " fila " + col);
+        System.out.println("Errores_vinculacion fila:" + fila + " columna:" + col);
         error = true;
     }
 
@@ -289,8 +291,7 @@ public class Vinculacion_vis extends ProcesamientoDef {
         dec.tipo().procesa2(this);
     }
     public void procesa2(Dec_proc dec) {}
-
-        public void procesa2(Tipo_int tipo) {}
+    public void procesa2(Tipo_int tipo) {}
     public void procesa2(Tipo_bool tipo) {}
     public void procesa2(Tipo_real tipo) {}
     public void procesa2(Tipo_array tipo) {}
@@ -301,7 +302,6 @@ public class Vinculacion_vis extends ProcesamientoDef {
                 errorNoDeclarado(tipo.tipo().iden(), tipo.tipo().leeFila(), tipo.tipo().leeCol());
             } else {
                 ((Tipo_iden)tipo.tipo()).ponVinculo(infoVinculo(ts, tipo.tipo().iden()));
-                //System.out.println("Vinculado: " + tipo.toString());
             }
         } else {
             tipo.tipo().procesa2(this);
