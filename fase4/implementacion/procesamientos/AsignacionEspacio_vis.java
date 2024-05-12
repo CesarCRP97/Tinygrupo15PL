@@ -175,11 +175,11 @@ public class AsignacionEspacio_vis extends ProcesamientoDef {
     public void procesa2(Tipo_real tipo) {
     }
 
-    public void procesa2(Tipo_bool tipo) {
+    public void procesa1(Tipo_bool tipo) {
         tipo.setTam(1);
     }
 
-    public void procesa1(Tipo_bool tipo) {
+    public void procesa2(Tipo_bool tipo) {
     }
 
     public void procesa1(Tipo_string tipo) {
