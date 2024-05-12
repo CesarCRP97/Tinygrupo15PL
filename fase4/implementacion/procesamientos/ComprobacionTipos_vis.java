@@ -16,24 +16,44 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     public Tipo_real tipoREAL;
     public Tipo_string tipoSTRING;
 
-    private boolean errores;
+    private ArrayList<String> errores_pretipado;
+    private ArrayList<String> errores_tipado;
 
-    public boolean hayErrores() {
-        return errores;
+
+    public boolean hayErroresPretipado() {
+        return errores_pretipado.size() > 0;
+    }
+
+    public boolean hayErroresTipado() {
+        return errores_tipado.size() > 0;
+    }
+
+    public ArrayList<String> getErroresPretipado() {
+        return errores_pretipado;
+    }
+
+    public ArrayList<String> getErroresTipado() {
+        return errores_tipado;
     }
 
     public void avisoError(Nodo n) {
-        System.out.println("Error de tipos en la línea " + n.leeFila() + " y columna " + n.leeCol() + " en nodo " + n.toString());
-        errores = true;
+        //System.out.println("Error de tipos en la línea " + n.leeFila() + " y columna " + n.leeCol() + " en nodo " + n.toString());
+        errores_tipado.add("Errores_tipado fila:" + n.leeFila() + " col:" + n.leeCol());
     }
 
     public void avisoError(Nodo n, String mensaje) {
-        System.out.println("Error de tipos en la línea " + n.leeFila() + " y columna " + n.leeCol() + " en nodo " + n.toString() + ": " + mensaje);
-        errores = true;
+        //System.out.println("Error de tipos en la línea " + n.leeFila() + " y columna " + n.leeCol() + " en nodo " + n.toString() + ": " + mensaje);
+        errores_tipado.add("Errores_tipado fila:" + n.leeFila() + " col:" + n.leeCol() + " " + mensaje);
+    }
+
+    public void avisoErrorPreTipado(Nodo n) {
+        //System.out.println("Errores_pretipado fila:" + n.leeFila() + " col:" + n.leeCol());
+        errores_pretipado.add("Errores_pretipado fila:" + n.leeFila() + " col:" + n.leeCol());
     }
 
     public ComprobacionTipos_vis() {
-        errores = false;
+        errores_pretipado = new ArrayList<String>();
+        errores_tipado = new ArrayList<String>();
         tipoERROR = new Tipo_ERROR();
         tipoOK = new Tipo_OK();
         tipoNULL = new Tipo_null();
@@ -121,15 +141,15 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         tipo.tipo().procesa(this);
         try {
             int dim = Integer.parseInt(tipo.num());
-            if (dim <= 0) {
-                avisoError(tipo, "Tamaño de array menor o igual a 0");
+            if (dim < 0) {
+                avisoErrorPreTipado(tipo);
                 tipo.putTipo(getTipoERROR());
             } else {
                 tipo.putTipo(tipo.tipo().getTipo());
                 tipo.ponDim(dim);
             }
         } catch (NumberFormatException e) {
-            avisoError(tipo, "Tamaño de array no es un entero");
+            avisoErrorPreTipado(tipo);
             tipo.putTipo(getTipoERROR());
         }
         tipo.putTipo(tipo.tipo().getTipo());
@@ -140,11 +160,10 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
     public void procesa(Tipo_struct tipo) {
         tipo.campos().procesa(this);
-        if(!(tipo.camposDuplicados())) {
+        if(!(chequeoDuplicados(tipo.campos()))) {
             tipo.ponNumCampos();
             tipo.putTipo(getTipoOK());
         } else {
-            avisoError(tipo, "Campos duplicados en structura");
             tipo.putTipo(getTipoERROR());
         }
     }
@@ -169,7 +188,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         if (tipo.vinculo() instanceof Dec_tipo) {
             tipo.putTipo(getTipoOK());
         } else {
-            avisoError(tipo, "Tipo no definido");
+            avisoErrorPreTipado(tipo);
             tipo.putTipo(getTipoERROR());
         }
     }
@@ -692,4 +711,34 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         }
         return true;
     }
+
+    public boolean chequeoDuplicados(Campos campos) {
+        ArrayList<String> nombres = new ArrayList<String>();
+        return chequeoDuplicados(campos.lcampos(), nombres);
+    }
+
+    public boolean chequeoDuplicados(LCampos campos, ArrayList<String> nombres) {
+        if (campos instanceof Un_campo) {
+            Campo campo = ((Un_campo) campos).campo();
+            if (nombres.contains(campo.iden())) {
+                avisoErrorPreTipado(campo);
+                return true;
+            } else {
+                nombres.add(campo.iden());
+                return false;
+            }
+        } else {
+            Muchos_campos muchos = (Muchos_campos) campos;
+            Campo campo = muchos.campo();
+            boolean temp = chequeoDuplicados(muchos.lcampos(), nombres);
+            if (nombres.contains(campo.iden())) {
+                avisoErrorPreTipado(campo);
+                return true;
+            } else {
+                nombres.add(campo.iden());
+                return temp;
+            }
+        }
+    }
+
 }

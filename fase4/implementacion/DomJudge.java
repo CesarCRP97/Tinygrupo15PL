@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.io.IOException;
 import maquinap.MaquinaP;
+import java.util.ArrayList;
 
 public class DomJudge {
 
@@ -59,7 +60,20 @@ public class DomJudge {
 
         ComprobacionTipos_vis comp = new ComprobacionTipos_vis();
         prog.procesa(comp);
-        if(comp.hayErrores()) {
+
+        if(comp.hayErroresPretipado()) {
+            ArrayList<String> errores = comp.getErroresPretipado();
+            for(String error : errores) {
+                System.out.println(error);
+            }
+            return;
+        }
+
+        if(comp.hayErroresTipado()) {
+            ArrayList<String> errores = comp.getErroresTipado();
+            for(String error : errores) {
+                System.out.println(error);
+            }
             return;
         }
 
