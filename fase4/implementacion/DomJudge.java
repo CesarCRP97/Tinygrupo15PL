@@ -24,7 +24,7 @@ public class DomJudge {
         Prog prog = null;
         if(tipo == 'a') {
             AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
-            c_ast_ascendente.ConstructorASTTinyDJ asint_asc = new c_ast_ascendente.ConstructorASTTinyDJ(alex);
+            c_ast_ascendente.ConstructorASTTiny asint_asc = new c_ast_ascendente.ConstructorASTTiny(alex);
             try {
                 prog = (Prog)asint_asc.parse().value;
             } catch (Exception e) {
@@ -35,7 +35,7 @@ public class DomJudge {
                 System.exit(0);
             }
         } else if (tipo == 'd') {
-            c_ast_descendente.ConstructorASTsTinyDJ asint_desc = new c_ast_descendente.ConstructorASTsTinyDJ(System.in);
+            c_ast_descendente.ConstructorASTsTiny asint_desc = new c_ast_descendente.ConstructorASTsTiny(input);
             asint_desc.disable_tracing();
             try {
                 prog = asint_desc.analiza();
