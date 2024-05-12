@@ -91,6 +91,7 @@ iden = ({letra}|_){caracter}*
 litCadena = \".*\"
 espacio = [ \b\r\t\n]
 comentario = ##([^\n])*
+eof = \$
 
 %%
 {espacio} {}
@@ -146,4 +147,5 @@ comentario = ##([^\n])*
 {litCadena} {return ops.unidadLitCadena();}
 {litEntero} {return ops.unidadLitEntero();}
 {litReal} {return ops.unidadLitReal();}
+{eof} {return ops.unidadEof();}
 [^]                       {errores.errorLexico(fila(), columna(), lexema());}  

@@ -79,9 +79,14 @@ PARSER_END(ConstructorASTsTiny)
 
     Prog analiza(): 
     {Prog prog;} 
-    { prog = programa() <EOF>
+    { prog = programa() fin()
         {return prog;}
     }
+
+    void fin():
+    {}
+    { <EOF> | "$$" }
+
     Prog programa(): 
     {Bloque bloque;} 
     { bloque = bloque() 
