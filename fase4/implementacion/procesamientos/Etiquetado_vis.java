@@ -180,6 +180,14 @@ public class Etiquetado_vis extends ProcesamientoDef {
 		etiqueta++;
     }
 
+    public void procesa(Mod exp) {
+        exp.opnd0().procesa(this);
+        etiqAccesoValor(exp.opnd0());
+        exp.opnd1().procesa(this);
+        etiqAccesoValor(exp.opnd1());
+        etiqueta++;
+    }
+
     public void procesa(And exp) {
         exp.opnd0().procesa(this);
         etiqAccesoValor(exp.opnd0());

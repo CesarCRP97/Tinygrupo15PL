@@ -182,6 +182,14 @@ public class GeneracionCod_vis extends ProcesamientoDef {
 		m.emit(m.div());
     }
 
+    public void procesa(Mod exp) {
+        exp.opnd0().procesa(this);
+        genAccesoValor(exp.opnd0());
+        exp.opnd1().procesa(this);
+        genAccesoValor(exp.opnd1());
+        m.emit(m.mod());
+    }
+
     public void procesa(And exp) {
         exp.opnd0().procesa(this);
         genAccesoValor(exp.opnd0());
