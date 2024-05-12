@@ -107,7 +107,7 @@ public class Etiquetado_vis extends ProcesamientoDef {
     public void procesa(Delete instr) {
         instr.exp().procesa(this);
         etiqAccesoValor(instr.exp());
-        Tipo_puntero tp = (Tipo_puntero) instr.getTipo();
+        Tipo_puntero tp = (Tipo_puntero) instr.exp().getTipo();
         etiqueta++;
     }
 

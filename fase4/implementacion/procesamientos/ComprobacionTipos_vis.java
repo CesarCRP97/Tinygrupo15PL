@@ -249,7 +249,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         instr.exp().procesa(this);
         if(instr.exp().getTipo() instanceof Tipo_ERROR) {
             instr.putTipo(getTipoERROR());
-        } else if (instr.exp().getTipo() instanceof Tipo_int || instr.exp().getTipo() instanceof Tipo_real || instr.exp().getTipo() instanceof Tipo_string) {
+        } else if (instr.exp().getTipo() instanceof Tipo_int || instr.exp().getTipo() instanceof Tipo_real || instr.exp().getTipo() instanceof Tipo_string || instr.exp().getTipo() instanceof Tipo_bool) {
             instr.putTipo(getTipoOK());
         } else {
             instr.putTipo(getTipoERROR());
