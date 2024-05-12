@@ -7,3 +7,4 @@ zip: memoriapdf
 clean:
 	rm -f PLG15fase4.zip memoria.pdf *~
 	make -C implementacion clean
+	rm -f pruebas/pruebas_tiny/*~
