@@ -129,6 +129,8 @@ public class MaquinaP {
             } else if(v instanceof ValorString) {
                 String str = v.valorString().replaceAll("^\"|\"$", "");
                 System.out.print(str);
+            } else if(v instanceof ValorBool) {
+                System.out.print(v.valorBool());
             }
             pc++;
         }
