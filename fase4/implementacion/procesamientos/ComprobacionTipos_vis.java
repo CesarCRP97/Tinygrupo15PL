@@ -43,7 +43,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
 
     public void avisoError(Nodo n, String mensaje) {
         //System.out.println("Error de tipos en la línea " + n.leeFila() + " y columna " + n.leeCol() + " en nodo " + n.toString() + ": " + mensaje);
-        errores_tipado.add("Errores_tipado fila:" + n.leeFila() + " col:" + n.leeCol() + " " + mensaje);
+        errores_tipado.add("Errores_tipado fila:" + n.leeFila() + " col:" + n.leeCol());
     }
 
     public void avisoErrorPreTipado(Nodo n) {
@@ -224,7 +224,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (instr.exp().getTipo() instanceof Tipo_bool) {
             instr.putTipo(instr.bloque().getTipo());
         } else {
-            avisoError(instr, "Expresion no booleana en condicion de if");
+            avisoError(instr.exp(), "Expresion no booleana en condicion de if");
             instr.putTipo(getTipoERROR());
         }
     }
@@ -238,7 +238,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo(ambosOK(instr.bloque1().getTipo(), instr.bloque2().getTipo()));
         } else {
             instr.putTipo(getTipoERROR());
-            avisoError(instr, "Expresion no booleana en condicion de if-else");
+            avisoError(instr.exp(), "Expresion no booleana en condicion de if-else");
         }
     }
     public void procesa(While instr) {
@@ -250,7 +250,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo(instr.bloque().getTipo());
         } else {
             instr.putTipo(getTipoERROR());
-            avisoError(instr, "Expresion no booleana en condicion de while");
+            avisoError(instr.exp(), "Expresion no booleana en condicion de while");
         }
     }
     public void procesa(Read instr) {
@@ -261,7 +261,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo(getTipoOK());
         } else {
             instr.putTipo(getTipoERROR());
-            avisoError(instr, "Expresion no designador o no entero, real o string");
+            avisoError(instr.exp(), "Expresion no designador o no entero, real o string");
         }
     }
     public void procesa(Write instr) {
@@ -272,7 +272,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo(getTipoOK());
         } else {
             instr.putTipo(getTipoERROR());
-            avisoError(instr, "Expresion no entero, real o string, es de tipo: " + instr.exp().getTipo());
+            avisoError(instr.exp(), "Expresion no entero, real o string, es de tipo: " + instr.exp().getTipo());
         }
     }
     public void procesa(NL instr) {
@@ -285,7 +285,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo(getTipoOK());
         } else {
             instr.putTipo(getTipoERROR());
-            avisoError(instr, "Expresion no puntero");
+            avisoError(instr.exp(), "Expresion no puntero");
         }
     }
     public void procesa(Delete instr) {
@@ -296,7 +296,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
             instr.putTipo(getTipoOK());
         } else {
             instr.putTipo(getTipoERROR());
-            avisoError(instr, "Expresion no puntero");
+            avisoError(instr.exp(), "Expresion no puntero");
         }
     }
     public void procesa(Instr_compuesta instr) {
@@ -314,7 +314,6 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
                     instr.putTipo(getTipoOK());
                 } else {
                     instr.putTipo(getTipoERROR());
-                    avisoError(instr, "Parametros no compatibles");
                 }
             } else {
                 instr.putTipo(getTipoERROR());
@@ -503,7 +502,12 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         exp.putTipo(getTipoString());
     }
     public void procesa(Iden exp) {
-        exp.putTipo(SintaxisAbstractaTiny.ref(exp.vinculo()));
+        if (exp.vinculo() instanceof Param_form || exp.vinculo() instanceof Tipo_iden || exp.vinculo() instanceof Dec_variable || exp.vinculo() instanceof Campo || exp.vinculo() instanceof Tipo) {
+            exp.putTipo(SintaxisAbstractaTiny.ref(exp.vinculo()));
+        } else {
+            avisoError(exp);
+            exp.putTipo(getTipoERROR());
+        }
     }
     public void procesa(Null exp) {
         exp.putTipo(getTipoNull());
@@ -572,6 +576,8 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
         } else if (tipo1 instanceof Tipo_int && tipo2 instanceof Tipo_int) {
             return true;
         } else if (tipo1 instanceof Tipo_real && tipo2 instanceof Tipo_real) {
+            return true;
+        } else if (tipo1 instanceof Tipo_real && tipo2 instanceof Tipo_int) {
             return true;
         } else if (tipo1 instanceof Tipo_bool && tipo2 instanceof Tipo_bool) {
             return true;
@@ -704,8 +710,20 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
 
     public boolean compParams(Params_reales params_reales, Params_form params_form) {
         for(int i = 0; i < params_form.numParams(); i++) {
-            if (!compatibles(params_form.paramFormPorIndex(i).getTipo(), params_reales.paramRealPorIndex(i).getTipo())) {
-                System.out.println("Tipos no compatibles: " + params_reales.paramRealPorIndex(i).getTipo() + " y " + params_form.paramFormPorIndex(i).getTipo());
+            Param_form param_form = params_form.paramFormPorIndex(i);
+            Exp param_real = params_reales.paramRealPorIndex(i);
+
+            if(param_form instanceof Param_form_ref && param_form.getTipo() instanceof Tipo_real) {
+                if(SintaxisAbstractaTiny.designador(param_real) && param_real.getTipo() instanceof Tipo_real) {
+                    return true;
+                } else {
+                    avisoError(param_real, "Parametros no compatibles en posicion " + i);
+                    return false;
+                }
+            } else if (compatibles(param_form.getTipo(), param_real.getTipo())) {
+                return true;
+            } else {
+                avisoError(param_real, "Parametros no compatibles en posicion " + i);
                 return false;
             }
         }
