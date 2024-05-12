@@ -98,9 +98,7 @@
         @ i=0;
         write "nombres.cont: "; write nombres.cont; nl;
         while i < nombres.cont { 
-            write "Intentando insertar nombre "; write nombres.nombres[i]; nl;
             call inserta_nombre(arbol);
-            write "Nombre insertado"; nl;
             @ i = i + 1
         }
     };  ## del procedimiento construye_arbol 
