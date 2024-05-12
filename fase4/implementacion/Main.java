@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -67,11 +68,23 @@ public class Main {
         System.out.println("Procesando comprobacion de tipos...");
         ComprobacionTipos_vis comp = new ComprobacionTipos_vis();
         prog.procesa(comp);
-        if(comp.hayErrores()) {
-            System.err.println("Errores de tipos");
+
+        if(comp.hayErroresPretipado()) {
+            ArrayList<String> errores = comp.getErroresPretipado();
+            for(String error : errores) {
+                System.err.println(error);
+            }
+            return;
+        }
+
+        if(comp.hayErroresTipado()) {
+            ArrayList<String> errores = comp.getErroresTipado();
+            for(String error : errores) {
+                System.err.println(error);
+            }
             return;
         } else {
-            System.out.println("Tipado correcto");
+            System.out.println("Comprobacion de tipos correcta");
         }
         
         System.out.println("Asignando espacio...");
