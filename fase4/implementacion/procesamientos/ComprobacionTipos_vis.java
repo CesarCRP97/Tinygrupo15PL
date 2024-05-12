@@ -136,7 +136,7 @@ public class ComprobacionTipos_vis extends ProcesamientoDef {
     }
     public void procesa(Tipo_puntero tipo) {
         tipo.tipo().procesa(this);
-        tipo.putTipo(tipo.tipo().getTipo());
+        tipo.putTipo(SintaxisAbstractaTiny.ref(tipo.tipo()));
     }
     public void procesa(Tipo_struct tipo) {
         tipo.campos().procesa(this);
