@@ -325,7 +325,7 @@ public class GeneracionCod_vis extends ProcesamientoDef {
     }
 
     public void genAsig(Nodo n1) {
-        if(SintaxisAbstractaTiny.designador(n1)) {
+        if(SintaxisAbstractaTiny.designador(n1) || n1 instanceof Asignacion) {
             m.emit(m.copia(n1.getTipo().getTam()));
         } else {
             m.emit(m.desapila_ind());
