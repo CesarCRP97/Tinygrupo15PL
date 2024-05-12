@@ -4,23 +4,29 @@ import asint.SintaxisAbstractaTiny.*;
 import procesamientos.*;
 import java.io.Reader;
 import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.IOException;
 import maquinap.MaquinaP;
 
 public class DomJudge {
-        public static void main(String[] args) throws Exception {
 
-        char tipo;
+    public static void main(String[] args) throws Exception {
+        char tipo = (char) System.in.read();
+        Reader input = new BISReader(System.in);
+        Prog prog = construyeAST(input, tipo);
+        if(prog != null) {
+            procesa(prog, input);
+        }
+
+    }
+
+    private static Prog construyeAST(Reader input, char tipo) throws Exception {
         Prog prog = null;
-
-        tipo = (char) System.in.read();
-        
-        //Inicializamos el arbol de sintaxis abstracta que vayamos a usar
         if(tipo == 'a') {
-            Reader input = new InputStreamReader(System.in);
             AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
             c_ast_ascendente.ConstructorASTTinyDJ asint_asc = new c_ast_ascendente.ConstructorASTTinyDJ(alex);
             try {
-                prog = (Prog)asint_asc.debug_parse().value;
+                prog = (Prog)asint_asc.parse().value;
             } catch (Exception e) {
                 System.out.println("ERROR_SINTACTICO");
                 System.exit(0);
@@ -30,6 +36,7 @@ public class DomJudge {
             }
         } else if (tipo == 'd') {
             c_ast_descendente.ConstructorASTsTinyDJ asint_desc = new c_ast_descendente.ConstructorASTsTinyDJ(System.in);
+            asint_desc.disable_tracing();
             try {
                 prog = asint_desc.analiza();
             } catch (Exception e) {
@@ -40,40 +47,53 @@ public class DomJudge {
                 System.exit(0);
             }
         }
+        return prog;
+    }
 
+    private static void procesa(Prog prog, Reader datos) throws Exception {
         Vinculacion_vis vinc = new Vinculacion_vis();
         prog.procesa(vinc);
         if(vinc.hayErrores()) {
-            System.err.println("Errores de vinculacion");
             return;
-        } else {
-            System.out.println("Vinculacion correcta");
-
         }
 
         ComprobacionTipos_vis comp = new ComprobacionTipos_vis();
         prog.procesa(comp);
         if(comp.hayErrores()) {
-            System.err.println("Errores de tipos");
             return;
-        } else {
-            System.out.println("Tipado correcto");
         }
-        
+
         AsignacionEspacio_vis asig = new AsignacionEspacio_vis();
         prog.procesa(asig);
-        int maxtam = asig.getMaxTamNivel();
-        int maxnivel = asig.getMaxNivel();
 
-        System.out.println("Etiquetando codigo...");
         Etiquetado_vis etiq = new Etiquetado_vis();
         prog.procesa(etiq);
 
-        System.out.println("Generando codigo...");
-        MaquinaP maq = new MaquinaP(new InputStreamReader(System.in), maxtam, 2*maxtam, 2*maxtam, maxnivel);
+        MaquinaP maq = new MaquinaP(datos, 500, 5000, 5000, 10);
         GeneracionCod_vis gen = new GeneracionCod_vis(maq);
-        prog.procesa(gen);         
+        prog.procesa(gen); 
 
-        
+        maq.ejecuta();
+    }
+
+
+
+    static class BISReader extends InputStreamReader {
+
+        public BISReader(InputStream in) {
+            super(in);
+        }
+
+        @Override
+        public int read(char[] cbuf, int offset, int length) throws IOException {
+            int c = read();
+            if (c == -1) return -1;
+            else {
+                cbuf[offset] = (char) c;
+                return 1;
+            }
+        }
     }
 }
+
+
