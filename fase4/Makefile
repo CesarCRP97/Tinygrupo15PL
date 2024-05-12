@@ -8,3 +8,6 @@ clean:
 	rm -f PLG15fase4.zip memoria.pdf *~
 	make -C implementacion clean
 	rm -f pruebas/pruebas_tiny/*~
+	rm -f pruebas/casos_basicos/*~
+	rm -f pruebas/casos_elaborados/*~
+	rm -f pruebas/casos_errores/*~
