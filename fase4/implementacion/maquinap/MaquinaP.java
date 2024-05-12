@@ -90,6 +90,7 @@ public class MaquinaP {
     private class IReadInt implements Instruccion {
         public void ejecuta() {
             int valor = input.nextInt();
+            input.nextLine();
             pilaEvaluacion.push(new ValorInt(valor));
             pc++;
         }
@@ -100,6 +101,7 @@ public class MaquinaP {
     private class IReadReal implements Instruccion {
         public void ejecuta() {
             double valor = input.nextDouble();
+            input.nextLine();
             pilaEvaluacion.push(new ValorReal(valor));
             pc++;
         }
