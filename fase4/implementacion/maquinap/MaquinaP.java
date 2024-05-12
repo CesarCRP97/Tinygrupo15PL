@@ -25,7 +25,6 @@ public class MaquinaP {
         public boolean valorBool() {throw new EAccesoIlegitimo();} 
         public double valorReal() {throw new EAccesoIlegitimo();}
         public String valorString() {throw new EAccesoIlegitimo();}
-        public int valorPuntero() {throw new EAccesoIlegitimo();}
     } 
     private class ValorInt extends Valor {
         private int valor;
@@ -67,21 +66,6 @@ public class MaquinaP {
         public String valorString() {return valor;}
         public String toString() {
             return valor;
-        }
-    }
-    private class ValorPuntero extends Valor {
-        private int valor;
-        public ValorPuntero(int valor) {
-            this.valor = valor; 
-        }
-        public int valorPuntero() {return valor;}
-        public String toString() {
-            return String.valueOf(valor);
-        }
-    }
-    private class ValorNull extends Valor {
-        public String toString() {
-            return "null";
         }
     }
 
@@ -411,13 +395,6 @@ public class MaquinaP {
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
-            } else if (opnd1 instanceof ValorNull && opnd2 instanceof ValorNull) {
-                pilaEvaluacion.push(new ValorBool(true));
-            } else if (opnd1 instanceof ValorPuntero && opnd2 instanceof ValorPuntero) {
-                if (opnd1.valorPuntero() == opnd2.valorPuntero()) 
-                    pilaEvaluacion.push(new ValorBool(true));
-                else 
-                    pilaEvaluacion.push(new ValorBool(false));
             } else {
                 pilaEvaluacion.push(new ValorBool(false));
             }
@@ -449,13 +426,6 @@ public class MaquinaP {
                     pilaEvaluacion.push(new ValorBool(false));
             } else if (opnd1 instanceof ValorBool && opnd2 instanceof ValorBool) {
                 if (opnd1.valorBool() != opnd2.valorBool()) 
-                    pilaEvaluacion.push(new ValorBool(true));
-                else 
-                    pilaEvaluacion.push(new ValorBool(false));
-            } else if (opnd1 instanceof ValorNull && opnd2 instanceof ValorNull) {
-                pilaEvaluacion.push(new ValorBool(false));
-            } else if (opnd1 instanceof ValorPuntero && opnd2 instanceof ValorPuntero) {
-                if (opnd1.valorPuntero() != opnd2.valorPuntero()) 
                     pilaEvaluacion.push(new ValorBool(true));
                 else 
                     pilaEvaluacion.push(new ValorBool(false));
@@ -541,7 +511,7 @@ public class MaquinaP {
 
     private class IApilaNull implements Instruccion {
         public void ejecuta() {
-            pilaEvaluacion.push(new ValorNull()); 
+            pilaEvaluacion.push(new ValorInt(-1)); 
             pc++;
         } 
         public String toString() {return "apila-null";};
@@ -553,7 +523,7 @@ public class MaquinaP {
             this.valor = valor;  
         }
         public void ejecuta() {
-            pilaEvaluacion.push(new ValorPuntero(valor)); 
+            pilaEvaluacion.push(new ValorInt(valor)); 
             pc++;
         } 
         public String toString() {return "apila-puntero("+valor+")";};
@@ -611,7 +581,7 @@ public class MaquinaP {
             int dir = pilaEvaluacion.pop().valorInt();
             if (dir >= datos.length) throw new EAccesoFueraDeRango();
             if (datos[dir] == null) {
-                pilaEvaluacion.push(new ValorNull());
+                pilaEvaluacion.push(new ValorInt(-1));
             } else {
                 pilaEvaluacion.push(datos[dir]);
             }
@@ -847,9 +817,9 @@ public class MaquinaP {
     public void ejecuta() {
         muestraCodigo();
         while(pc != codigoP.size()) {
-            System.out.println(pc + ": " + codigoP.get(pc).toString());
+            //System.out.println(pc + ": " + codigoP.get(pc).toString());
             codigoP.get(pc).ejecuta();
-            muestraPila();
+            //muestraPila();
         }
 
     }
@@ -867,15 +837,8 @@ public class MaquinaP {
         for (int i=1; i <= ndisplays; i++)
             System.out.print(i+":"+gestorPilaActivaciones.display(i)+" ");
         System.out.println();
-        System.out.println("Pila de evaluacion");
-        for(int i=0; i < pilaEvaluacion.size(); i++) {
-            System.out.println(" "+i+":"+pilaEvaluacion.get(i));
-        }
-        System.out.println("Datos");
-        for(int i=0; i < datos.length; i++) {
-            System.out.print(" "+i+":"+datos[i] + " ");
-        }
-        System.out.println();
+        muestraPila();
+        muestraDatos();
         System.out.println("PC:"+pc);
     }
 
@@ -884,6 +847,14 @@ public class MaquinaP {
         for(int i=0; i < pilaEvaluacion.size(); i++) {
             System.out.println(" "+i+":"+pilaEvaluacion.get(i));
         }
+    }
+    
+    public void muestraDatos() {
+        System.out.println("Datos");
+        for(int i=0; i < datos.length; i++) {
+            System.out.print(" "+i+":"+datos[i] + " ");
+        }
+        System.out.println();
     }
 
     public static void main(String[] args) {
