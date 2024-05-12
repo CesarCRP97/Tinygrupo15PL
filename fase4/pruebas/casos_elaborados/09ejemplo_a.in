@@ -1,4 +1,4 @@
-d
+a
 {
 type ^tNodo tArbol;     
 type struct{ 
@@ -45,7 +45,7 @@ proc construye_arbol() {
      ## Hace un uso global de la variable 'nombres' declarado en el programa principal,
      ## y en del contador 'i' declarado en el subprograma contenedor 'construye_arbol'
   proc inserta_nombre(tArbol & arbol) { 
-    if arbol == null { 
+    if arbol ==  null { 
 	 new arbol;
         @ arbol^.nombre = nombres.nombres[i];
         @ arbol^.izq = arbol^.der = null
@@ -127,3 +127,15 @@ proc construye_arbol() {
     call escribe_nombres(arbol)
 
 } ## fin programa
+$$
+10
+Pedro
+Ana
+Maria
+Rodrigo
+Bernarda
+Petra
+Roberto
+Martin
+Carla
+Amalia
