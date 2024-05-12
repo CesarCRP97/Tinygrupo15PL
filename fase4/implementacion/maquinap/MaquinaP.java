@@ -812,13 +812,20 @@ public class MaquinaP {
         IDUP = new IDup();
         ISTOP = new IStop();
         gestorPilaActivaciones = new GestorPilaActivaciones(tamdatos,(tamdatos+tampila)-1,ndisplays); 
+        System.out.println("new GestorMemoriaDinamica("+(tamdatos+tampila)+","+(tamdatos+tampila+tamheap)+")");
         gestorMemoriaDinamica = new GestorMemoriaDinamica(tamdatos+tampila,(tamdatos+tampila+tamheap)-1);
     }
     public void ejecuta() {
-        muestraCodigo();
+        //muestraCodigo();
         while(pc != codigoP.size()) {
             //System.out.println(pc + ": " + codigoP.get(pc).toString());
-            codigoP.get(pc).ejecuta();
+            try {
+                codigoP.get(pc).ejecuta();
+            } catch (Exception e) {
+                muestraEstado();
+                System.out.println("Error en la instruccion " + pc + ": " + codigoP.get(pc).toString());
+                throw e;
+            }
             //muestraPila();
         }
 
