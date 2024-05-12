@@ -236,9 +236,7 @@ public class Vinculacion_vis extends ProcesamientoDef {
     public void procesa1(Tipo_bool tipo) {}
     public void procesa1(Tipo_real tipo) {}
     public void procesa1(Tipo_array tipo) {
-        if (!(tipo.tipo() instanceof Tipo_iden)) {
-            tipo.tipo().procesa1(this);
-        }
+        tipo.tipo().procesa1(this);
     }
     public void procesa1(Tipo_string tipo) {}
     public void procesa1(Tipo_puntero tipo) {
@@ -295,16 +293,7 @@ public class Vinculacion_vis extends ProcesamientoDef {
         public void procesa2(Tipo_int tipo) {}
     public void procesa2(Tipo_bool tipo) {}
     public void procesa2(Tipo_real tipo) {}
-    public void procesa2(Tipo_array tipo) {
-        if (tipo.tipo() instanceof Tipo_iden) {
-            if( infoVinculo(ts, tipo.tipo().iden()) == null) {
-                errorNoDeclarado(tipo.tipo().iden(), tipo.tipo().leeFila(), tipo.tipo().leeCol());
-            } else {
-                ((Tipo_iden)tipo.tipo()).ponVinculo(infoVinculo(ts, tipo.tipo().iden()));
-                //System.out.println("Vinculado: " + tipo.toString());
-            }
-        }
-    }
+    public void procesa2(Tipo_array tipo) {}
     public void procesa2(Tipo_string tipo) {}
     public void procesa2(Tipo_puntero tipo) {
         if (tipo.tipo() instanceof Tipo_iden) {
